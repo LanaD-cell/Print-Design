@@ -2,37 +2,38 @@
 {% load static %}
 
 {% block page_header %}
-  <div class="header-container d-flex flex-column flex-md-row align-items-start flex-grow-1">
+<div class="header-container d-flex flex-md-row align-items-center justify-content-between" style="height: 180px;">
+  <!-- Sidebar for menu items -->
+  <div class="sidebar" id="sidebar">
+    <ul class="list-group">
+      <li class="list-group-item">
+        <a href="#">Print</a>
+      </li>
+      <li class="list-group-item">
+        <a href="#">Digital</a>
+      </li>
+      <li class="list-group-item">
+        <a href="#">Ready-Made Product</a>
+      </li>
+    </ul>
+  </div>
 
-    <!-- Main Header Content -->
-    <div class="shopnow">
-      <h1 class="text-light">Where design comes to life in Pixels and Ink!</h1>
-      <div class="my-5">
-        <h4>
-          <a href="#" class="shop-now-button btn btn-lg rounded-1 text-uppercase py-3">Shop Now!</a>
-        </h4>
-      </div>
+  <!-- Main Header Content -->
+  <div class="shopnow">
+    <h1 class="text-light">Where design comes to life in Pixels and Ink!</h1>
+    <div class="my-5">
+      <h4>
+        <a href="#" class="shop-now-button btn btn-lg rounded-1 text-uppercase py-3">Shop Now!</a>
+      </h4>
     </div>
+  </div>
 
-    <div class="sidebar" id="sidebar">
-      <ul class="list-group">
-        <li class="list-group-item">
-          <a href="#">Print</a>
-        </li>
-        <li class="list-group-item">
-          <a href="#">Digital</a>
-        </li>
-        <li class="list-group-item">
-          <a href="#">Ready-Made Product</a>
-        </li>
-      </ul>
-    </div>
-
-     <!-- Call Us Button -->
-<div class="callbtn">
-  <a href="javascript:void(0)" class="btn rounded-circle p-4 d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#contactModal">
-    <i class="fa fa-phone fa-2x"></i> Call Us!
-  </a>
+  <!-- Call Us Button -->
+  <div class="callbtn d-flex justify-content-center align-items-center" style="padding-left: 15px;">
+    <a href="javascript:void(0)" class="btn rounded-circle p-4 d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#contactModal">
+      <i class="fa fa-phone fa-2x"></i> Call Us!
+    </a>
+  </div>
 </div>
 
 <!-- Modal Structure for Contact Details -->
@@ -54,7 +55,7 @@
   </div>
 </div>
 
-   <!-- Sidebar Toggle Button (Visible only on mobile) -->
-   <button class="sidebar-toggle btn d-block d-sm-none" style="background-color: #006466; color: white;" id="sidebar-toggle">☰ Menu</button>
+<!-- Sidebar Toggle Button (Visible only on mobile) -->
+<button class="sidebar-toggle btn d-block d-sm-none" style="background-color: #006466; color: white;" id="sidebar-toggle">☰ Menu</button>
 
 {% endblock %}

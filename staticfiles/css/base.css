@@ -6,22 +6,33 @@
 }
 html {
     height: 100%;
-    max-width: 100%;
 }
 
 body {
-    background: url('/media/bg-img.webp') no-repeat center center fixed;
+    display: flex;
+    flex-direction: column;
+    background: url('/media/bg-img.webp') center/cover fixed;
     background-size: cover;
-    max-height: 100vh;
-    color: #212f45;
+    width: 100%;
+    min-height: 100vh;
+    color: #272640;
     font-family: 'Figtree', sans-serif;
     padding-top: 90px;
+    margin: 0;
 }
-
+.main-content {
+    flex: 1;
+}
 em {
     font-family: 'Tangerine', cursive;
 }
 
+strong {
+    color: #272640;
+}
+.spacer {
+    flex-grow: 1;
+}
 /* Icon styles */
 .icon {
     align-items: center;
@@ -44,6 +55,7 @@ em {
     align-items: center;
     justify-content: space-between;
     padding: 10px 20px;
+    flex-wrap: wrap;
 }
 
 /* Logo styling inside navbar */
@@ -87,19 +99,39 @@ em {
     display: flex;
     align-items: center;
 }
+/* Style for the UL element */
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
 
-/* Navigation Links */
-.navbar-links {
+.navbar-nav .nav-item {
     display: flex;
     align-items: center;
-    gap: 20px;
 }
 
 .navbar-links a {
     text-decoration: none;
     color: #272640;
     font-weight: 600;
-    font-size: 16px;
+    font-size: 18px;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links a:hover {
+    color: #006466;
+}
+
+.navbar-links i {
+    margin-right: 8px;
+    font-size: 20px;
 }
 
 /* General button styles */
@@ -128,16 +160,122 @@ em {
     color: white;
 }
 
+/* ---- Footer ---- */
+
+footer {
+    background-color: white;
+    color: #272640;
+    padding: 20px 0;
+    margin-top: auto;
+  }
+
+  .footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0 auto;
+  }
+
+  .left-section, .right-section {
+    flex: 1;
+  }
+
+  .right-section .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  .right-section .col-3 {
+    flex: 1;
+    padding: 10px;
+  }
+
+  .list-title, .list-title-2 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .list-links {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .list-links li {
+    margin-bottom: 8px;
+  }
+
+  .list-links a {
+    color: #272640;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+
+  .list-links a:hover {
+    color: #006466;
+  }
+
+  .social-icons a {
+    color: #272640;
+    font-size: 24px;
+    margin-right: 10px;
+    transition: color 0.3s ease;
+  }
+
+  .social-icons a:hover {
+    color: #006466;
+  }
+
+  .contact-address {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .contact-number ._txt {
+    font-size: 14px;
+  }
+
+
 /* ---- Homepage ---- */
 
 /* Sidebar Styles */
+
+.header-container {
+    display: flex;
+    background-color:  #312244;
+    min-height: 10vh;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.shopnow {
+    text-align: center;
+}
+
+.shopnow h1 {
+    padding-left: 10px;
+}
+.shop-now-button  {
+    margin-bottom: 100px;
+  }
+.sidebar {
+    width: 250px;
+    float: left;
+    margin-left: 80px;
+    display: block;
+    margin-bottom: 90px;
+}
+
+/* List group styles to make the items stack vertically */
 .sidebar .list-group {
     padding-left: 0;
-    margin-bottom: 0;
     display: flex;
     flex-direction: column;
 }
 
+/* Individual list item styles */
 .sidebar .list-group-item {
     background-color: #312244;
     color: white;
@@ -147,26 +285,56 @@ em {
     text-transform: uppercase;
 }
 
+/* Links inside list items */
 .sidebar .list-group-item a {
     color: white;
     text-decoration: none;
     display: block;
 }
 
+/* Hover effect on list items */
 .sidebar .list-group-item:hover {
     background-color: #006466;
     cursor: pointer;
 }
 
+/* Hover effect on the links */
 .sidebar .list-group-item a:hover {
     color: #fff;
 }
 
+/* Active item styles */
 .sidebar .list-group-item.active {
     background-color: #4d194d;
     color: white;
 }
 
+.callbtn {
+    color: white;
+    background-color: darkorange;
+    font-size: 40px;
+    padding: 20px 40px;
+    display: flex;
+    font-weight: bold;
+    margin-bottom: 130px;
+    height: 180px;
+
+}
+.callbtn a {
+    font-size: 40px;
+    margin-right: 10px;
+    color: white;
+}
+.callbtn i {
+    font-size: 40px;
+    margin-right: 10px;
+    color: white;
+}
+.modal-header {
+    color: white;
+    background-color: #006466;
+    font-weight: bold;
+}
 /* ---- Media Queries ---- */
 @media (max-width: 992px) {
     #topnav {
@@ -200,7 +368,13 @@ em {
         height: 40px;
         margin-bottom: 10px;
     }
+    .right-section .row {
+        flex-direction: column;
+    }
 
+    .left-section, .right-section {
+        flex: 1 1 100%;
+    }
     .sidebar {
         display: none;
     }
@@ -215,9 +389,17 @@ em {
     .sidebar.show {
         display: block;
     }
+    .callbtn {
+        font-size: 30px;
+        padding: 15px 30px;
+    }
 
-    .main-content {
-        margin-left: 250px;
+    .callbtn a {
+        font-size: 30px;
+    }
+
+    .callbtn i {
+        font-size: 30px;
     }
 }
 
@@ -245,8 +427,6 @@ em {
 @media (max-width: 320px) {
     #topnav {
       flex-direction: column;
-      align-items: center;
-      text-align: center;
       padding: 10px;
     }
 
@@ -256,6 +436,12 @@ em {
       margin-right: 10px;
     }
 
+    .navbar-links {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        text-align: center;
+    }
     .navbar-search {
       width: 100%;
       margin-top: 5px;
@@ -269,7 +455,7 @@ em {
       background: transparent;
       padding: 8px 15px;
       outline: none;
-      border-radius: 25px;  /* Make sure it's rounded */
+      border-radius: 25px;
     }
 
     .navbar-links {
@@ -297,4 +483,22 @@ em {
     padding: 8px 15px;
     outline: none;
   }
+
+.header-container {
+    background-color:  #312244;
+    width: 100% !Important;
+}
+.callbtn {
+    font-size: 10px;
+    padding: 10px 20px;
+    margin: 10px 30px;
+}
+
+.callbtn a {
+    font-size: 24px;
+}
+
+.callbtn i {
+    font-size: 24px;
+}
 }
