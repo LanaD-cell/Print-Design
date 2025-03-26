@@ -79,14 +79,14 @@
 
                   <!-- Login Link -->
                   <li class="nav-item">
-                    <!--<a class="nav-link {% if request.path == '/login/' %}active{% endif %}" href="{% url 'login' %}">-->
+                    <a class="nav-link" href="">
                       <i class="fa-solid fa-user"></i></i>
                     </a>
                   </li>
 
                 <!-- Cart Link -->
                 <li class="nav-item">
-                  <!--<a class="nav-link {% if request.path == '/cart/' %}active{% endif %}" href="{% url 'cart' %}">-->
+                  <a class="nav-link" href="">
                     <i class="fa-solid fa-cart-shopping"></i>
                   </a>
                 </li>
@@ -107,9 +107,84 @@
         <div class="message-container"></div>
       {% endif %}
 
-
       {% block content %}{% endblock %}
       {% block page_header %}{% endblock %}
     </div>
+
+
+  <footer>
+      <div class="footer-content g-aligner">
+        <div class="container d-flex p-0 mr1-0">
+          <div class="left-section"></div>
+          <div class="right-section d-flex flex-wrap justify-content-between w100">
+            <div class="row">
+              <div class="col-3">
+                <label class="list-title">Our Products</label>
+                <ul class="list-links">
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                </ul>
+              </div>
+              <div class="col-3">
+                <label class="list-title">Our Products</label>
+                <ul class="list-links">
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                </ul>
+              </div>
+              <div class="col-3">
+                <label class="list-title">Information</label>
+                <ul class="list-links">
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                </ul>
+              </div>
+              <div class="col-3">
+                <label class="list-title">Payment Methods</label>
+                <ul class="list-links">
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                  <li><a href="" rel="follow"></a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="col-3">
+                <label class="list-title-2">Print & Design</label>
+                <span class="contact-address">
+                  "123 Design Street"
+                  <br>
+                  "City"
+                  <br>
+                  "Country"
+                </span>
+                <div class="contact-number">
+                  <span class="_txt">Phone Number: +1234567890</span>
+                </div>
+              </div>
+              <div class="col-3">
+                <label class="list-title">Social Media</label>
+                <div class="social-icons">
+                  <a href="https://www.linkedin.com/" class="linkdn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                  <a href="https://www.instagram.com/" class="insta" target="_blank"><i class="fab fa-instagram"></i></a>
+                  <a href="https://de-de.facebook.com/" class="fb" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                  <a href="https://www.youtube.com/" class="youtube" target="_blank"><i class="fab fa-youtube"></i></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </footer>
   </body>
+
 </html>
