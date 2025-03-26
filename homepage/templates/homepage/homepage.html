@@ -2,27 +2,59 @@
 {% load static %}
 
 {% block page_header %}
-    <div class="container header-container">
-        <div class="row">
-            <div class="col"></div>
-        </div>
-    </div>
-{% endblock %}
+  <div class="header-container d-flex flex-column flex-md-row align-items-start flex-grow-1">
 
-{% block content %}
-    <div class="container h-100">
-        <div class="row h-100">
-            <div class="col-7 col-md-6 my-auto">
-                <h1 class="display-4 logo-font text-dark">
-                    Where design comes to life in Pixels and Ink!
-                </h1>
-                <div class="my-5">
-                    <h4>
-                        <a href="" class="shope-now-button btn ntn-lg rounded-0 text-uppercase py-3">Shop Now!</a>
-                    </h4>
-                </div>
-            </div>
-        </div>
+    <!-- Main Header Content -->
+    <div class="shopnow">
+      <h1 class="text-light">Where design comes to life in Pixels and Ink!</h1>
+      <div class="my-5">
+        <h4>
+          <a href="#" class="shop-now-button btn btn-lg rounded-1 text-uppercase py-3">Shop Now!</a>
+        </h4>
+      </div>
     </div>
-{% endblock %}
 
+    <div class="sidebar" id="sidebar">
+      <ul class="list-group">
+        <li class="list-group-item">
+          <a href="#">Print</a>
+        </li>
+        <li class="list-group-item">
+          <a href="#">Digital</a>
+        </li>
+        <li class="list-group-item">
+          <a href="#">Ready-Made Product</a>
+        </li>
+      </ul>
+    </div>
+
+     <!-- Call Us Button -->
+<div class="callbtn">
+  <a href="javascript:void(0)" class="btn rounded-circle p-4 d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#contactModal">
+    <i class="fa fa-phone fa-2x"></i> Call Us!
+  </a>
+</div>
+
+<!-- Modal Structure for Contact Details -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contactModalLabel">Contact Details</h5>
+      </div>
+      <div class="modal-body">
+        <p><strong>Phone Number:</strong> +1234567890</p>
+        <p><strong>Email:</strong> contact@printanddesign.com</p>
+        <p><strong>Address:</strong> 123 Design Street, City, Country</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" style="background-color: #006466; color: white;" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+   <!-- Sidebar Toggle Button (Visible only on mobile) -->
+   <button class="sidebar-toggle btn d-block d-sm-none" style="background-color: #006466; color: white;" id="sidebar-toggle">☰ Menu</button>
+
+{% endblock %}

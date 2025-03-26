@@ -1,22 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
 html {
     height: 100%;
     max-width: 100%;
 }
 
 body {
-    background: url('media/homepage_background') no-repeat center center fixed;
+    background: url('/media/bg-img.webp') no-repeat center center fixed;
     background-size: cover;
-    height:  calc(100vh - 164px);
+    max-height: 100vh;
     color: #212f45;
     font-family: 'Figtree', sans-serif;
-
+    padding-top: 90px;
 }
 
 em {
     font-family: 'Tangerine', cursive;
 }
 
-/* from Bulma */
+/* Icon styles */
 .icon {
     align-items: center;
     display: inline-flex;
@@ -25,23 +31,83 @@ em {
     width: 1.5rem;
 }
 
-.logo-font {
-    text-transform: uppercase;
+/* Updated Top Navigation Bar */
+#topnav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030;
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
 }
 
-.main-logo-link {
-    width: fit-content;
+/* Logo styling inside navbar */
+.navbar-logo {
+    height: 40px;
+    width: auto;
+    margin-right: 10px; /* Adjusting the spacing between logo and text */
 }
 
-.shop-now-button {
-    background: #272640;
+#topnav a {
+    text-decoration: none !important;
+    display: flex;
+    align-items: center; /* Align text and logo in a row */
+}
+
+/* Centered Search Bar */
+.navbar-search {
+    display: flex;
+    align-items: center;
+    border: 1px solid #312244;
+    border-radius: 25px;
+    background: #f8f9fa;
+    width: 100%;
+}
+
+.navbar-search input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    border-radius: 25px 0 0 25px;
+}
+
+.navbar-search button {
+    background: #006466;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 0 25px 25px 0;
+    display: flex;
+    align-items: center;
+}
+
+/* Navigation Links */
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: #272640;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+/* General button styles */
+.shop-now-button,
+.btn-dark {
+    background: #006466;
     color: white;
     min-width: 260px;
-}
-
-.btn-dark {
-    background: #272640;
-    color: white;
 }
 
 .shop-now-button:hover,
@@ -54,34 +120,181 @@ em {
     color: white;
 }
 
-.text-dark {
-    color: #272640 !important;
-}
-
 .border-dark {
     border: 1px solid #312244 !important;
 }
 
-/* -------------------------------- Media Queries */
-
-/* Slightly larger container on xl screens */
-@media (min-width: 1200px) {
-  .container {
-    max-width: 80%;
-  }
+.text-light {
+    color: white;
 }
 
-/* fixed top navbar only on medium and up */
-@media (min-width: 992px) {
-    .fixed-top-desktop-only {
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 1030;
+/* ---- Homepage ---- */
+
+/* Sidebar Styles */
+.sidebar .list-group {
+    padding-left: 0;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar .list-group-item {
+    background-color: #312244;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.sidebar .list-group-item a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+.sidebar .list-group-item:hover {
+    background-color: #006466;
+    cursor: pointer;
+}
+
+.sidebar .list-group-item a:hover {
+    color: #fff;
+}
+
+.sidebar .list-group-item.active {
+    background-color: #4d194d;
+    color: white;
+}
+
+/* ---- Media Queries ---- */
+@media (max-width: 992px) {
+    #topnav {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
-    .header-container {
-        padding-top: 164px;
+    .navbar-search {
+        width: 80%;
+        margin-top: 10px;
     }
+
+    .navbar-logo {
+        height: 40px;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .navbar-search {
+        width: 100%;
+    }
+
+    .navbar-logo {
+        height: 40px;
+        margin-bottom: 10px;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+    .sidebar.show {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    #topnav {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .navbar-logo {
+        height: 35px;
+        margin-bottom: 10px;
+    }
+
+    .navbar-search {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .navbar-links {
+        gap: 5px;
+    }
+}
+
+@media (max-width: 320px) {
+    #topnav {
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .navbar-logo {
+      height: 40px;
+      margin-bottom: 10px;
+      margin-right: 10px;
+    }
+
+    .navbar-search {
+      width: 100%;
+      margin-top: 5px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar-search input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 8px 15px;
+      outline: none;
+      border-radius: 25px;  /* Make sure it's rounded */
+    }
+
+    .navbar-links {
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .navbar-links a {
+      font-size: 14px;
+    }
+
+    .navbar-search {
+    display: flex;
+    align-items: center;
+    border: 1px solid #312244;
+    border-radius: 25px;
+    background: #f8f9fa;
+  }
+
+  .navbar-search input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 8px 15px;
+    outline: none;
+  }
 }

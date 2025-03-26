@@ -1,22 +1,35 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+}
 html {
     height: 100%;
-    max-width: 100%;
+    overflow: hidden;
 }
 
 body {
-    background: url('media/homepage_background') no-repeat center center fixed;
+    display: flex;
+    flex-direction: column;
+    background: url('/media/bg-img.webp') center/cover fixed;
     background-size: cover;
-    height:  calc(100vh - 164px);
-    color: #212f45;
+    width: 100%;
+    min-height: 100vh;
+    color: #272640;
     font-family: 'Figtree', sans-serif;
-
+    padding-top: 90px;
 }
 
 em {
     font-family: 'Tangerine', cursive;
 }
 
-/* from Bulma */
+strong {
+    color: #272640;
+}
+
+/* Icon styles */
 .icon {
     align-items: center;
     display: inline-flex;
@@ -25,23 +38,104 @@ em {
     width: 1.5rem;
 }
 
-.logo-font {
-    text-transform: uppercase;
+/* Updated Top Navigation Bar */
+#topnav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1030;
+    background: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    flex-wrap: wrap;
 }
 
-.main-logo-link {
-    width: fit-content;
+/* Logo styling inside navbar */
+.navbar-logo {
+    height: 40px;
+    width: auto;
+    margin-right: 10px; /* Adjusting the spacing between logo and text */
 }
 
-.shop-now-button {
-    background: #272640;
+#topnav a {
+    text-decoration: none !important;
+    display: flex;
+    align-items: center; /* Align text and logo in a row */
+}
+
+/* Centered Search Bar */
+.navbar-search {
+    display: flex;
+    align-items: center;
+    border: 1px solid #312244;
+    border-radius: 25px;
+    background: #f8f9fa;
+    width: 100%;
+}
+
+.navbar-search input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    outline: none;
+    border-radius: 25px 0 0 25px;
+}
+
+.navbar-search button {
+    background: #006466;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 0 25px 25px 0;
+    display: flex;
+    align-items: center;
+}
+/* Style for the UL element */
+.navbar-nav {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.navbar-nav .nav-item {
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links a {
+    text-decoration: none;
+    color: #272640;
+    font-weight: 600;
+    font-size: 18px;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-links a:hover {
+    color: #006466;
+}
+
+.navbar-links i {
+    margin-right: 8px;
+    font-size: 20px;
+}
+
+/* General button styles */
+.shop-now-button,
+.btn-dark {
+    background: #006466;
     color: white;
     min-width: 260px;
-}
-
-.btn-dark {
-    background: #272640;
-    color: white;
 }
 
 .shop-now-button:hover,
@@ -54,34 +148,270 @@ em {
     color: white;
 }
 
-.text-dark {
-    color: #272640 !important;
-}
-
 .border-dark {
     border: 1px solid #312244 !important;
 }
 
-/* -------------------------------- Media Queries */
-
-/* Slightly larger container on xl screens */
-@media (min-width: 1200px) {
-  .container {
-    max-width: 80%;
-  }
+.text-light {
+    color: white;
 }
 
-/* fixed top navbar only on medium and up */
-@media (min-width: 992px) {
-    .fixed-top-desktop-only {
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 1030;
+/* ---- Homepage ---- */
+
+/* Sidebar Styles */
+
+.header-container {
+    display: flex;
+    background-color:  #312244;
+    min-height: 10vh;
+    width: 100%;
+    flex-wrap: wrap;
+}
+
+.shopnow {
+    text-align: center;
+    border-left: 5px solid white;
+    padding-top: 50px;
+}
+
+.shopnow h1 {
+    padding-left: 10px;
+}
+.sidebar {
+    width: 250px;
+    float: left;
+    margin-right: 20px;
+    display: block;
+}
+
+/* List group styles to make the items stack vertically */
+.sidebar .list-group {
+    padding-left: 0;
+    padding-top: 120px;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Individual list item styles */
+.sidebar .list-group-item {
+    background-color: #312244;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+/* Links inside list items */
+.sidebar .list-group-item a {
+    color: white;
+    text-decoration: none;
+    display: block;
+}
+
+/* Hover effect on list items */
+.sidebar .list-group-item:hover {
+    background-color: #006466;
+    cursor: pointer;
+}
+
+/* Hover effect on the links */
+.sidebar .list-group-item a:hover {
+    color: #fff;
+}
+
+/* Active item styles */
+.sidebar .list-group-item.active {
+    background-color: #4d194d;
+    color: white;
+}
+
+.callbtn {
+    color: white;
+    background-color: darkorange;
+    border-radius: 50%;
+    font-size: 40px;
+    padding: 20px 40px;
+    display: flex;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-left: 30px;
+
+}
+.callbtn a {
+    font-size: 40px;
+    margin-right: 10px;
+    color: white;
+}
+.callbtn i {
+    font-size: 40px;
+    margin-right: 10px;
+    color: white;
+}
+.modal-header {
+    color: white;
+    background-color: #006466;
+    font-weight: bold;
+}
+/* ---- Media Queries ---- */
+@media (max-width: 992px) {
+    #topnav {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
-    .header-container {
-        padding-top: 164px;
+    .navbar-search {
+        width: 80%;
+        margin-top: 10px;
     }
+
+    .navbar-logo {
+        height: 40px;
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-links {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .navbar-search {
+        width: 100%;
+    }
+
+    .navbar-logo {
+        height: 40px;
+        margin-bottom: 10px;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .sidebar-toggle {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+    .sidebar.show {
+        display: block;
+    }
+    .callbtn {
+        font-size: 30px;
+        padding: 15px 30px;
+    }
+
+    .callbtn a {
+        font-size: 30px;
+    }
+
+    .callbtn i {
+        font-size: 30px;
+    }
+}
+
+@media (max-width: 480px) {
+    #topnav {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .navbar-logo {
+        height: 35px;
+        margin-bottom: 10px;
+    }
+
+    .navbar-search {
+        width: 100%;
+        margin-top: 5px;
+    }
+
+    .navbar-links {
+        gap: 5px;
+    }
+}
+
+@media (max-width: 320px) {
+    #topnav {
+      flex-direction: column;
+      padding: 10px;
+    }
+
+    .navbar-logo {
+      height: 40px;
+      margin-bottom: 10px;
+      margin-right: 10px;
+    }
+
+    .navbar-links {
+        flex-direction: column;
+        gap: 10px;
+        width: 100%;
+        text-align: center;
+    }
+    .navbar-search {
+      width: 100%;
+      margin-top: 5px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .navbar-search input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      padding: 8px 15px;
+      outline: none;
+      border-radius: 25px;
+    }
+
+    .navbar-links {
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .navbar-links a {
+      font-size: 14px;
+    }
+
+    .navbar-search {
+    display: flex;
+    align-items: center;
+    border: 1px solid #312244;
+    border-radius: 25px;
+    background: #f8f9fa;
+  }
+
+  .navbar-search input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 8px 15px;
+    outline: none;
+  }
+
+.header-container {
+    background-color:  #312244;
+    width: 100% !Important;
+}
+.callbtn {
+    font-size: 10px;
+    padding: 10px 20px;
+    margin: 10px 30px;
+}
+
+.callbtn a {
+    font-size: 24px;
+}
+
+.callbtn i {
+    font-size: 24px;
+}
 }
