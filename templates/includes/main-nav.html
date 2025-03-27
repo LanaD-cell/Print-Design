@@ -1,48 +1,56 @@
-<div class="collapse navbar-collapse site-links" id="main-nav">
-    <ul class="navbar-nav w-auto mx-auto">
-        <li class="nav-item dropdown">
-            <a class="font-weight-bold nav-link mr-5" href="#" id="all-products-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                All Products
-            </a>
-            <div class="dropdown-menu border-0" aria-labelledby="all-products-link">
-                <a href="" class="dropdown-item">By Price</a>
-                <a href="" class="dropdown-item ">By Rating</a>
-                <a href="" class="dropdown-item ">By Category</a>
-                <a href="" class="dropdown-item">All Products</a>
+<ul class="nav justify-content-center" id="site-links">
+
+    <li class="nav-item">
+      <a class="nav-link active" aria-current="page" href="#" style="color: #272640">
+        Product Range
+    </a>
+    <div class="dropdown-menu border-0" aria-labelledby="all-products-link">
+        <a href="" class="dropdown-item">We print your Designs</a>
+        <a href="" class="dropdown-item ">Predesigned Products</a>
+        <a href="" class="dropdown-item ">Digital Designs</a>
+    </div>
+    </li>
+
+    <li class="nav-item">
+      <a class="nav-link" href="#" style="color: #272640">
+        Information
+    </a>
+    <div class="dropdown-menu border-0" aria-labelledby="all-products-link">
+        <a href="" class="dropdown-item">Printed ABC</a>
+        <a href="" class="dropdown-item ">FAQ</a>
+    </div>
+    </li>
+
+    <li class="nav-item">
+        <a class="font-weight-bold nav-link" href="#" id="contact-link" data-bs-toggle="modal" data-bs-target="#contactModal" style="color: #272640">
+            Contact
+        </a>
+    </li>
+
+    <li class="nav-item dropdown">
+        <a class="font-weight-bold nav-link" href="#" id="about-link" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #272640">
+            About
+        </a>
+    </li>
+</ul>
+
+<!-- Modal for Contact Details -->
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true" data-bs-backdrop="false">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="contactModalLabel">Contact Details</h5>
             </div>
-        </li>
-
-        <li class="nav-item dropdown">
-            <a class="font-weight-bold nav-link mr-5" href="#" id="product-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Digital
-            </a>
-            <div class="dropdown-menu border-0" aria-labelledby="clothing-link">
-                <a href="" class="dropdown-item">Digital Templates</a>
-                <a href="" class="dropdown-item">Printable Digital Products</a>
-                <a href="" class="dropdown-item">Digital Media</a>
+            <div class="modal-body">
+                <p><strong>Phone Number:</strong> +1234567890</p>
+                <p><strong>Email:</strong> contact@printanddesign.com</p>
+                <p><strong>Address:</strong> 123 Design Street, City, Country</p>
             </div>
-        </li>
-
-        <li class="nav-item dropdown">
-            <a class="font-weight-bold nav-link mr-5" href="#" id="homeware-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Information
-            </a>
-            <div class="dropdown-menu border-0" aria-labelledby="homeware-link">
-                <a href="" class="dropdown-item">Printing ABC</a>
-                <a href="" class="dropdown-item">FAQ</a>
+            <div class="modal-footer">
+                <button type="button" class="btn" style="background-color: #006466; color: white" data-bs-dismiss="modal">
+                    Close
+                </button>
             </div>
-        </li>
-
-        <li class="nav-item dropdown">
-            <a class="font-weight-bold nav-link" href="#" id="contact-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Contact
-            </a>
-        </li>
-
-        <li class="nav-item dropdown">
-            <a class="font-weight-bold nav-link" href="#" id="about-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                About
-            </a>
-        </li>
-    </ul>
+        </div>
+    </div>
 </div>

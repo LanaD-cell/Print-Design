@@ -9,7 +9,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
     {% endblock %}
 
-    {% block favicon%}
+    {% block favicon %}
       <link rel="icon" type="image/png" href="/static/favicon/favicon-96x96.png" sizes="96x96" />
       <link rel="icon" type="image/svg+xml" href="/static/favicon/favicon.svg" />
       <link rel="shortcut icon" href="/static/favicon/favicon.ico" />
@@ -28,23 +28,10 @@
     {% endblock %}
 
     {% block corejs %}
-      <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     {% endblock %}
 
     {% block extra_js %}
-      <script>
-        // JavaScript to toggle the sidebar on mobile
-        document.addEventListener("DOMContentLoaded", function() {
-          const toggleButton = document.getElementById("sidebar-toggle");
-          const sidebar = document.getElementById("sidebar");
-
-          toggleButton.addEventListener("click", function() {
-            sidebar.classList.toggle("show");
-          });
-        });
-      </script>
     {% endblock %}
 
     {% block google_fonts %}
@@ -57,87 +44,96 @@
       <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     {% endblock %}
 
-    <title>Print & Design {% block extra_title%}{% endblock %}</title>
+    <title>Print & Design {% block extra_title %}{% endblock %}</title>
   </head>
 
   <body>
     <header class="container-fluid fixed-top">
       <div class="row g-0" id="topnav">
-        <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text center text-lg-left align-items-center d-flex">
-          <a href="[% url 'homepage' %]" class="nav-link main-logo-link align-items-center d-flex">
-           <img src="https://res.cloudinary.com/dvs5uituk/image/upload/logo_cgecxp.webp" alt="Company logo" class="navbar-logo">
-           <h2 class="my-0"><strong>Print & Design</strong></h2>
-          </a>
-        </div>
-        <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text center text-lg-left">
-          <form method="GET" action="">
-            <div class="navbar-search button w-100">
-              <input class="form-control border-0" type="text" name="q" placeholder="Search">
-              <div class="">
-                <button class="btn" type="submit">
-                  <span class="icon">
-                    <i class="fas fa-search"></i>
-                  </span>
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center">
-          <ul class="icon-ul text-center d-flex text-lg-right my-0 justify-content-end">
 
-            <li class="nav-icon mx-2 text-center">
-              <i class="fa-solid fa-house d-block"></i>
-              <span>Home</span>
-            </li>
-
-            <li class="nav-icon dropdown mx-2 text-center">
-              <a class="nav-link dropdown-toggle d-flex flex-column align-items-center" href="#" id="user-options" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa-solid fa-user d-block"></i>
-                <span style="font-weight: normal;">Profile</span>
+          <!-- Logo Section -->
+          <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center text-lg-left d-flex align-items-center">
+              <a href="{% url 'homepage' %}" class="nav-link main-logo-link d-flex align-items-center">
+                  <img src="https://res.cloudinary.com/dvs5uituk/image/upload/logo_cgecxp.webp" alt="Company logo" class="navbar-logo">
+                  <h2 class="my-0"><strong>Print & Design</strong></h2>
               </a>
-              <ul class="dropdown-menu border-0" aria-labelledby="user-options">
-                {% if request.user.is_authenticated %}
-                  {% if request.user.is_superuser %}
-                    <li><a href="" class="dropdown-item">Product Management</a></li>
-                  {% endif %}
-                  <li><a href="" class="dropdown-item">My Profile</a></li>
-                  <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
-                {% else %}
-                  <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
-                  <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
-                {% endif %}
+          </div>
+
+          <!-- Search Section -->
+          <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center">
+              <form method="GET" action="">
+                  <div class="navbar-search button w-100">
+                      <input class="form-control border-0" type="text" name="q" placeholder="Search">
+                      <button class="btn" type="submit">
+                          <span class="icon">
+                              <i class="fas fa-search"></i>
+                          </span>
+                      </button>
+                  </div>
+              </form>
+          </div>
+
+          <!-- Icons Section (Home, Profile, Cart) -->
+          <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center">
+              <ul class="icon-ul d-flex justify-content-center justify-content-lg-end my-0">
+                  <!-- Home Icon -->
+                  <li class="nav-icon mx-2 text-center">
+                      <i class="fa-solid fa-house d-block"></i>
+                      <span>Home</span>
+                  </li>
+
+                  <!-- Profile Dropdown -->
+                  <li class="nav-icon dropdown mx-2 text-center">
+                      <a class="nav-link dropdown-toggle d-flex flex-column align-items-center" href="#" id="user-options" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                          <i class="fa-solid fa-user d-block"></i>
+                          <span style="font-weight: normal;">Profile</span>
+                      </a>
+                      <ul class="dropdown-menu border-0" aria-labelledby="user-options">
+                          {% if request.user.is_authenticated %}
+                              {% if request.user.is_superuser %}
+                                  <li><a href="" class="dropdown-item">Product Management</a></li>
+                              {% endif %}
+                              <li><a href="" class="dropdown-item">My Profile</a></li>
+                              <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
+                          {% else %}
+                              <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
+                              <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
+                          {% endif %}
+                      </ul>
+                  </li>
+
+                  <!-- Cart Icon -->
+                  <li class="nav-icon mx-2">
+                      <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="">
+                          <div class="text-center">
+                              <div><i class="fa-solid fa-cart-shopping"></i></div>
+                              <p class="my-0">
+                                  {% if grand_total %}
+                                      ${{ grand_total|floatformat:2 }}
+                                  {% else %}
+                                      €<span class="small-text">0.00</span>
+                                  {% endif %}
+                              </p>
+                          </div>
+                      </a>
+                  </li>
               </ul>
-            </li>
-
-            <li class="nav-icon mx-2">
-              <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif%} nav-link" href="">
-                <div class="text-center">
-                  <div><i class="fa-solid fa-cart-shopping"></i></div>
-                  <p class="my-0">
-                    {% if grand_total %}
-                      ${{ grand_total|floatformat:2 }}
-                    {% else %}
-                      €0.00
-                    {% endif %}
-                  </p>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="row bg-white">
-        <nav class="navbar navbar-expand-lg navbar-light w-100">
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#main-nav" aria-controls="main-nav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbat-toggler-icon"></span>
-          </button>
-          {% include 'includes/mobile-top-header.html' %}
-          {% include 'includes/main-nav.html' %}
-        </nav>
+          </div>
       </div>
 
-    <div class="main-content">
+
+      {% include 'includes/main-nav.html' %}
+
+
+</header>
+
+<div id="delivery-banner" class="row text-center">
+  <div class="col" style="color: #3e1f47; background-color: white;">
+    <h4 class="my-1">Free delivery on orders over €{{ free_shipping_threshold }}!</h4>
+  </div>
+</div>
+
+  <div class="main-content">
       {% if messages %}
         <div class="message-container"></div>
       {% endif %}
@@ -145,7 +141,6 @@
       {% block content %}{% endblock %}
       {% block page_header %}{% endblock %}
     </div>
-
 
   <footer>
       <div class="footer-content g-aligner">
@@ -184,7 +179,7 @@
                 </ul>
               </div>
               <div class="col-3">
-                <label class="list-title">Payment Methods</label>
+                <label class="list-title">Support</label>
                 <ul class="list-links">
                   <li><a href="" rel="follow"></a></li>
                   <li><a href="" rel="follow"></a></li>
@@ -194,32 +189,13 @@
                 </ul>
               </div>
             </div>
-            <div class="col-3">
-                <label class="list-title-2">Print & Design</label>
-                <span class="contact-address">
-                  "123 Design Street"
-                  <br>
-                  "City"
-                  <br>
-                  "Country"
-                </span>
-                <div class="contact-number">
-                  <span class="_txt">Phone Number: +1234567890</span>
-                </div>
-              </div>
-              <div class="col-3">
-                <label class="list-title">Social Media</label>
-                <div class="social-icons">
-                  <a href="https://www.linkedin.com/" class="linkdn" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                  <a href="https://www.instagram.com/" class="insta" target="_blank"><i class="fab fa-instagram"></i></a>
-                  <a href="https://de-de.facebook.com/" class="fb" target="_blank"><i class="fab fa-facebook-f"></i></a>
-                  <a href="https://www.youtube.com/" class="youtube" target="_blank"><i class="fab fa-youtube"></i></a>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
-    </footer>
-  </body>
+      </div>
+  </footer>
 
+  <!-- Bootstrap JS & Popper.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+</body>
 </html>
