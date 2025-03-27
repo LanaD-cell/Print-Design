@@ -11,7 +11,7 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    background: url('/media/bg-img.webp') center/cover fixed;
+    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/bg-img_hvunnv.png') center/cover fixed;
     background-size: cover;
     width: 100%;
     min-height: 100vh;
@@ -63,7 +63,7 @@ strong {
 .navbar-logo {
     height: 40px;
     width: auto;
-    margin-right: 10px; /* Adjusting the spacing between logo and text */
+    margin-right: 10px;
 }
 
 #topnav a {
@@ -101,38 +101,23 @@ strong {
     align-items: center;
 }
 /* Style for the UL element */
-.navbar-nav {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 30px;
-    list-style: none;
-    padding-left: 0;
-    margin-bottom: 0;
-}
+.icon-ul {
+    color: #312244;
 
-.navbar-nav .nav-item {
+}
+.nav-icon {
+    font-size: 20px;
+    padding: 10px;
     display: flex;
     align-items: center;
 }
-
-.navbar-links a {
-    text-decoration: none;
-    color: #272640;
+.nav-link {
     font-weight: 600;
     font-size: 18px;
     transition: color 0.3s ease;
     display: flex;
     align-items: center;
-}
-
-.navbar-links a:hover {
-    color: #006466;
-}
-
-.navbar-links i {
-    margin-right: 8px;
-    font-size: 20px;
+    text-decoration: none;
 }
 
 /* General button styles */

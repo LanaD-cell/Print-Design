@@ -62,53 +62,67 @@
 
   <body>
     <header class="container-fluid fixed-top">
-      <nav class="navbar navbar-expand-lg bg-body-tertiary" id="topnav">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{% url 'homepage' %}">
-                <img src="{% static 'images/logo.webp' %}" alt="Print & Design Logo" class="navbar-logo" height="40">
-                <span><strong style="padding-right: 50px;">PRINT&DESIGN</strong></span>
-            </a>
-
-            <!-- Burger Menu Button -->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <!-- Collapsible Navbar Links -->
-            <div class="collapse navbar-collapse" id="navbarNav">
-              <ul class="navbar-nav ms-auto mb-2 mb-lg-0 navbar-links">
-                <!-- Home Link -->
-                <li class="nav-item">
-                  <a class="nav-link {% if request.path == '/' %}active{% endif %}" aria-current="page" href="{% url 'homepage' %}">
-                    <i class="fa-solid fa-house-chimney"></i>
-                  </a>
-                </li>
-
-                  <!-- Login Link -->
-                  <li class="nav-item">
-                    <a class="nav-link" href="">
-                      <i class="fa-solid fa-user"></i></i>
-                    </a>
-                  </li>
-
-                <!-- Cart Link -->
-                <li class="nav-item">
-                  <a class="nav-link" href="">
-                    <i class="fa-solid fa-cart-shopping"></i>
-                  </a>
-                </li>
-              </ul>
-
-                <!-- Search Bar (Inside the collapsible menu) -->
-                <form class="navbar-search d-flex mt-2 mt-lg-0" role="search">
-                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn" type="submit">Search</button>
-                </form>
-            </div>
+      <div class="row" id="topnav">
+        <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text center text-lg-left align-items-center d-flex">
+          <a href="[% url 'homepage' %]" class="nav-link main-logo-link align-items-center d-flex">
+           <img src="https://res.cloudinary.com/dvs5uituk/image/upload/logo_cgecxp.webp" alt="Company logo" class="navbar-logo">
+           <h2 class="my-0"><strong>Print & Design</strong></h2>
+          </a>
         </div>
-    </nav>
-    </header>
+        <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text center text-lg-left">
+          <form method="GET" action="">
+            <div class="navbar-search button w-100">
+              <input class="form-control border-0" type="text" name="q" placeholder="Search">
+              <div class="">
+                <button class="btn" type="submit">
+                  <span class="icon">
+                    <i class="fas fa-search"></i>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text center text-lg-left">
+          <ul class="icon-ul text-center d-flex text-lg-right my-0 justify-content-end">
+            <li class="nav-icon mx-2">
+              <i class="fa-solid fa-house"></i>
+            </li>
+            <li class="nav-icon dropdown nav-icon mx-2">
+              <a class="nav-link dropdown-toggle" href="#" id="user-options" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa-solid fa-user"></i>
+              </a>
+              <ul class="dropdown-menu border-0" aria-labelledby="user-options">
+                {% if request.user.is_authenticated %}
+                  {% if request.user.is_superuser %}
+                    <li><a href="" class="dropdown-item">Product Management</a></li>
+                  {% endif %}
+                  <li><a href="" class="dropdown-item">My Profile</a></li>
+                  <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
+                {% else %}
+                  <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
+                  <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
+                {% endif %}
+              </ul>
+            </li>
+
+            <li class="nav-icon mx-2">
+              <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif%} nav-link" href="">
+                <div class="text-center">
+                  <div><i class="fa-solid fa-cart-shopping"></i></div>
+                  <p class="my-0">
+                    {% if grand_total %}
+                      ${{ grand_total|floatformat:2 }}
+                    {% else %}
+                      €0.00
+                    {% endif %}
+                  </p>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
 
     <div class="main-content">
       {% if messages %}
