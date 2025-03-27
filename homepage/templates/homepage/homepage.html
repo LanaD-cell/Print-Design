@@ -3,43 +3,60 @@
 
 {% block page_header %}
 <!-- Main Header Content -->
-<div class="shopnow">
-  <h1 class="text-light">Where design comes to life in Pixels and Ink!</h1>
+<div class="header-container">
+  <div class="shopnow">
+    <h1 class="text-light">Where design comes to life in Pixels and Ink!</h1>
     <div>
       <h4>
-        <a href="#" class="shop-now-button btn btn-lg rounded-1 text-uppercase py-3">Shop Now!</a>
+        <a
+          href="#"
+          class="shop-now-button btn btn-lg rounded-1 text-uppercase py-3"
+          >Shop Now!</a>
       </h4>
-    </div>
-</div>
-
-<!-- Call Us Button -->
-<div class="callbtn d-flex justify-content-center align-items-center" style="padding-left: 15px;">
-    <a href="javascript:void(0)" class="btn rounded-circle p-4 d-flex justify-content-center align-items-center" data-bs-toggle="modal" data-bs-target="#contactModal">
-      <i class="fa fa-phone fa-2x"></i> Call Us!
-    </a>
-</div>
-
-<!-- Modal Structure for Contact Details -->
-<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="contactModalLabel">Contact Details</h5>
-      </div>
-      <div class="modal-body">
-        <p><strong>Phone Number:</strong> +1234567890</p>
-        <p><strong>Email:</strong> contact@printanddesign.com</p>
-        <p><strong>Address:</strong> 123 Design Street, City, Country</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn" style="background-color: #006466; color: white;" data-bs-dismiss="modal">Close</button>
-      </div>
     </div>
   </div>
 </div>
 
-{% endblock %}
+<!-- Call Us Button -->
+<div class="callbtn d-flex justify-content-center align-items-center"
+    style="padding-left: 15px">
+    <a
+      href="javascript:void(0)"
+      class="btn rounded-circle p-4 d-flex justify-content-center align-items-center"
+      data-bs-toggle="modal"
+      data-bs-target="#contactModal">
+      <i class="fa fa-phone fa-2x"></i> Call Us!
+    </a>
+  </div>
 
-{% block content %}
+  <!-- Modal Structure for Contact Details -->
+  <div
+    class="modal fade"
+    id="contactModal"
+    tabindex="-1"
+    aria-labelledby="contactModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="contactModalLabel">Contact Details</h5>
+        </div>
+        <div class="modal-body">
+          <p><strong>Phone Number:</strong> +1234567890</p>
+          <p><strong>Email:</strong> contact@printanddesign.com</p>
+          <p><strong>Address:</strong> 123 Design Street, City, Country</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn"
+            style="background-color: #006466; color: white"
+            data-bs-dismiss="modal">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-{% endblock %}
+{% endblock %} {% block content %} {% endblock %}
