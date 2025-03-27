@@ -21,7 +21,10 @@ body {
     margin: 0;
 }
 .main-content {
-    flex: 1;
+    min-height: 100vh;
+    padding-bottom: 50px;
+    display: flex;
+    flex-direction: column;
 }
 em {
     font-family: 'Tangerine', cursive;
@@ -30,9 +33,7 @@ em {
 strong {
     color: #272640;
 }
-.spacer {
-    flex-grow: 1;
-}
+
 /* Icon styles */
 .icon {
     align-items: center;
@@ -166,75 +167,77 @@ footer {
     background-color: white;
     color: #272640;
     padding: 20px 0;
-    margin-top: auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+
   }
 
   .footer-content {
+    width: 100%;
+  }
+
+  .container {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: 0 auto;
+    padding: 0 15px;
   }
 
-  .left-section, .right-section {
-    flex: 1;
-  }
-
-  .right-section .row {
+  .right-section {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    width: 100%;
   }
 
-  .right-section .col-3 {
-    flex: 1;
+  .col-3 {
+    flex: 1 1 25%;
+    margin-bottom: 20px;
     padding: 10px;
   }
 
   .list-title, .list-title-2 {
-    font-size: 18px;
     font-weight: bold;
+    color: #272640;
     margin-bottom: 10px;
   }
 
   .list-links {
-    list-style-type: none;
+    list-style: none;
     padding: 0;
-    margin: 0;
   }
 
   .list-links li {
-    margin-bottom: 8px;
+    margin-bottom: 10px;
   }
 
-  .list-links a {
+  .list-links li a {
     color: #272640;
     text-decoration: none;
-    transition: color 0.3s ease;
   }
 
-  .list-links a:hover {
+  .list-links li a:hover {
     color: #006466;
   }
 
-  .social-icons a {
-    color: #272640;
-    font-size: 24px;
-    margin-right: 10px;
-    transition: color 0.3s ease;
-  }
-
-  .social-icons a:hover {
-    color: #006466;
-  }
-
-  .contact-address {
+  .contact-address,
+  .contact-number {
     font-size: 14px;
     line-height: 1.5;
   }
 
-  .contact-number ._txt {
-    font-size: 14px;
+  .social-icons {
+    display: flex;
+    gap: 10px;
+  }
+
+  .social-icons a {
+    color: #272640;
+    font-size: 20px;
+    transition: color 0.3s;
+  }
+
+  .social-icons a:hover {
+    color: #006466;
   }
 
 
@@ -248,17 +251,20 @@ footer {
     min-height: 10vh;
     width: 100%;
     flex-wrap: wrap;
+    flex-shrink: 0;
 }
 
 .shopnow {
     text-align: center;
+    background-color: #272640;
+    min-height: 120px;
 }
 
 .shopnow h1 {
     padding-left: 10px;
 }
 .shop-now-button  {
-    margin-bottom: 100px;
+    margin-bottom: 10px;
   }
 .sidebar {
     width: 250px;
@@ -317,7 +323,7 @@ footer {
     display: flex;
     font-weight: bold;
     margin-bottom: 130px;
-    height: 180px;
+    height: 60px;
 
 }
 .callbtn a {
@@ -500,5 +506,9 @@ footer {
 
 .callbtn i {
     font-size: 24px;
+}
+
+footer {
+    max-width: 100%;
 }
 }

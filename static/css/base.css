@@ -256,13 +256,15 @@ footer {
 
 .shopnow {
     text-align: center;
+    background-color: #272640;
+    min-height: 120px;
 }
 
 .shopnow h1 {
     padding-left: 10px;
 }
 .shop-now-button  {
-    margin-bottom: 100px;
+    margin-bottom: 10px;
   }
 .sidebar {
     width: 250px;
@@ -321,7 +323,7 @@ footer {
     display: flex;
     font-weight: bold;
     margin-bottom: 130px;
-    height: 180px;
+    height: 60px;
 
 }
 .callbtn a {
@@ -495,7 +497,6 @@ footer {
 .callbtn {
     font-size: 10px;
     padding: 10px 20px;
-    margin: 10px 30px;
 }
 
 .callbtn a {
@@ -507,6 +508,6 @@ footer {
 }
 
 footer {
-    max-width: 100%;
+    max-width: 100% !Important;
 }
 }
