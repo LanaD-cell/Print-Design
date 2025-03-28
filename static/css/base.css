@@ -207,6 +207,23 @@ strong {
     font-size: 15px;
 }
 
+/* ---- Products ---- */
+
+.card {
+    color: white;
+    background-color: rgba(27, 58, 75, 0.9);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+.overlay {
+    height: 100%;
+    width: 100%;
+    top: 0;
+    left: 0;
+    position: fixed;
+    background-color: white;
+    z-index: -1;
+}
+
 /* ---- Media Queries ---- */
 @media (max-width: 1200px) {
     .container {

@@ -67,8 +67,10 @@
               <ul class="icon-ul d-flex justify-content-center justify-content-lg-end my-0">
                   <!-- Home Icon -->
                   <li class="nav-icon mx-2 text-center">
+                    <a href="{% url 'homepage' %}" class="nav-link">
                       <i class="fa-solid fa-house d-block"></i>
                       <span>Home</span>
+                    </a>
                   </li>
 
                   <!-- Profile Dropdown -->
@@ -109,7 +111,9 @@
               </ul>
           </div>
       </div>
+
       {% include 'includes/main-nav.html' %}
+
     </header>
 
     <div class="main-content">
@@ -127,53 +131,6 @@
 
     <!-- Bootstrap Bundle JS (Includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-
-    <!-- Ensure fallback image incase of bad connection -->
-    <script>
-      window.onload = function() {
-        // Function to detect if an image fails to load
-        function checkImage(imageElement, cloudinaryUrl, fallbackUrl) {
-          const img = new Image();
-          img.src = cloudinaryUrl;
-
-          img.onload = function() {
-            console.log(`${cloudinaryUrl} loaded successfully.`);
-          };
-
-          img.onerror = function() {
-            console.log(`${cloudinaryUrl} failed to load. Applying fallback.`);
-            imageElement.style.backgroundImage = `url('${fallbackUrl}')`;
-          };
-        }
-
-        // Check the section background image
-        const section = document.querySelector('.products-section');
-        const sectionBackground = getComputedStyle(section).backgroundImage.slice(5, -2); // Get the URL without "url()"
-
-        // Split the background URL to extract Cloudinary and fallback images
-        const urls = sectionBackground.split(', '); // In case you have both images
-        const cloudinaryUrl = urls[0].slice(5, -1); // Cloudinary image URL
-        const fallbackUrl = urls[1].slice(5, -1); // Fallback image URL
-
-        // Call checkImage function for the section
-        checkImage(section, cloudinaryUrl, fallbackUrl);
-
-        // Check each product background image
-        const products = document.querySelectorAll('.product');
-
-        products.forEach(product => {
-          const productImageUrl = getComputedStyle(product).backgroundImage.slice(5, -2); // Get URL without "url()"
-
-          // Split the background URL to extract Cloudinary and fallback images
-          const productUrls = productImageUrl.split(', ');
-          const productCloudinaryUrl = productUrls[0].slice(5, -1); // Cloudinary image URL
-          const productFallbackUrl = productUrls[1].slice(5, -1); // Fallback image URL
-
-          // Call checkImage function for each product
-          checkImage(product, productCloudinaryUrl, productFallbackUrl);
-        });
-      };
-    </script>
 
   </body>
 </html>
