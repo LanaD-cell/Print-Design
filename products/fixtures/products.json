@@ -1,0 +1,240 @@
+[
+    {
+      "pk": 1,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp1001",
+        "name": "Business Cards",
+        "description": "High-quality printed business cards in a variety of styles and finishes.",
+        "price": 29.99,
+        "category": 1,
+        "rating": 4.8,
+        "image_url": "http://example.com/images/business-cards.jpg",
+        "image": "business-cards.jpg"
+      }
+    },
+    {
+      "pk": 2,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp1002",
+        "name": "Flyers",
+        "description": "Custom printed flyers to promote your business or event.",
+        "price": 19.99,
+        "category": 1,
+        "rating": 4.5,
+        "image_url": "http://example.com/images/flyers.jpg",
+        "image": "flyers.jpg"
+      }
+    },
+    {
+      "pk": 3,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp1003",
+        "name": "Posters",
+        "description": "Print high-quality posters with custom designs and finishes.",
+        "price": 49.99,
+        "category": 1,
+        "rating": 4.7,
+        "image_url": "http://example.com/images/posters.jpg",
+        "image": "posters.jpg"
+      }
+    },
+    {
+      "pk": 4,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp1004",
+        "name": "Brochures",
+        "description": "Custom designed brochures to showcase your business or products.",
+        "price": 39.99,
+        "category": 1,
+        "rating": 4.6,
+        "image_url": "http://example.com/images/brochures.jpg",
+        "image": "brochures.jpg"
+      }
+    },
+    {
+      "pk": 5,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp1005",
+        "name": "Banners",
+        "description": "Custom printed banners for advertising events, promotions, and more.",
+        "price": 59.99,
+        "category": 1,
+        "rating": 4.9,
+        "image_url": "http://example.com/images/banners.jpg",
+        "image": "banners.jpg"
+      }
+    },
+    {
+      "pk": 6,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp1006",
+        "name": "Stickers",
+        "description": "Custom stickers in various shapes and sizes for branding and promotional purposes.",
+        "price": 9.99,
+        "category": 1,
+        "rating": 4.8,
+        "image_url": "http://example.com/images/stickers.jpg",
+        "image": "stickers.jpg"
+      }
+    },
+    {
+      "pk": 7,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp1007",
+        "name": "Invitations",
+        "description": "Custom-designed invitations for weddings, parties, and other events.",
+        "price": 19.99,
+        "category": 1,
+        "rating": 4.7,
+        "image_url": "http://example.com/images/invitations.jpg",
+        "image": "invitations.jpg"
+      }
+    },
+    {
+      "pk": 8,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp1008",
+        "name": "Labels",
+        "description": "Custom labels in various sizes and shapes for products, packages, and branding.",
+        "price": 14.99,
+        "category": 1,
+        "rating": 4.6,
+        "image_url": "http://example.com/images/labels.jpg",
+        "image": "labels.jpg"
+      }
+    },
+    {
+      "pk": 9,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp1009",
+        "name": "FMCG Products",
+        "description": "Fast-moving consumer goods such as food, beverages, and personal care items.",
+        "price": 25.99,
+        "category": 1,
+        "rating": 4.4,
+        "image_url": "http://example.com/images/fmcg-products.jpg",
+        "image": "fmcg-products.jpg"
+      }
+    },
+    {
+      "pk": 10,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp2001",
+        "name": "Logo Design",
+        "description": "Professional logo design services to establish your brand identity.",
+        "price": 199.99,
+        "category": 2,
+        "rating": 4.9,
+        "image_url": "http://example.com/images/logo-design.jpg",
+        "image": "logo-design.jpg"
+      }
+    },
+    {
+      "pk": 11,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp2002",
+        "name": "Social Media Graphics",
+        "description": "Custom social media graphics to boost your brand's online presence.",
+        "price": 99.99,
+        "category": 2,
+        "rating": 4.8,
+        "image_url": "http://example.com/images/social-media-graphics.jpg",
+        "image": "social-media-graphics.jpg"
+      }
+    },
+    {
+      "pk": 12,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp2003",
+        "name": "Digital Art",
+        "description": "Custom digital art for personal or business use.",
+        "price": 79.99,
+        "category": 2,
+        "rating": 4.7,
+        "image_url": "http://example.com/images/digital-art.jpg",
+        "image": "digital-art.jpg"
+      }
+    },
+    {
+      "pk": 13,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp2004",
+        "name": "Website Banners",
+        "description": "Custom-designed banners for your website's promotion and branding.",
+        "price": 59.99,
+        "category": 2,
+        "rating": 4.6,
+        "image_url": "http://example.com/images/website-banners.jpg",
+        "image": "website-banners.jpg"
+      }
+    },
+    {
+      "pk": 14,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp3001",
+        "name": "Custom Print Orders",
+        "description": "Custom print orders for business cards, flyers, banners, and more.",
+        "price": 99.99,
+        "category": 3,
+        "rating": 4.7,
+        "image_url": "http://example.com/images/custom-print-orders.jpg",
+        "image": "custom-print-orders.jpg"
+      }
+    },
+    {
+      "pk": 15,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp3002",
+        "name": "Branding Packages",
+        "description": "Comprehensive branding packages for businesses looking to build their identity.",
+        "price": 299.99,
+        "category": 3,
+        "rating": 4.8,
+        "image_url": "http://example.com/images/branding-packages.jpg",
+        "image": "branding-packages.jpg"
+      }
+    },
+    {
+      "pk": 16,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp3003",
+        "name": "Merchandise Design",
+        "description": "Custom design services for merchandise such as t-shirts, mugs, and more.",
+        "price": 149.99,
+        "category": 3,
+        "rating": 4.7,
+        "image_url": "http://example.com/images/merchandise-design.jpg",
+        "image": "merchandise-design.jpg"
+      }
+    },
+    {
+      "pk": 17,
+      "model": "products.product",
+      "fields": {
+        "sku": "pp3004",
+        "name": "Print & Digital Bundles",
+        "description": "Special bundles that include both print and digital services for your business.",
+        "price": 249.99,
+        "category": 3,
+        "rating": 4.9,
+        "image_url": "http://example.com/images/print-digital-bundles.jpg",
+        "image": "print-digital-bundles.jpg"
+      }
+    }
+  ]
