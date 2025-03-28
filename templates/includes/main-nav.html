@@ -1,24 +1,56 @@
 <ul class="nav justify-content-center" id="site-links">
 
-    <li class="nav-item">
-      <a class="nav-link active" aria-current="page" href="#" style="color: #272640">
-        Product Range
-    </a>
-    <div class="dropdown-menu border-0" aria-labelledby="all-products-link">
-        <a href="" class="dropdown-item">We print your Designs</a>
-        <a href="" class="dropdown-item ">Predesigned Products</a>
-        <a href="" class="dropdown-item ">Digital Designs</a>
-    </div>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="all-products-link" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #272640">
+            Products
+        </a>
+        <ul class="dropdown-menu border-0" aria-labelledby="all-products-link">
+            <!-- Printed Products Submenu -->
+            <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Printed Products</a>
+                <ul class="dropdown-menu border-0">
+                    <li><a href="#" class="dropdown-item">Business Cards</a></li>
+                    <li><a href="#" class="dropdown-item">Flyers</a></li>
+                    <li><a href="#" class="dropdown-item">Posters</a></li>
+                    <li><a href="#" class="dropdown-item">Brochures</a></li>
+                    <li><a href="#" class="dropdown-item">Banners</a></li>
+                    <li><a href="#" class="dropdown-item">Stickers</a></li>
+                    <li><a href="#" class="dropdown-item">Invitations</a></li>
+                    <li><a href="#" class="dropdown-item">Labels</a></li>
+                    <li><a href="#" class="dropdown-item">FMCG Products</a></li>
+                </ul>
+            </li>
+            <!-- Digital Designs Submenu -->
+            <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Digital Designs</a>
+                <ul class="dropdown-menu border-0">
+                    <li><a href="#" class="dropdown-item">Logo Design</a></li>
+                    <li><a href="#" class="dropdown-item">Social Media Graphics</a></li>
+                    <li><a href="#" class="dropdown-item">Digital Art</a></li>
+                    <li><a href="#" class="dropdown-item">Website Banners</a></li>
+                </ul>
+            </li>
+            <!-- Custom Design Services Submenu -->
+            <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="#">Custom Design Services</a>
+                <ul class="dropdown-menu border-0">
+                    <li><a href="#" class="dropdown-item">Custom Print Orders</a></li>
+                    <li><a href="#" class="dropdown-item">Branding Packages</a></li>
+                    <li><a href="#" class="dropdown-item">Merchandise Design</a></li>
+                    <li><a href="#" class="dropdown-item">Webservices</a></li>
+                </ul>
+            </li>
+        </ul>
     </li>
 
-    <li class="nav-item">
-      <a class="nav-link" href="#" style="color: #272640">
-        Information
-    </a>
-    <div class="dropdown-menu border-0" aria-labelledby="all-products-link">
-        <a href="" class="dropdown-item">Printed ABC</a>
-        <a href="" class="dropdown-item ">FAQ</a>
-    </div>
+    <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="info-link" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #272640">
+            Information
+        </a>
+        <ul class="dropdown-menu border-0" aria-labelledby="info-link">
+            <li><a href="#" class="dropdown-item">Printed ABC</a></li>
+            <li><a href="#" class="dropdown-item">FAQ</a></li>
+        </ul>
     </li>
 
     <li class="nav-item">
@@ -27,7 +59,7 @@
         </a>
     </li>
 
-    <li class="nav-item dropdown">
+    <li class="nav-item">
         <a class="font-weight-bold nav-link" href="#" id="about-link" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #272640">
             About
         </a>
@@ -54,3 +86,24 @@
         </div>
     </div>
 </div>
+
+<!-- JavaScript to Enable Submenus -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.querySelectorAll('.dropdown-submenu > a').forEach(function (element) {
+            element.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                let submenu = this.nextElementSibling;
+                if (submenu.classList.contains("show")) {
+                    submenu.classList.remove("show");
+                } else {
+                    document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(function (el) {
+                        el.classList.remove("show");
+                    });
+                    submenu.classList.add("show");
+                }
+            });
+        });
+    });
+</script>

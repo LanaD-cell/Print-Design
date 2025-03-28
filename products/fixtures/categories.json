@@ -1,0 +1,186 @@
+[
+  {
+      "pk": 1,
+      "model": "products.category",
+      "fields": {
+          "name": "printed_products",
+          "friendly_name": "Printed Products"
+      }
+  },
+  {
+      "pk": 2,
+      "model": "products.category",
+      "fields": {
+          "name": "business_cards",
+          "friendly_name": "Business Cards"
+      }
+  },
+  {
+      "pk": 3,
+      "model": "products.category",
+      "fields": {
+          "name": "flyers",
+          "friendly_name": "Flyers"
+      }
+  },
+  {
+      "pk": 4,
+      "model": "products.category",
+      "fields": {
+          "name": "posters",
+          "friendly_name": "Posters"
+      }
+  },
+  {
+      "pk": 5,
+      "model": "products.category",
+      "fields": {
+          "name": "brochures",
+          "friendly_name": "Brochures"
+      }
+  },
+  {
+      "pk": 6,
+      "model": "products.category",
+      "fields": {
+          "name": "banners",
+          "friendly_name": "Banners"
+      }
+  },
+  {
+      "pk": 7,
+      "model": "products.category",
+      "fields": {
+          "name": "stickers",
+          "friendly_name": "Stickers"
+      }
+  },
+  {
+      "pk": 8,
+      "model": "products.category",
+      "fields": {
+          "name": "invitations",
+          "friendly_name": "Invitations"
+      }
+  },
+  {
+      "pk": 9,
+      "model": "products.category",
+      "fields": {
+          "name": "labels",
+          "friendly_name": "Labels"
+      }
+  },
+  {
+      "pk": 10,
+      "model": "products.category",
+      "fields": {
+          "name": "fmcg_products",
+          "friendly_name": "FMCG Products"
+      }
+  },
+  {
+      "pk": 11,
+      "model": "products.category",
+      "fields": {
+          "name": "digital_designs",
+          "friendly_name": "Digital Designs"
+      }
+  },
+  {
+      "pk": 12,
+      "model": "products.category",
+      "fields": {
+          "name": "logo_design",
+          "friendly_name": "Logo Design"
+      }
+  },
+  {
+      "pk": 13,
+      "model": "products.category",
+      "fields": {
+          "name": "social_media_graphics",
+          "friendly_name": "Social Media Graphics"
+      }
+  },
+  {
+      "pk": 14,
+      "model": "products.category",
+      "fields": {
+          "name": "digital_art",
+          "friendly_name": "Digital Art"
+      }
+  },
+  {
+      "pk": 15,
+      "model": "products.category",
+      "fields": {
+          "name": "website_banners",
+          "friendly_name": "Website Banners"
+      }
+  },
+  {
+      "pk": 16,
+      "model": "products.category",
+      "fields": {
+          "name": "custom_design_services",
+          "friendly_name": "Custom Design Services"
+      }
+  },
+  {
+      "pk": 17,
+      "model": "products.category",
+      "fields": {
+          "name": "custom_print_orders",
+          "friendly_name": "Custom Print Orders"
+      }
+  },
+  {
+      "pk": 18,
+      "model": "products.category",
+      "fields": {
+          "name": "branding_packages",
+          "friendly_name": "Branding Packages"
+      }
+  },
+  {
+      "pk": 19,
+      "model": "products.category",
+      "fields": {
+          "name": "merchandise_design",
+          "friendly_name": "Merchandise Design"
+      }
+  },
+  {
+      "pk": 20,
+      "model": "products.category",
+      "fields": {
+          "name": "print_digital_bundles",
+          "friendly_name": "Print & Digital Bundles"
+      }
+  },
+  {
+      "pk": 21,
+      "model": "products.category",
+      "fields": {
+          "name": "printed_products",
+          "subcategories": [2, 3, 4, 5, 6, 7, 8, 9, 10]
+      }
+  },
+  {
+      "pk": 22,
+      "model": "products.category",
+      "fields": {
+          "name": "digital_designs",
+          "subcategories": [12, 13, 14, 15]
+      }
+  },
+  {
+      "pk": 23,
+      "model": "products.category",
+      "fields": {
+          "name": "custom_design_services",
+          "subcategories": [17, 18, 19, 20]
+      }
+  }
+]

@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'homepage',
+    'products',
+    'jazzmin',
 ]
 
 MIDDLEWARE = [
@@ -141,3 +143,15 @@ DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+JAZZMIN_SETTINGS = {
+    "site_title": "My Admin Panel",
+    "site_header": "My Admin Dashboard",
+    "site_brand": "https://res.cloudinary.com/dvs5uituk/image/upload/c_thumb,w_200,g_face/logo_cgecxp.webp",
+    "welcome_sign": "Welcome to the Admin Panel",
+    "copyright": "2025 My Company",
+    "show_ui_builder": True,
+    "show_navigation": True,
+    "theme": "dark",
+
+}
