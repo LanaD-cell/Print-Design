@@ -1,19 +1,6 @@
 [
     {
-      "pk": 1,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp1001",
-        "name": "Business Cards",
-        "description": "High-quality printed business cards in a variety of styles and finishes.",
-        "price": 29.99,
-        "category": 1,
-        "rating": 4.8,
-        "image_url": "http://example.com/images/business-cards.jpg",
-        "image": "business-cards.jpg"
-      }
-    },
-    {
+      "id": 2,
       "pk": 2,
       "model": "products.product",
       "fields": {
@@ -28,20 +15,7 @@
       }
     },
     {
-      "pk": 3,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp1003",
-        "name": "Posters",
-        "description": "Print high-quality posters with custom designs and finishes.",
-        "price": 49.99,
-        "category": 1,
-        "rating": 4.7,
-        "image_url": "http://example.com/images/posters.jpg",
-        "image": "posters.jpg"
-      }
-    },
-    {
+      "id": 4,
       "pk": 4,
       "model": "products.product",
       "fields": {
@@ -56,6 +30,7 @@
       }
     },
     {
+      "id": 5,
       "pk": 5,
       "model": "products.product",
       "fields": {
@@ -70,20 +45,7 @@
       }
     },
     {
-      "pk": 6,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp1006",
-        "name": "Stickers",
-        "description": "Custom stickers in various shapes and sizes for branding and promotional purposes.",
-        "price": 9.99,
-        "category": 1,
-        "rating": 4.8,
-        "image_url": "http://example.com/images/stickers.jpg",
-        "image": "stickers.jpg"
-      }
-    },
-    {
+      "id": 7,
       "pk": 7,
       "model": "products.product",
       "fields": {
@@ -98,6 +60,7 @@
       }
     },
     {
+      "id": 8,
       "pk": 8,
       "model": "products.product",
       "fields": {
@@ -112,6 +75,7 @@
       }
     },
     {
+      "id": 9,
       "pk": 9,
       "model": "products.product",
       "fields": {
@@ -126,6 +90,7 @@
       }
     },
     {
+      "id": 10,
       "pk": 10,
       "model": "products.product",
       "fields": {
@@ -140,20 +105,7 @@
       }
     },
     {
-      "pk": 11,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp2002",
-        "name": "Social Media Graphics",
-        "description": "Custom social media graphics to boost your brand's online presence.",
-        "price": 99.99,
-        "category": 2,
-        "rating": 4.8,
-        "image_url": "http://example.com/images/social-media-graphics.jpg",
-        "image": "social-media-graphics.jpg"
-      }
-    },
-    {
+      "id": 12,
       "pk": 12,
       "model": "products.product",
       "fields": {
@@ -168,25 +120,12 @@
       }
     },
     {
-      "pk": 13,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp2004",
-        "name": "Website Banners",
-        "description": "Custom-designed banners for your website's promotion and branding.",
-        "price": 59.99,
-        "category": 2,
-        "rating": 4.6,
-        "image_url": "http://example.com/images/website-banners.jpg",
-        "image": "website-banners.jpg"
-      }
-    },
-    {
+      "id": 14,
       "pk": 14,
       "model": "products.product",
       "fields": {
         "sku": "pp3001",
-        "name": "Custom Print Orders",
+        "name": "Custom-print",
         "description": "Custom print orders for business cards, flyers, banners, and more.",
         "price": 99.99,
         "category": 3,
@@ -196,11 +135,12 @@
       }
     },
     {
+      "id": 15,
       "pk": 15,
       "model": "products.product",
       "fields": {
         "sku": "pp3002",
-        "name": "Branding Packages",
+        "name": "Branding",
         "description": "Comprehensive branding packages for businesses looking to build their identity.",
         "price": 299.99,
         "category": 3,
@@ -210,31 +150,18 @@
       }
     },
     {
+      "id": 16,
       "pk": 16,
       "model": "products.product",
       "fields": {
         "sku": "pp3003",
-        "name": "Merchandise Design",
+        "name": "Merchandising",
         "description": "Custom design services for merchandise such as t-shirts, mugs, and more.",
         "price": 149.99,
         "category": 3,
         "rating": 4.7,
         "image_url": "http://example.com/images/merchandise-design.jpg",
         "image": "merchandise-design.jpg"
-      }
-    },
-    {
-      "pk": 17,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp3004",
-        "name": "Print & Digital Bundles",
-        "description": "Special bundles that include both print and digital services for your business.",
-        "price": 249.99,
-        "category": 3,
-        "rating": 4.9,
-        "image_url": "http://example.com/images/print-digital-bundles.jpg",
-        "image": "print-digital-bundles.jpg"
       }
     }
   ]

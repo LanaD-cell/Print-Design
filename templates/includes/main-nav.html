@@ -1,115 +1,383 @@
-<ul class="nav justify-content-center" id="site-links">
-
-    <!-- Link for Products page -->
-    <li class="nav-item">
-        <a class="font-weight-bold nav-link" href="{% url 'products' %}" id="allproducts-link" style="color: #272640">
-            All Products
-        </a>
-    </li>
+<div class="navbar-nav w-auto mx-auto" id="site-links">
+  <ul class="navbar-nav w-auto mx-auto">
+    <!-- All Products Dropdown -->
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" id="all-products-link" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #272640">
-            Products Categories
-        </a>
-        <ul class="dropdown-menu border-0" aria-labelledby="all-products-link">
-            <!-- Printed Products Submenu -->
-            <li class="dropdown-submenu">
-                <a class="dropdown-item dropdown-toggle" href="#">Printed Products</a>
-                <ul class="dropdown-menu border-0">
-                    <li><a href="#" class="dropdown-item">Business Cards</a></li>
-                    <li><a href="#" class="dropdown-item">Flyers</a></li>
-                    <li><a href="#" class="dropdown-item">Posters</a></li>
-                    <li><a href="#" class="dropdown-item">Brochures</a></li>
-                    <li><a href="#" class="dropdown-item">Banners</a></li>
-                    <li><a href="#" class="dropdown-item">Stickers</a></li>
-                    <li><a href="#" class="dropdown-item">Invitations</a></li>
-                    <li><a href="#" class="dropdown-item">Labels</a></li>
-                    <li><a href="#" class="dropdown-item">FMCG Products</a></li>
-                </ul>
-            </li>
-            <!-- Digital Designs Submenu -->
-            <li class="dropdown-submenu">
-                <a class="dropdown-item dropdown-toggle" href="#">Digital Designs</a>
-                <ul class="dropdown-menu border-0">
-                    <li><a href="#" class="dropdown-item">Logo Design</a></li>
-                    <li><a href="#" class="dropdown-item">Social Media Graphics</a></li>
-                    <li><a href="#" class="dropdown-item">Digital Art</a></li>
-                    <li><a href="#" class="dropdown-item">Website Banners</a></li>
-                </ul>
-            </li>
-            <!-- Custom Design Services Submenu -->
-            <li class="dropdown-submenu">
-                <a class="dropdown-item dropdown-toggle" href="#">Custom Design Services</a>
-                <ul class="dropdown-menu border-0">
-                    <li><a href="#" class="dropdown-item">Custom Print Orders</a></li>
-                    <li><a href="#" class="dropdown-item">Branding Packages</a></li>
-                    <li><a href="#" class="dropdown-item">Merchandise Design</a></li>
-                    <li><a href="#" class="dropdown-item">Webservices</a></li>
-                </ul>
-            </li>
-        </ul>
+      <a
+        class="logo-font font-weight-bold nav-link mr-5 dropdown-toggle"
+        href="#"
+        id="all_products"
+        data-bs-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        All Products
+      </a>
+      <div class="dropdown-menu border-0" aria-labelledby="all-products-link">
+        <a href="#" class="dropdown-item">By Price</a>
+        <a href="#" class="dropdown-item">By Rating</a>
+        <a href="#" class="dropdown-item">By Category</a>
+        <a href="{% url 'products' %}" class="dropdown-item">All Products</a>
+      </div>
     </li>
 
+    <!-- Printed Products Dropdown -->
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="info-link" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #272640">
-            Information
+        <a
+          class="logo-font font-weight-bold nav-link mr-5 dropdown-toggle"
+          href="#"
+          id="printed_products"
+          data-bs-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Printed Products
         </a>
-        <ul class="dropdown-menu border-0" aria-labelledby="info-link">
-            <li><a href="#" class="dropdown-item">Printed ABC</a></li>
-            <li><a href="#" class="dropdown-item">FAQ</a></li>
-        </ul>
-    </li>
+        <div class="dropdown-menu border-0" aria-labelledby="printed_products">
+          <!-- Printed Products -->
+          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal5">Banners</a>
+          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal4">Brochures</a>
+          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal12">Digital Art</a>
+          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal9">FMCG Products</a>
+          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal2">Flyers</a>
+          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal7">Invitations</a>
+        </div>
+      </li>
 
-    <li class="nav-item">
-        <a class="font-weight-bold nav-link" href="#" id="contact-link" data-bs-toggle="modal" data-bs-target="#contactModal" style="color: #272640">
-            Contact
+      <li class="nav-item dropdown">
+        <a
+          class="logo-font font-weight-bold nav-link mr-5 dropdown-toggle"
+          href="#"
+          id="custom_design_services"
+          data-bs-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Custom Design Services
         </a>
-    </li>
+        <div class="dropdown-menu border-0" aria-labelledby="custom_design_services">
+          <!-- Custom Design Services -->
+            <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal15">Branding</a>
+            <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal16">Merchandising</a>
+        </div>
+      </li>
 
-    <li class="nav-item">
-        <a class="font-weight-bold nav-link" href="#" id="about-link" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #272640">
-            About
+      <li class="nav-item dropdown">
+        <a
+          class="logo-font font-weight-bold nav-link mr-5 dropdown-toggle"
+          href="#"
+          id="digital_designs"
+          data-bs-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+        >
+          Digital Designs
         </a>
-    </li>
-</ul>
+        <div class="dropdown-menu border-0" aria-labelledby="digital_designs">
+          <!-- Digital Designs -->
+          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal10">Logo Design</a>
+        </div>
+      </li>
+       <!-- Information and Contact Links -->
+    <li class="nav-item dropdown">
+        <a
+          class="nav-link dropdown-toggle"
+          href="#"
+          id="info-link"
+          role="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+          style="color: #272640"
+        >
+          Information
+        </a>
+        <div class="dropdown-menu border-0" aria-labelledby="info-link">
+          <a href="#" class="dropdown-item">Printed ABC</a>
+          <a href="#" class="dropdown-item">FAQ</a>
+        </div>
+      </li>
 
-<!-- Modal for Contact Details -->
-<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true" data-bs-backdrop="false">
+      <li class="nav-item">
+        <a
+          class="font-weight-bold nav-link"
+          href="#"
+          id="contact-link"
+          data-bs-toggle="modal"
+          data-bs-target="#contactModal"
+          style="color: #272640"
+        >
+          Contact
+        </a>
+      </li>
+
+      <li class="nav-item">
+        <a
+          class="font-weight-bold nav-link"
+          href="#"
+          id="about-link"
+          data-bs-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="false"
+          style="color: #272640"
+        >
+          About
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Modal for Product Details -->
+  <div
+    class="modal fade"
+    id="productDetailModal"
+    tabindex="-1"
+    aria-labelledby="productDetailModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productDetailModalLabel">
+            Product Details
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <img id="product-image" class="img-fluid" src="" alt="Product Image" />
+          <h3 id="product-name"></h3>
+          <p id="product-description"></p>
+          <p id="product-price"></p>
+          <p id="product-rating"></p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn"
+            style="background-color: #006466; color: white"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Contact Details -->
+  <div
+    class="modal fade"
+    id="contactModal"
+    tabindex="-1"
+    aria-labelledby="contactModalLabel"
+    aria-hidden="true"
+    data-bs-backdrop="false"
+  >
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="contactModalLabel">Contact Details</h5>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="contactModalLabel">Contact Details</h5>
+        </div>
+        <div class="modal-body">
+          <p><strong>Phone Number:</strong> +1234567890</p>
+          <p><strong>Email:</strong> contact@printanddesign.com</p>
+          <p><strong>Address:</strong> 123 Design Street, City, Country</p>
+        </div>
+        <div class="modal-footer">
+          <button
+            type="button"
+            class="btn"
+            style="background-color: #006466; color: white"
+            data-bs-dismiss="modal"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Individual Product Modals -->
+    <div class="modals-container">
+        <!-- Banners -->
+        <div class="modal fade" id="productDetailModal5" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel5" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="5">Banners</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <img src="/media/banner.jpg" alt="Banners" class="img-fluid mb-3" />
+                <p><strong>Description:</strong> Banners, sizes, textile, form</p>
+                <p><strong>Price:</strong> $59.99</p>
+                <p><strong>Rating:</strong> 4.90 stars</p>
+              </div>
             </div>
-            <div class="modal-body">
-                <p><strong>Phone Number:</strong> +1234567890</p>
-                <p><strong>Email:</strong> contact@printanddesign.com</p>
-                <p><strong>Address:</strong> 123 Design Street, City, Country</p>
+          </div>
+        </div>
+
+        <!-- Brochures -->
+        <div class="modal fade" id="productDetailModal4" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel4" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="4">Brochures</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <img src="/media/brochure.webp" alt="Brochures" class="img-fluid mb-3" />
+                <p><strong>Description:</strong> High-quality brochures</p>
+                <p><strong>Price:</strong> $39.99</p>
+                <p><strong>Rating:</strong> 4.60 stars</p>
+              </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn" style="background-color: #006466; color: white" data-bs-dismiss="modal">
-                    Close
-                </button>
+          </div>
+        </div>
+
+         <!-- Digital Art -->
+         <div class="modal fade" id="productDetailModal12" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel12" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="12">Digital Art</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="/media/digitalart.webp" alt="Brochures" class="img-fluid mb-3" />
+                    <p><strong>Description:</strong> High-quality Art</p>
+                    <p><strong>Price:</strong> $39.99</p>
+                    <p><strong>Rating:</strong> 4.60 stars</p>
+                  </div>
+                </div>
+              </div>
             </div>
+
+        <!-- FMCG -->
+        <div class="modal fade" id="productDetailModal9" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel9" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="9">FMCG Products</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="/media/fmcg.webp" alt="Brochures" class="img-fluid mb-3" />
+                    <p><strong>Description:</strong> High-quality FMCG Products</p>
+                    <p><strong>Price:</strong> $39.99</p>
+                    <p><strong>Rating:</strong> 4.60 stars</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+        <!-- Flyers -->
+        <div class="modal fade" id="productDetailModal2" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel2" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="2">Flyers</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="/media/flyer.jpg" alt="Brochures" class="img-fluid mb-3" />
+                    <p><strong>Description:</strong> High-quality flyers</p>
+                    <p><strong>Price:</strong> $39.99</p>
+                    <p><strong>Rating:</strong> 4.60 stars</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+        <!-- Invites -->
+        <div class="modal fade" id="productDetailModal7" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel7" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="7">Invitations</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="/media/invites.jpg" alt="Brochures" class="img-fluid mb-3" />
+                    <p><strong>Description:</strong> High-quality Invitations</p>
+                    <p><strong>Price:</strong> $39.99</p>
+                    <p><strong>Rating:</strong> 4.60 stars</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+        <!-- Logo -->
+        <div class="modal fade" id="productDetailModal10" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel10" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="10">Logo Design</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img src="/media/logo.png" alt="Brochures" class="img-fluid mb-3" />
+                    <p><strong>Description:</strong> High-quality brochures</p>
+                    <p><strong>Price:</strong> $39.99</p>
+                    <p><strong>Rating:</strong> 4.60 stars</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+         <!-- Branding -->
+        <div class="modal fade" id="productDetailModal15" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel15" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="15">Branding</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <img src="/media/branding.jpg" alt="Branding" class="img-fluid mb-3" />
+                <p><strong>Description:</strong> Custom branding services</p>
+                <p><strong>Price:</strong> $299.99</p>
+                <p><strong>Rating:</strong> 4.80 stars</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+          <!-- Merchandising -->
+        <div class="modal fade" id="productDetailModal16" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel16" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="16">Merchandising</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <img src="/media/merch-packages.jpg" alt="Branding" class="img-fluid mb-3" />
+                <p><strong>Description:</strong> Custom Merchandising designs</p>
+                <p><strong>Price:</strong> $299.99</p>
+                <p><strong>Rating:</strong> 4.80 stars</p>
+              </div>
+            </div>
+          </div>
         </div>
     </div>
-</div>
 
-<!-- JavaScript to Enable Submenus -->
 <script>
-    document.addEventListener("DOMContentLoaded", function () {
-        document.querySelectorAll('.dropdown-submenu > a').forEach(function (element) {
-            element.addEventListener("click", function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-                let submenu = this.nextElementSibling;
-                if (submenu.classList.contains("show")) {
-                    submenu.classList.remove("show");
-                } else {
-                    document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(function (el) {
-                        el.classList.remove("show");
-                    });
-                    submenu.classList.add("show");
-                }
-            });
+      document.addEventListener("DOMContentLoaded", function () {
+        var modals = document.querySelectorAll(".modal");
+        modals.forEach(function (modal) {
+          modal.addEventListener("click", function (event) {
+            if (event.target.classList.contains("modal")) {
+              var modalInstance = bootstrap.Modal.getInstance(modal);
+              modalInstance.hide();
+            }
+          });
         });
-    });
-</script>
+      });
+
+    </script>
