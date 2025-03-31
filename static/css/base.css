@@ -73,11 +73,30 @@ strong {
     color: #312244;
     background-color: white;
     z-index: 999;
-    padding-top: 80px;
+    padding-top: 100px;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#site-links ul {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+
+#site-links li {
+    display: flex;
+    align-items: center;
+}
+
+#site-links a {
+    text-decoration: none;
+    color: #312244;
+    padding: 10px 15px;
 }
 
 /* Logo styling inside navbar */
@@ -197,9 +216,9 @@ strong {
     padding-top: 20px;
     text-align: center;
     background-color: #272640;
-    min-height: 120px;
+    min-height: 80px;
     width: 100vw;
-    padding-top: 60px;
+    padding-top: 100px;
 }
 
 .shopnow h1 {
