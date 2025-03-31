@@ -41,78 +41,87 @@
 
   <body>
     <header class="container-fluid fixed-top">
-      <div class="row g-0" id="topnav">
-          <!-- Logo Section -->
-          <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center text-lg-left d-flex align-items-center">
-              <a href="{% url 'homepage' %}" class="nav-link main-logo-link d-flex align-items-center">
-                  <img src="https://res.cloudinary.com/dvs5uituk/image/upload/logo_cgecxp.webp" alt="Company logo" class="navbar-logo">
-                  <h2 class="my-0"><strong>Print & Design</strong></h2>
-              </a>
-          </div>
+        <div class="row g-0" id="topnav">
+            <!-- Logo Section -->
+            <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center text-lg-left d-flex align-items-center">
+                <a href="{% url 'homepage' %}" class="main-logo-link d-flex align-items-center">
+                    <img src="https://res.cloudinary.com/dvs5uituk/image/upload/logo_cgecxp.webp" alt="Company logo" class="navbar-logo">
+                    <h2 class="my-0"><strong>Print & Design</strong></h2>
+                </a>
+            </div>
 
-          <!-- Search Section -->
-          <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center">
-              <form method="GET" action="">
-                  <div class="navbar-search button w-100">
-                      <input class="form-control border-0" type="text" name="q" placeholder="Search">
-                      <button class="btn" type="submit">
-                          <i class="fas fa-search"></i>
-                      </button>
-                  </div>
-              </form>
-          </div>
+            <!-- Search Section -->
+            <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center">
+                <form method="GET" action="">
+                    <div class="navbar-search button w-100">
+                        <input class="form-control border-0" type="text" name="q" placeholder="Search">
+                        <button class="btn" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
 
-          <!-- Icons Section (Home, Profile, Cart) -->
-          <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center">
-              <ul class="icon-ul d-flex justify-content-center justify-content-lg-end my-0">
-                  <!-- Home Icon -->
-                  <li class="nav-icon mx-2 text-center">
-                    <a href="{% url 'homepage' %}" class="nav-link">
-                      <i class="fa-solid fa-house d-block"></i>
-                      <span>Home</span>
-                    </a>
-                  </li>
+            <!-- Burger Menu Button (Visible Only on Small Screens) -->
+            <div class="col-12 d-block d-lg-none text-center">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarIcons" aria-controls="navbarIcons" aria-expanded="false" aria-label="Toggle navigation">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
 
-                  <!-- Profile Dropdown -->
-                  <li class="nav-item dropdown mx-2 text-center">
-                      <a class="nav-link dropdown-toggle d-flex flex-column align-items-center" href="#" id="user-options" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                          <i class="fa-solid fa-user d-block"></i>
-                          <span style="font-weight: normal;">Profile</span>
-                      </a>
-                      <ul class="dropdown-menu border-0" aria-labelledby="user-options">
-                          {% if request.user.is_authenticated %}
-                              {% if request.user.is_superuser %}
-                                  <li><a href="#" class="dropdown-item">Product Management</a></li>
-                              {% endif %}
-                              <li><a href="#" class="dropdown-item">My Profile</a></li>
-                              <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
-                          {% else %}
-                              <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
-                              <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
-                          {% endif %}
-                      </ul>
-                  </li>
+            <!-- Icons Section (Collapsible on Small Screens, Normal on Large Screens) -->
+            <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center">
+                <div class="collapse d-lg-flex justify-content-lg-end" id="navbarIcons">
+                    <ul class="icon-ul d-flex flex-column flex-lg-row justify-content-center my-0">
+                        <!-- Home Icon -->
+                        <li class="nav-icon mx-2 text-center">
+                            <a href="{% url 'homepage' %}" class="nav-link">
+                                <i class="fa-solid fa-house d-block"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
 
-                  <!-- Cart Icon -->
-                  <li class="nav-icon mx-2">
-                      <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="#">
-                          <div class="text-center">
-                              <i class="fa-solid fa-cart-shopping"></i>
-                              <p class="my-0">
-                                  {% if grand_total %}
-                                      ${{ grand_total|floatformat:2 }}
-                                  {% else %}
-                                      €<span class="small-text">0.00</span>
-                                  {% endif %}
-                              </p>
-                          </div>
-                      </a>
-                  </li>
-              </ul>
-          </div>
-      </div>
+                        <!-- Profile Dropdown -->
+                        <li class="nav-icon dropdown mx-2 text-center">
+                            <a class="nav-link dropdown-toggle d-flex flex-column align-items-center" href="#" id="user-options" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa-solid fa-user d-block"></i>
+                                <span style="font-weight: normal;">Profile</span>
+                            </a>
+                            <ul class="dropdown-menu border-0" aria-labelledby="user-options">
+                                {% if request.user.is_authenticated %}
+                                    {% if request.user.is_superuser %}
+                                        <li><a href="#" class="dropdown-item">Product Management</a></li>
+                                    {% endif %}
+                                    <li><a href="#" class="dropdown-item">My Profile</a></li>
+                                    <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
+                                    <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
+                                {% endif %}
+                            </ul>
+                        </li>
 
-      {% include 'includes/main-nav.html' %}
+                        <!-- Cart Icon -->
+                        <li class="nav-icon mx-2 text-center">
+                            <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="#">
+                                <div class="text-center">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    <p class="my-0">
+                                        {% if grand_total %}
+                                            ${{ grand_total|floatformat:2 }}
+                                        {% else %}
+                                            €<span class="small-text">0.00</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        {% include 'includes/main-nav.html' %}
 
     </header>
 

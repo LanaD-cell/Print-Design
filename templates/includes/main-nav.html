@@ -1,8 +1,14 @@
 <ul class="nav justify-content-center" id="site-links">
 
+    <!-- Link for Products page -->
+    <li class="nav-item">
+        <a class="font-weight-bold nav-link" href="{% url 'products' %}" id="allproducts-link" style="color: #272640">
+            All Products
+        </a>
+    </li>
     <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="all-products-link" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #272640">
-            Products
+        <a class="nav-link dropdown-toggle" id="all-products-link" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #272640">
+            Products Categories
         </a>
         <ul class="dropdown-menu border-0" aria-labelledby="all-products-link">
             <!-- Printed Products Submenu -->
