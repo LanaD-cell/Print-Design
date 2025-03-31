@@ -11,7 +11,7 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/freepik__the-style-is-candid-image-photography-with-natural__21526_izzgyt.png'), url('/media/fallback-bgimg.png');
+    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/freepik__the-style-is-candid-image-photography-with-natural__21526_izzgyt.png'), url('/media/bgimg.png');
     background-size: cover;
 
     width: 100%;
@@ -86,7 +86,12 @@ strong {
     width: auto;
     margin-right: 10px;
 }
-
+.main-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
 .navbar-nav {
     display: flex;
     justify-content: center;
@@ -96,7 +101,7 @@ strong {
 #topnav a {
     text-decoration: none !important;
     display: flex;
-    align-items: center; /* Align text and logo in a row */
+    align-items: center;
 }
 
 /* Centered Search Bar */
@@ -121,7 +126,7 @@ strong {
     background: #006466;
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 15px;
     cursor: pointer;
     border-radius: 0 25px 25px 0;
     display: flex;
@@ -131,7 +136,11 @@ strong {
 /* Style for the UL element */
 .icon-ul {
     list-style: none;
-    color: #312244;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 
 .nav-icon {
@@ -139,6 +148,7 @@ strong {
     flex-direction: column;
     align-items: center;
     text-decoration: none;
+    text-align: center;
 }
 
 .nav-link {
@@ -146,9 +156,11 @@ strong {
     font-size: 15px;
     transition: color 0.3s ease;
     display: flex;
+    flex-direction: column;
     align-items: center;
     text-decoration: none;
 }
+
 /* General button styles */
 .shop-now-button,
 .btn-dark {
@@ -187,6 +199,7 @@ strong {
     background-color: #272640;
     min-height: 120px;
     width: 100vw;
+    padding-top: 60px;
 }
 
 .shopnow h1 {
@@ -225,151 +238,172 @@ strong {
 }
 
 /* ---- Media Queries ---- */
-@media (max-width: 1200px) {
-    .container {
-        max-width: 80%;
+/* For screens up to 1024px */
+@media (min-width: 769px) and (max-width: 1024px) {
+    #topnav {
+        padding: 15px;
+    }
+
+    .navbar-logo {
+        height: 60px;
+    }
+
+    .navbar-search {
+        width: 50%;
+    }
+
+    .nav-icon {
+        font-size: 18px;
+    }
+
+    .shop-now-button, .btn-dark {
+        font-size: 20px;
+        padding: 16px;
     }
 }
 
-@media (max-width: 992px) {
-    .fixed-top {
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: 0;
-        z-index: 1030;
-        padding-top: 164px;
+/* For screens up to 991px */
+@media (max-width: 991px) {
+    .shopnow {
+        padding-top: 116px;
+    }
+}
+/* For screens up to 768px */
+@media (max-width: 768px) {
+    #topnav {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+    }
+
+    .navbar-logo {
+        height: 50px;
+    }
+
+    .navbar-search {
+        width: 60%;
+    }
+
+    .icon-ul {
+        flex-wrap: nowrap;
+        justify-content: flex-end;
+    }
+
+    .nav-icon {
+        font-size: 16px;
+        margin: 0 10px;
+    }
+
+    .shop-now-button, .btn-dark {
+        font-size: 18px;
+        padding: 14px;
+    }
+
+    .shopnow {
+        padding-top: 150px;
+    }
+    #site-links {
+        padding-top: 150px;
+    }
+
+    .product-container {
+        padding-top: 100px;
+    }
+}
+
+
+/* For screens up to 425px */
+@media (max-width: 425px) {
+    .navbar-logo {
+        height: 40px;
+    }
+
+    .navbar-search {
+        width: 95%;
+    }
+
+    .nav-icon {
+        font-size: 14px;
+    }
+
+    .shop-now-button, .btn-dark {
+        font-size: 16px;
+        padding: 12px;
+    }
+    .shopnow {
+        padding-top: 180px;
+    }
+    #site-links {
+        padding-top: 150px;
+    }
+
+    .product-container {
+        padding-top: 150px;
+    }
+}
+
+/* For screens up to 320px */
+@media (max-width: 320px) {
+
+    body {
+        padding-top: 50px;
     }
 
     #topnav {
         flex-direction: column;
-        align-items: center;
-        text-align: center;
-        padding-top: 20px; /* Reduced to fit better */
-    }
-
-    .navbar-search {
-        width: 80%;
-        margin-top: 10px;
+        height: auto;
+        padding: 5px;
     }
 
     .navbar-logo {
-        height: 40px;
-        margin-right: 0;
-    }
-}
-
-@media (max-width: 768px) {
-    .navbar-links {
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-        text-align: center;
+        height: 30px;
     }
 
     .navbar-search {
-        width: 100%;
+        width: 90%;
+        margin: 5px auto;
     }
 
-    .navbar-logo {
-        height: 40px;
-        margin-bottom: 10px;
+    .navbar-search input {
+        font-size: 12px;
     }
 
-    .right-section .row {
-        flex-direction: column;
+    .navbar-search button {
+        padding: 10px;
     }
 
-    .left-section, .right-section {
-        flex: 1 1 100%;
-    }
-
-    .sidebar {
-        display: none;
-    }
-
-    .sidebar-toggle {
-        display: block;
-    }
-
-    .main-content {
-        margin-left: 0;
-    }
-
-    .sidebar.show {
-        display: block;
-    }
-}
-
-
-@media (max-width: 320px) {
-    .navbar-logo {
-        height: 40px;
-        margin-bottom: 10px;
-        margin-right: 10px;
-    }
-
-    .navbar-links {
-        flex-direction: column;
-        gap: 10px;
-        width: 100%;
-        text-align: center;
-    }
-
-    .navbar-search {
-        width: 100%;
-        margin-top: 5px;
-        display: flex;
+    .icon-ul {
+        flex-wrap: wrap;
         justify-content: center;
+        padding: 5px 0;
     }
 
-    .navbar-search input {
-        width: 100%;
-        border: none;
-        background: transparent;
-        padding: 8px 15px;
-        outline: none;
-        border-radius: 25px;
+    .nav-icon {
+        margin: 5px;
+        font-size: 12px;
     }
-
-    .navbar-links {
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 10px;
-    }
-
-    .navbar-links a {
-        font-size: 14px;
-    }
-
-    .navbar-search {
+    .nav-icon a {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        border: 1px solid #312244;
-        border-radius: 25px;
-        background: #f8f9fa;
+        text-decoration: none;
+    }
+    .shopnow {
+        padding-top: 200px;
+    }
+    .shop-now-button, .btn-dark {
+        min-width: 100%;
+        font-size: 14px;
+        padding: 10px;
     }
 
-    .navbar-search input {
-        width: 100%;
-        border: none;
-        background: transparent;
-        padding: 8px 15px;
-        outline: none;
+    #site-links {
+        padding-top: 150px;
     }
 
-    .header-container {
-        background-color: #312244;
-        width: 100% !important;
-        padding: 0;
-    }
-
-    .site-links {
-        padding-top: 100px;
-        min-height: 100%;
-    }
-
-    footer {
-        max-width: 100% !important;
+    .product-container {
+        padding-top: 250px;
     }
 }
+
