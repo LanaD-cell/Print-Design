@@ -20,7 +20,7 @@ SECRET_KEY = 'django-insecure-wu8s@_*#ydcgyano##v0ynn+72o!qeirjvo9iua6dcjp9lo54#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["print-design-d837920c6712.herokuapp.com"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "print-design-d837920c6712.herokuapp.com"]
 
 # Application definition
 INSTALLED_APPS = [
@@ -93,7 +93,10 @@ WSGI_APPLICATION = 'print_design.wsgi.application'
 
 # Database settings (default SQLite)
 DATABASES = {
-     'default': dj_database_url.config(default='postgres://localhost/mydb')
+       'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
 
 # Password validation settings
