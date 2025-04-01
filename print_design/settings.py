@@ -18,7 +18,7 @@ load_dotenv()
 SECRET_KEY = 'django-insecure-wu8s@_*#ydcgyano##v0ynn+72o!qeirjvo9iua6dcjp9lo54#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["print-design.herokuapp.com"]
 
