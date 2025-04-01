@@ -48,7 +48,7 @@ class Product(models.Model):
 
 
     def get_image(self):
-        """ Image backup for Cloudinary (not yet implemented)"""
+        """ Image backup for Cloudinary """
         if self.image_url:
             return self.image_url
         elif self.fallback_url:
