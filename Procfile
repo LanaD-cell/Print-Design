@@ -1,1 +1,1 @@
-web: gunicorn print_design.wsgi --log-file -
+web: gunicorn print_design.wsgi:application
