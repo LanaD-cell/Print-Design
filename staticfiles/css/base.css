@@ -11,14 +11,14 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/freepik__the-style-is-candid-image-photography-with-natural__21526_izzgyt.png'), url('/media/bgimg.png');
+    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/freepik__the-style-is-candid-image-photography-with-natural__21526_izzgyt.png'),
+                url('/static/images/bgimg.png') no-repeat center center;
     background-size: cover;
-
     width: 100%;
     min-height: 100vh;
     color: #272640;
     font-family: 'Figtree', sans-serif;
-    padding-top: 70px; /* Reduced for better spacing on smaller screens */
+    padding-top: 70px;
     margin: 0;
 }
 
@@ -242,7 +242,11 @@ strong {
     font-size: 15px;
 }
 
+#terms-container {
+    color: #272640;
+    text-decoration: none;
 
+}
 
 /* ---- Products ---- */
 
