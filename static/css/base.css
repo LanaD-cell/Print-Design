@@ -228,6 +228,9 @@ strong {
 .shop-now-button {
     margin-bottom: 10px;
 }
+#contactModal {
+    padding: 10px;
+}
 
 .modal-header {
     color: white;
@@ -238,6 +241,8 @@ strong {
 .dropdown-item {
     font-size: 15px;
 }
+
+
 
 /* ---- Products ---- */
 

@@ -11,7 +11,7 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/freepik__the-style-is-candid-image-photography-with-natural__21526_izzgyt.png'), url('/media/fallback-bgimg.png');
+    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/freepik__the-style-is-candid-image-photography-with-natural__21526_izzgyt.png'), url('/media/bgimg.png');
     background-size: cover;
 
     width: 100%;
@@ -73,11 +73,30 @@ strong {
     color: #312244;
     background-color: white;
     z-index: 999;
-    padding-top: 80px;
+    padding-top: 100px;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+#site-links ul {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    list-style: none;
+    margin: 0;
+}
+
+#site-links li {
+    display: flex;
+    align-items: center;
+}
+
+#site-links a {
+    text-decoration: none;
+    color: #312244;
+    padding: 10px 15px;
 }
 
 /* Logo styling inside navbar */
@@ -86,7 +105,12 @@ strong {
     width: auto;
     margin-right: 10px;
 }
-
+.main-logo-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
 .navbar-nav {
     display: flex;
     justify-content: center;
@@ -96,7 +120,7 @@ strong {
 #topnav a {
     text-decoration: none !important;
     display: flex;
-    align-items: center; /* Align text and logo in a row */
+    align-items: center;
 }
 
 /* Centered Search Bar */
@@ -121,7 +145,7 @@ strong {
     background: #006466;
     color: white;
     border: none;
-    padding: 8px 15px;
+    padding: 15px;
     cursor: pointer;
     border-radius: 0 25px 25px 0;
     display: flex;
@@ -131,7 +155,11 @@ strong {
 /* Style for the UL element */
 .icon-ul {
     list-style: none;
-    color: #312244;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
 }
 
 .nav-icon {
@@ -139,6 +167,7 @@ strong {
     flex-direction: column;
     align-items: center;
     text-decoration: none;
+    text-align: center;
 }
 
 .nav-link {
@@ -146,9 +175,11 @@ strong {
     font-size: 15px;
     transition: color 0.3s ease;
     display: flex;
+    flex-direction: column;
     align-items: center;
     text-decoration: none;
 }
+
 /* General button styles */
 .shop-now-button,
 .btn-dark {
@@ -185,8 +216,9 @@ strong {
     padding-top: 20px;
     text-align: center;
     background-color: #272640;
-    min-height: 120px;
+    min-height: 80px;
     width: 100vw;
+    padding-top: 100px;
 }
 
 .shopnow h1 {
@@ -195,6 +227,9 @@ strong {
 
 .shop-now-button {
     margin-bottom: 10px;
+}
+#contactModal {
+    padding: 10px;
 }
 
 .modal-header {
@@ -206,6 +241,8 @@ strong {
 .dropdown-item {
     font-size: 15px;
 }
+
+
 
 /* ---- Products ---- */
 
@@ -249,6 +286,12 @@ strong {
     }
 }
 
+/* For screens up to 991px */
+@media (max-width: 991px) {
+    .shopnow {
+        padding-top: 116px;
+    }
+}
 /* For screens up to 768px */
 @media (max-width: 768px) {
     #topnav {
@@ -280,6 +323,17 @@ strong {
         font-size: 18px;
         padding: 14px;
     }
+
+    .shopnow {
+        padding-top: 150px;
+    }
+    #site-links {
+        padding-top: 150px;
+    }
+
+    .product-container {
+        padding-top: 100px;
+    }
 }
 
 
@@ -297,13 +351,19 @@ strong {
         font-size: 14px;
     }
 
-    .main-content {
-        padding: 15px;
-    }
-
     .shop-now-button, .btn-dark {
         font-size: 16px;
         padding: 12px;
+    }
+    .shopnow {
+        padding-top: 180px;
+    }
+    #site-links {
+        padding-top: 150px;
+    }
+
+    .product-container {
+        padding-top: 150px;
     }
 }
 
@@ -334,7 +394,7 @@ strong {
     }
 
     .navbar-search button {
-        padding: 5px 10px;
+        padding: 10px;
     }
 
     .icon-ul {
@@ -353,15 +413,21 @@ strong {
         align-items: center;
         text-decoration: none;
     }
-
-    .main-content {
-        padding: 10px;
+    .shopnow {
+        padding-top: 200px;
     }
-
     .shop-now-button, .btn-dark {
         min-width: 100%;
         font-size: 14px;
         padding: 10px;
+    }
+
+    #site-links {
+        padding-top: 150px;
+    }
+
+    .product-container {
+        padding-top: 250px;
     }
 }
 
