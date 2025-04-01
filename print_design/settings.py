@@ -20,7 +20,7 @@ SECRET_KEY = 'django-insecure-wu8s@_*#ydcgyano##v0ynn+72o!qeirjvo9iua6dcjp9lo54#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["print-design.herokuapp.com"]
+ALLOWED_HOSTS = ["'print-design-d837920c6712.herokuapp.com"]
 
 # Application definition
 INSTALLED_APPS = [
