@@ -1,4 +1,7 @@
 import os
+import dj_database_url
+if os.path.isfile('env.py'):
+    import env
 from dotenv import load_dotenv
 from pathlib import Path
 import cloudinary
@@ -15,12 +18,16 @@ load_dotenv()
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-wu8s@_*#ydcgyano##v0ynn+72o!qeirjvo9iua6dcjp9lo54#'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = 'DEVELOPMENT' in os.environ
 
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "print-design-d837920c6712.herokuapp.com"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "print-design-d837920c6712.herokuapp.com",
+    ]
 
 # Application definition
 INSTALLED_APPS = [
@@ -91,13 +98,17 @@ LOGIN_REDIRECT_URL = '/'
 
 WSGI_APPLICATION = 'print_design.wsgi.application'
 
-# Database settings (default SQLite)
-DATABASES = {
-       'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if 'DATABASE_URL' in os.environ:
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 # Password validation settings
 AUTH_PASSWORD_VALIDATORS = [
