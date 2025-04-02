@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'homepage',
     'products',
-    'bag',
+    'cart',
+
 ]
 
 MIDDLEWARE = [
@@ -75,6 +76,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.contexts.cart_contents',
             ],
         },
     },
@@ -159,5 +161,7 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": True,
     "show_navigation": True,
     "theme": "dark",
-
 }
+
+FREE_DELIVERY_THRESHOLD = 50
+STANDARD_DELIVERY_PERCENTAGE = 10
