@@ -32,6 +32,7 @@ ALLOWED_HOSTS = [
 # Application definition
 INSTALLED_APPS = [
     'cloudinary',
+    'jazzmin',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'homepage',
     'products',
-    'jazzmin',
+    'bag',
 ]
 
 MIDDLEWARE = [
