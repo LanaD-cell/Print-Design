@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import Product, Category
+import json
+from django.conf import settings
 
 # This view is for rendering a list of all products
 def all_products(request):
@@ -72,3 +74,12 @@ def category_detail(request, category_id):
 
 def terms_and_conditions(request):
     return render(request, 'terms.html')
+
+def main_nav(request):
+    """ View to return main navigation with product data for modal """
+    json_file_path = settings.BASE_DIR / 'products.json'
+
+    with open(json_file_path) as f:
+        products = json.load(f)
+
+    return render(request, 'includes/main-nav.html', {'products': products})

@@ -207,6 +207,21 @@ strong {
 }
 
 /* ---- Footer ---- */
+#footer-container {
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+}
+footer .social-icons a {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+    font-size: 24px;
+    transition: color 0.3s ease;
+    border: none;
+}
+
+footer .social-icons a:hover {
+    color: #006466;
+}
 
 /* ---- Homepage ---- */
 .shopnow {

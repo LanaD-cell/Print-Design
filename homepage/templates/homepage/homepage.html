@@ -1,18 +1,50 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block page_header %}
-<!-- Main Header Content -->
+{% block about %}
+<div class="about-card">
+  <div class="card-body">
+    <h2 class="about-card-title" style="font-family: 'Figtree'; font-size: 2rem;">Welcome to </h2>
+    <h3 class="about-card-title fw-bold">Print & Design</h3>
+    <h4 class="card-subtitle mb-2">Where design comes to life in Pixels and Ink!</h4>
+    <p class="card-text">We are a passionate, dynamic collaboration between myself,
+      Illana, and my sister-in-law, Wilri. With years of experience in various
+      industries, we have come together to offer a unique combination of creativity,
+      technical expertise, and practical knowledge in the graphic design and printing
+      sectors.</p>
+      <br>
+      <h4 class="card-subtitle mb-2">About Us</h4>
+    <p class="card-text">At Print & Design, we specialize in delivering high-quality
+      design services and offering affordable printing solutions to businesses and
+      individuals alike. With a strong foundation in graphic design, marketing, and
+      full-stack programming, we are well-equipped to handle your design and printing
+      needs—from concept to creation.
 
-<div class="shopnow">
-  <h1 class="text-light">Where design comes to life in Pixels and Ink!</h1>
-  <div>
-    <h4>
-      <a href="{% url 'products' %}"
-        class="shop-now-button btn btn-lg rounded-1 text-uppercase py-3">
-        Shop Now!
-      </a>
-    </h4>
+      I, Illana, hold a degree in logistics, with years of experience in graphic
+      design and marketing, particularly in the fast-moving consumer goods (FMCG)
+      sector. This experience has allowed me to develop a deep understanding of
+      branding and design strategy, while honing my skills in delivering tailored
+      solutions for diverse business needs. Most recently, I earned my full-stack
+      programming qualifications, which allows us to bring more advanced,
+      tech-savvy services to the table.
+
+      Wilri, my sister-in-law, is an expert in graphic design, and her creativity
+      and artistic eye ensure that every project we take on is aesthetically
+      compelling and impactful. Together, our combined knowledge and expertise
+      give us a unique edge in providing both exceptional design services and
+      the ability to print your products at competitive pricing.
+
+      Our vision is to offer a one-stop solution for all your design and printing
+      needs. Whether you're looking to create professional branding, print marketing
+      materials, or bring your custom designs to life, we are here to make your
+      vision a reality. We strive to make quality design accessible and affordable,
+      helping you stand out in today's competitive market.
+
+      Thank you for choosing Print & Design. We look forward to collaborating
+      with you!</p>
+    <a href="/products/products/" class="btn btn-lg">Shop Now!</a>
+    <!-- Link to open the modal -->
+    <a href="#" class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us!</a>
   </div>
 </div>
 {% endblock %}
@@ -27,23 +59,23 @@
   <div class="carousel-inner">
     <div class="carousel-item active">
       <img src="/static/images/carousel3.webp" class="d-block w-100" alt="...">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>First slide label</h5>
-        <p>Some representative placeholder content for the first slide.</p>
+      <div class="carousel-caption d-none d-md-block"
+            style="background-color: #212f45; color: white; display: inline-block; padding: 10px; width: auto;">
+        <p>Actions speak almost as loud as Awards!</p>
       </div>
     </div>
     <div class="carousel-item">
       <img src="/static/images/carousel1.webp" class="d-block w-100" alt="...">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Second slide label</h5>
-        <p>Some representative placeholder content for the second slide.</p>
+      <div class="carousel-caption d-none d-md-block"
+            style="background-color: #212f45; color: white; display: inline-block; padding: 10px; width: auto;">
+        <p>As a printing company, dependant on nature for our basic product, we support various Enviromental programs.</p>
       </div>
     </div>
     <div class="carousel-item">
       <img src="/static/images/carousel2.webp" class="d-block w-100" alt="...">
-      <div class="carousel-caption d-none d-md-block">
-        <h5>Third slide label</h5>
-        <p>Some representative placeholder content for the third slide.</p>
+      <div class="carousel-caption d-none d-md-block"
+            style="color: #212f45; background-color: white; display: inline-block; padding: 10px; width: auto;">
+        <p>A wide range of quality, enviromentally freindly merchandising options available. Contact us for more Info.</p>
       </div>
     </div>
   </div>
