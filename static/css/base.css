@@ -71,7 +71,7 @@ strong {
 
 #site-links {
     color: #312244;
-    background-color:  rgba(255, 255, 255, 0.6);;
+    background-color: white;
     z-index: 999;
     padding-top: 100px;
     width: 100%;
@@ -345,6 +345,13 @@ footer .social-icons a:hover {
     z-index: -1;
 }
 
+#product-details {
+    color: white;
+    background-color: #312244;
+    padding-top: 150px;
+    width: 100%;
+    margin: 0;
+}
 /* ---- Media Queries ---- */
 /* For screens up to 1024px */
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -461,7 +468,7 @@ footer .social-icons a:hover {
     }
 
     #site-links {
-      padding-top: 120px;
+      padding-top: 150px;
     }
 
     .product-container {
@@ -470,7 +477,7 @@ footer .social-icons a:hover {
 
     .about-card {
       max-width: 100%;
-      margin: 30px auto;
+      margin-top: 280px;
       padding: 20px;
     }
     .navbar-nav {
