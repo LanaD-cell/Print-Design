@@ -1,15 +1,21 @@
-from ckeditor.widgets import CKEditorWidget
 from django.contrib import admin
-from .models import FAQ
 from django import forms
+from django_summernote.admin import SummernoteModelAdmin
+from .models import FAQ
 
+# Custom form for FAQ to use in the admin interface
 class FAQForm(forms.ModelForm):
     class Meta:
         model = FAQ
         fields = '__all__'
-    answer = forms.CharField(widget=CKEditorWidget())
 
-@admin.register(FAQ)
-class FAQAdmin(admin.ModelAdmin):
+    # Make sure 'answer' is a CharField and will use Summernote
+    answer = forms.CharField(widget=forms.Textarea)
+
+# Use Summernote for the FAQ admin
+class FAQAdmin(SummernoteModelAdmin):
+    summernote_fields = ('answer',)
     list_display = ('question',)
-    form = FAQForm
+
+# Register FAQ with the modified admin configuration
+admin.site.register(FAQ, FAQAdmin)
