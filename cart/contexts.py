@@ -1,7 +1,10 @@
+""" Functionality to display Cart context """
 from decimal import Decimal
 from django.conf import settings
 
+
 def cart_contents(request):
+    """ Create Cart contents for Cost and Delivery Calculations """
 
     cart_items = []
     total = 0
