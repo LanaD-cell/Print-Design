@@ -2,54 +2,69 @@
 {% load static %}
 
 {% block about %}
-<div class="about-card">
-  <div class="card-body">
-    <h2 class="about-card-title" style="font-family: 'Figtree'; font-size: 2rem;">Welcome to </h2>
-    <h3 class="about-card-title fw-bold">Print & Design</h3>
-    <h4 class="card-subtitle mb-2">Where design comes to life in Pixels and Ink!</h4>
-    <p class="card-text">We are a passionate, dynamic collaboration between myself,
-      Illana, and my sister-in-law, Wilri. With years of experience in various
-      industries, we have come together to offer a unique combination of creativity,
-      technical expertise, and practical knowledge in the graphic design and printing
-      sectors.</p>
-      <br>
+<div class="container about-section">
+  <div class="about-image">
+    <img src="/static/images/about-logo.png" alt="About Photo"
+      class="img-fluid mb-3" style="width: 150px; height: 200px; border: 2px solid white;">
+  </div>
+
+  <div class="about-card">
+    <div class="card-body">
+      <h4 class="card-subtitle mb-2">Where design comes to life in Pixels and Ink!</h4>
+      <p class="card-text">We are a passionate, dynamic collaboration between myself,
+        Illana, and my sister-in-law, Wilri. With years of experience in various
+        industries, we have come together to offer a unique combination of creativity,
+        technical expertise, and practical knowledge in the graphic design and printing
+        sectors.</p>
+
+      <div class="about-image-lana">
+        <img src="/static/images/profile-pic-lana.webp" alt="Team Photo"
+          class="img-fluid mb-3" style="width: 150px; height: 200px; border: 2px solid white;">
+      </div>
+
       <h4 class="card-subtitle mb-2">About Us</h4>
-    <p class="card-text">At Print & Design, we specialize in delivering high-quality
-      design services and offering affordable printing solutions to businesses and
-      individuals alike. With a strong foundation in graphic design, marketing, and
-      full-stack programming, we are well-equipped to handle your design and printing
-      needs—from concept to creation.
+      <p class="card-text">At Print & Design, we specialize in delivering high-quality
+        design services and offering affordable printing solutions to businesses and
+        individuals alike.</p>
 
-      I, Illana, hold a degree in logistics, with years of experience in graphic
-      design and marketing, particularly in the fast-moving consumer goods (FMCG)
-      sector. This experience has allowed me to develop a deep understanding of
-      branding and design strategy, while honing my skills in delivering tailored
-      solutions for diverse business needs. Most recently, I earned my full-stack
-      programming qualifications, which allows us to bring more advanced,
-      tech-savvy services to the table.
+      <div class="about-image-wilri justify-content-start" img src="/static/images/wilri-profile.webp" alt="Team Photo"
+          class="img-fluid mb-3" style="background-image: url (https://res.cloudinary.com/dvs5uituk/image/upload/wilri-profile_iqhbpi.jpg) width: 150px; height: 150px; border: 2px solid white;">
+      </div>
+        <div class="about-us-history-tabs-item">
+            <h2>The Team</h2>
+            <p>Wilri is part of our dynamic duo!</p>
+            <a href="/wilridesign.html" class="wmd-btn wmd-btn-green">
+                <span class="wmd-btn-title">Look at my portfolio!</span>
+                <span class="wmd-btn-icon"><i class="fal fa-angle-right"></i></span>
+            </a>
+        </div>
+      </div>
 
-      Wilri, my sister-in-law, is an expert in graphic design, and her creativity
-      and artistic eye ensure that every project we take on is aesthetically
-      compelling and impactful. Together, our combined knowledge and expertise
-      give us a unique edge in providing both exceptional design services and
-      the ability to print your products at competitive pricing.
+      <p class="card-text">I, Illana, hold a degree in logistics, with years of experience in graphic
+        design and marketing, particularly in the fast-moving consumer goods (FMCG)
+        sector.</p>
 
-      Our vision is to offer a one-stop solution for all your design and printing
-      needs. Whether you're looking to create professional branding, print marketing
-      materials, or bring your custom designs to life, we are here to make your
-      vision a reality. We strive to make quality design accessible and affordable,
-      helping you stand out in today's competitive market.
+      <p class="card-text">Wilri, my sister-in-law, is an expert in graphic design, and her creativity
+        and artistic eye ensure that every project we take on is aesthetically
+        compelling and impactful.</p>
 
-      Thank you for choosing Print & Design. We look forward to collaborating
-      with you!</p>
-    <a href="/products/products/" class="btn btn-lg">Shop Now!</a>
-    <!-- Link to open the modal -->
-    <a href="#" class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us!</a>
+      <p class="card-text">Our vision is to offer a one-stop solution for all your design and printing
+        needs. Whether you're looking to create professional branding, print marketing
+        materials, or bring your custom designs to life, we are here to make your
+        vision a reality.</p>
+
+      <p class="card-text">Thank you for choosing Print & Design. We look forward to collaborating
+        with you!</p>
+
+      <a href="/products/products/" class="btn btn-lg btn-primary">Shop Now!</a>
+      <a href="#" class="btn btn-lg btn-secondary" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us!</a>
+    </div>
   </div>
 </div>
 {% endblock %}
 
-{% block content %}
+
+{% block carousel %}
 <div id="carousel-hp" class="carousel slide">
   <div class="carousel-indicators">
     <button type="button" data-bs-target="#carousel-hp" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
@@ -90,4 +105,74 @@
 </div>
 {% endblock %}
 
+{% block faq %}
+<div class="main-content-section p-3-5">
+  <div class="inner-container">
+    <div class="bar-container">
+      <div class="container">
+        <div class="row"
+            style="background-color: green; color: white;
+                  font-weight: bold; border: 1px; border-radius: 4px;
+                  align-content: center;">
+          <div class="bar">
+            <ul>
+              <li class="fa-solid fa-truck-fast" style="margin: 5px;">
+                <span class="">Free delivery on orders over Free delivery on orders over €{{ free_delivery_threshold }}!</span>
+              </li>
+              <li class="fa-solid fa-award" style="margin: 5px;">
+                <span class="pl-1">Best Price Guarenteed!</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <section id="faq">
+    <div class="faq-container">
+      <div class="faq-title">
+        <h2>Frequently Asked Questions</h2>
+      </div>
+      <div class="faq-content">
+        {% if faqs %}
+          {% for faq in faqs %}
+          <div class="panel">
+            <div class="panel-heading">
+              <a href="javascript:void(0);" class="faq-question">
+                {{ faq.question }}
+                <i class="fal fa-chevron-down"></i>
+              </a>
+            </div>
+            <div class="collapse">
+              <div class="panel-body">
+                <p>{{ faq.answer }}</p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p>No FAQs available at the moment.</p>
+        {% endif %}
+      </div>
+    </div>
+  </section>
+  {% endblock %}
+  <!-- JavaScript for FAQ Toggle -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const questions = document.querySelectorAll(".faq-question");
 
+      questions.forEach((question) => {
+        question.addEventListener("click", function () {
+          let answer = this.parentElement.nextElementSibling;
+
+          // Toggle display
+          if (answer.style.display === "none" || answer.style.display === "") {
+            answer.style.display = "block";
+          } else {
+            answer.style.display = "none";
+          }
+        });
+      });
+    });
+  </script>
