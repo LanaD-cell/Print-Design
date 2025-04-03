@@ -3,11 +3,6 @@ from .models import FAQ
 
 
 def homepage(request):
-    """ View to return Homepage """
-    return render(request, 'homepage/homepage.html')
-
-
-def faq_view(request):
-    """ View to return FAQ and Answers """
+    """ View to return Homepage and FAQ """
     faqs = FAQ.objects.all()
-    return render(request, 'homepage.html', {"faq": faqs})
+    return render(request, 'homepage/homepage.html', {'faqs': faqs})

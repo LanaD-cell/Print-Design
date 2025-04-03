@@ -33,6 +33,7 @@ ALLOWED_HOSTS = [
 INSTALLED_APPS = [
     'cloudinary',
     'jazzmin',
+    'ckeditor',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -161,6 +162,20 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": True,
     "show_navigation": True,
     "theme": "dark",
+}
+
+CKEDITOR_5_CONFIGS = {
+    'default': {
+        'toolbar': [
+            ['bold', 'italic', 'underline', 'strikethrough'],
+            ['link', 'image'],
+            ['bulletedList', 'numberedList'],
+            ['blockQuote'],
+            ['undo', 'redo'],
+        ],
+        'height': 300,
+        'width': '100%',
+    },
 }
 
 FREE_DELIVERY_THRESHOLD = 50

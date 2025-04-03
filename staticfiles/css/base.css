@@ -71,7 +71,7 @@ strong {
 
 #site-links {
     color: #312244;
-    background-color:  rgba(255, 255, 255, 0.6);;
+    background-color: white;
     z-index: 999;
     padding-top: 100px;
     width: 100%;
@@ -312,6 +312,75 @@ footer .social-icons a:hover {
     background: #0056b3;
 }
 
+/* ---- About ---- */
+
+.container.about-section {
+    max-width: 900px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.about-image {
+    float: left;
+    margin: 10px 20px 10px 0;
+    border-radius: 5px;
+}
+
+.about-image img {
+    border-radius: 5px;
+    width: 150px;
+    height: auto;
+}
+
+.about-card .card-body {
+    overflow: hidden; /* Ensures text wraps properly */
+}
+
+h4.card-subtitle {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+p.card-text {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 15px;
+    text-align: justify;
+}
+
+.btn-lg {
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin: 10px;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: #6c7ae0;
+    color: white;
+    border: none;
+}
+
+.btn-primary:hover {
+    background: #5a68c0;
+}
+
+.btn-secondary {
+    background: #555;
+    color: white;
+    border: none;
+}
+
+.btn-secondary:hover {
+    background: #444;
+}
+
 /* ---- Carousel ---- */
 #carousel-hp {
     max-width: 80%;
@@ -327,6 +396,144 @@ footer .social-icons a:hover {
 
 .carousel-caption p {
     font-size: 1rem;
+}
+
+ /* Floating Bar for Seals */
+ .floating-right-bar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100vh;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: flex-start;
+    overflow-y: auto;
+    gap: 20px;
+  }
+
+  .seals-and-references-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-end;
+  }
+
+  .seals-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .seal-col {
+    display: block;
+    margin-bottom: 10px;
+    width: 150px;
+  }
+
+  .img-fluid {
+    width: 100%;
+    height: auto;
+  }
+
+/* ---- FAQ ---- */
+.collapse {
+    display: none;
+    transition: all 0.3s ease-in-out;
+  }
+
+.faq-container {
+    padding: 20px;
+    color: #272640;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+.faq-title h2 {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.faq-content {
+    margin-top: 15px;
+}
+
+.panel {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    background-color: #fff;
+}
+
+.panel-heading {
+    cursor: pointer;
+    padding: 15px;
+    background-color: #006466;
+    color: white;
+    font-size: 1.2rem;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+.panel-body {
+    display: block;
+    padding: 15px;
+    border-top: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+.faq-content a {
+    color: white;
+}
+
+.faq-content p {
+    font-size: 1rem;
+    line-height: 1.6;
+}
+
+.faq-question i {
+    transition: transform 0.3s;
+}
+
+.faq-question.active i {
+    transform: rotate(180deg);
+}
+
+.bar-container {
+    padding: 10px;
+    background-color: #006466;
+    color: white;
+    margin-bottom: 20px;
+  }
+
+.bar-container .bar ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bar-container .bar ul li {
+    font-size: 1rem;
+}
+
+.bar-container .bar ul li .fa {
+    margin-right: 8px;
+}
+
+.bar-container .bar ul li span {
+    display: inline-block;
 }
 
 /* ---- Products ---- */
@@ -345,6 +552,13 @@ footer .social-icons a:hover {
     z-index: -1;
 }
 
+#product-details {
+    color: white;
+    background-color: #312244;
+    padding-top: 150px;
+    width: 100%;
+    margin: 0;
+}
 /* ---- Media Queries ---- */
 /* For screens up to 1024px */
 @media (min-width: 769px) and (max-width: 1024px) {
@@ -461,7 +675,7 @@ footer .social-icons a:hover {
     }
 
     #site-links {
-      padding-top: 120px;
+      padding-top: 150px;
     }
 
     .product-container {
@@ -470,7 +684,7 @@ footer .social-icons a:hover {
 
     .about-card {
       max-width: 100%;
-      margin: 30px auto;
+      margin-top: 280px;
       padding: 20px;
     }
     .navbar-nav {
