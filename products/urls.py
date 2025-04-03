@@ -3,7 +3,7 @@ from .views import( product_detail,
                    all_products,
                    category_detail,
                    terms_and_conditions,
-                   main_nav)
+                   main_nav,)
 
 
 urlpatterns = [
@@ -12,4 +12,5 @@ urlpatterns = [
     path('product/<int:product_id>/', product_detail, name='product_detail'),
     path('category/<int:category_id>/', category_detail, name='category_detail'),
     path('main-nav/', main_nav, name='main_nav'),
+
 ]

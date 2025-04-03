@@ -83,3 +83,4 @@ def main_nav(request):
         products = json.load(f)
 
     return render(request, 'includes/main-nav.html', {'products': products})
+

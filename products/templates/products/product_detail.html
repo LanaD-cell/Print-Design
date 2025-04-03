@@ -88,7 +88,7 @@
                                                         <input onclick="ownDataOptionsCheck(1, this)" type="checkbox" id="own_print_data_option" name="own_print_data_option" value="1" checked="">
                                                         <span class="col-1 fa-solid fa-circle-check checked-radio"></span>
                                                         <div class="icon-col">
-                                                            <img src="/tpl/manns-partner/section_template/images/icons/service_options/icon-own-printdata.svg" class="col-1 option-icon" alt="Own Print Data">
+                                                            <i class="fa-solid fa-download col-1" alt="Own Print Data"></i>
                                                         </div>
                                                         <span class="col-8 delivery-title service-title" style="align-items: unset;text-align: unset;">
                                                             <b>Own Print Data</b>
@@ -104,13 +104,13 @@
                                         </div>
                                         <div id="online_gestalten_block" class="col-12 mb-1 option-box">
                                             <div class="delivery-option-container service-option-container parent-info">
-                                                <img src="/tpl/manns-partner/section_template/images/icons/service_options/icon-beliebt.svg" class="popular-service-icon" alt="Popular Service">
+
                                                 <div class="position-relative w-100">
                                                     <label for="online_gestalten" class="row m-0 radio-container">
                                                         <input onclick="cloudlabOption_check(1, this)" type="checkbox" id="online_gestalten" name="online_gestalten" value="1">
                                                         <span class="col-1 radio-checkmark"></span>
                                                         <div class="icon-col">
-                                                            <img src="" class="col-1 option-icon" alt="Online Design">
+                                                            <i class="fa-solid fa-palette col-1" alt="Online Design"></i>
                                                         </div>
                                                         <span class="col-8 delivery-title service-title" style="align-items: unset;text-align: unset;">
                                                             <b>Online Designer</b>
@@ -131,7 +131,7 @@
                                                         <input onclick="options_check('1', 1)" type="checkbox" id="option[1]" name="option[1]" value="1">
                                                         <span class="col-1 radio-checkmark"></span>
                                                         <div class="icon-col">
-                                                            <img src="" class="col-1 option-icon" alt="Design Service">
+                                                            <i class="fa-solid fa-paintbrush col-1" alt="Design Service"></i>
                                                         </div>
                                                         <span class="col-8 delivery-title service-title">
                                                             <b>Design Service</b>
@@ -148,15 +148,124 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="card delivery-card delivery-options-section">
+                                <div class="card-header">
+                                    Delivery Options
+                                </div>
+                                <div class="card-body">
+                                    <div class="card-text delivery-container">
 
+                                        <div id="hover_slider_STANDARD_PRODUCTION" class="option-box">
+                                            <div class="delivery-option-container parent-info">
+                                                <div class="position-relative w-100">
+                                                    <label for="feld_STANDARD_PRODUCTION" class="radio-container checked-radio-label">
+                                                        <input onclick="zusatz_check('STANDARD_PRODUCTION', 1, this);" type="radio" id="feld_STANDARD_PRODUCTION" value="STANDARD_PRODUCTION" name="deliveryOption" checked="">
+                                                        <img src="/static/images/free-shipping_6892814.svg" class="img-icon" style="width: 66px; height: 44px;">
+                                                        <span class="fas fa-check-circle checked-radio"></span>
+                                                        <span class="delivery-title checked-radio-span">
+                                                            <strong>Standard Production</strong><strong class="txt-2">(including free shipping within Germany)</strong>
+                                                        </span>
+                                                    </label>
+                                                    <a href="javascript:void(0)" data-href="popup_info.htm?t=z&amp;c=STANDARD_PRODUCTION&amp;l=0&amp;aArtikelType=D" rel="nofollow" class="info-icon-click">
+                                                        <i class="fal fa-info-circle i-info" style="display: none;"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="delivery-date-text-container mb-2">
+                                                <span class="delivery-date-text" data-delivery-date="Wednesday, 09.04.2025">
+                                                    Delivery: <span>approx. 3 working days until</span> <strong>Wednesday, 09.04.2025</strong><sup>*</sup>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div id="hover_slider_1" class="option-box">
+                                            <div class="delivery-option-container parent-info">
+                                                <div class="position-relative w-100">
+                                                    <label for="feld_1" class="radio-container">
+                                                        <input onclick="zusatz_check('1', 1, this);" type="radio" id="feld_1" value="1" name="deliveryOption">
+                                                        <img src="/static/images/fast-delivery_15930903.svg" class="img-icon" style="width: 66px; height: 44px;">
+                                                        <span class="radio-checkmark"></span>
+                                                        <span class="delivery-title unchecked-radio-span">
+                                                            <strong>Priority Production</strong><strong class="txt-2"> (including express shipping within Germany)</strong>
+                                                        </span>
+                                                    </label>
+                                                    <a href="javascript:void(0)" data-href="popup_info.htm?t=z&amp;c=1&amp;l=0&amp;aArtikelType=D" rel="nofollow" class="info-icon-click">
+                                                        <i class="fal fa-info-circle i-info" style="display: none;"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="delivery-date-text-container mb-2">
+                                                <span class="delivery-date-text" data-delivery-date="Wednesday, 09.04.2025">
+                                                    Delivery: <span>3 working days until</span> <strong>Wednesday, 09.04.2025</strong><sup>*</sup>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div id="hover_slider_21" class="option-box">
+                                            <div class="delivery-option-container parent-info">
+                                                <div class="position-relative w-100">
+                                                    <label for="feld_21" class="radio-container">
+                                                        <input onclick="zusatz_check('21', 1, this);" type="radio" id="feld_21" value="21" name="deliveryOption">
+                                                        <img src="/static/images/freepik__48_stunden_lieferung.png" class="img-icon" style="width: 66px; height: 44px;">
+                                                        <span class="radio-checkmark"></span>
+                                                        <span class="delivery-title unchecked-radio-span">
+                                                            <strong>48h Express Production</strong><strong class="txt-2"> (including express shipping within Germany)</strong>
+                                                        </span>
+                                                    </label>
+                                                    <a href="javascript:void(0)" data-href="popup_info.htm?t=z&amp;c=21&amp;l=0&amp;aArtikelType=D" rel="nofollow" class="info-icon-click">
+                                                        <i class="fal fa-info-circle i-info" style="display: none;"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="delivery-date-text-container mb-2">
+                                                <span class="delivery-date-text" data-delivery-date="Tuesday, 08.04.2025">
+                                                    Delivery: <span>2 working days until</span> <strong>Tuesday, 08.04.2025</strong><sup>*</sup>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div id="hover_slider_23" class="option-box">
+                                            <div class="delivery-option-container parent-info">
+                                                <div class="position-relative w-100">
+                                                    <label for="feld_23" class="radio-container">
+                                                        <input onclick="zusatz_check('23', 1, this);" type="radio" id="feld_23" value="23" name="deliveryOption">
+                                                        <img src="/static/images/delivery_5536526.svg" class="img-icon" style="width: 66px; height: 44px;">
+                                                        <span class="radio-checkmark"></span>
+                                                        <span class="delivery-title unchecked-radio-span">
+                                                            <strong>24h Express Production</strong><strong class="txt-2"> (including express shipping within Germany)</strong>
+                                                        </span>
+                                                    </label>
+                                                    <a href="javascript:void(0)" data-href="popup_info.htm?t=z&amp;c=23&amp;l=0&amp;aArtikelType=D" rel="nofollow" class="info-icon-click">
+                                                        <i class="fal fa-info-circle i-info" style="display: none;"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="delivery-date-text-container mb-2">
+                                                <span class="delivery-date-text" data-delivery-date="Monday, 07.04.2025">
+                                                    Delivery: <span>1 working day until</span> <strong>Monday, 07.04.2025</strong><sup>*</sup>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="delivery-caption">
+                                        <div class="del-title">Wednesday, 09.04.2025</div>
+                                        <div class="del-info">
+                                            * We will ship on time. For guaranteed delivery on <span id="selected_delivery_date">Wednesday, 09.04.2025</span>, we recommend choosing an express shipping option.
+                                            Please ensure timely payment and error-free print data submission by <b>12:00 PM</b>.
+                                        </div>
+                                    </div>
+                                    <div class="card-text"></div>
+                                </div>
+                            </div>
                             <div class="col{% if s %}-12 mt-2{% endif %}">
-                                <a href="{% url 'products' %}" class="btn btn-outline-black rounded-0 mt-5">
+                                <a href="{% url 'products' %}" class="btn rounded-1 mt-5">
                                     <span class="icon">
                                         <i class="fa-solid fa-chevron-left"></i>
                                     </span>
                                     <span class="text-uppercase">Keep Shopping</span>
                                 </a>
-                                <input type="submit" class="btn btn-black rounded-0 text-uppercase mt-5" value="Add to Bag">
+                                <input type="submit" class="btn rounded-1 text-uppercase mt-5" value="Add to Cart">
                             </div>
                             <input type="hidden" name="redirect_url" value="{{ request.path }}">
                             {% endwith %}
@@ -166,5 +275,35 @@
             </div>
         </div>
     </div>
-{% endblock %}
 
+
+<script>
+    // Handle increment and decrement of quantity
+    document.addEventListener('DOMContentLoaded', function () {
+        // Event listener for increment button
+        document.querySelectorAll('.increment-qty').forEach(function(button) {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                var inputField = document.querySelector(`#id_qty_${this.dataset.item_id}`);
+                var currentValue = parseInt(inputField.value, 10);
+                if (currentValue < 99) {  // Max limit to 99
+                    inputField.value = currentValue + 1;
+                }
+            });
+        });
+
+        // Event listener for decrement button
+        document.querySelectorAll('.decrement-qty').forEach(function(button) {
+            button.addEventListener('click', function (e) {
+                e.preventDefault();
+                var inputField = document.querySelector(`#id_qty_${this.dataset.item_id}`);
+                var currentValue = parseInt(inputField.value, 10);
+                if (currentValue > 1) {  // Min limit to 1
+                    inputField.value = currentValue - 1;
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}

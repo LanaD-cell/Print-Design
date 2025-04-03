@@ -315,7 +315,7 @@ footer .social-icons a:hover {
 /* ---- About ---- */
 
 .container.about-section {
-    max-width: 900px;
+    max-width: 1200px;
     margin: 50px auto;
     background: #fff;
     padding: 20px;
@@ -411,7 +411,7 @@ p.card-text {
     justify-content: flex-start;
     overflow-y: auto;
     gap: 20px;
-    padding-right: 30px;
+    padding-right: 150px;
   }
 
   .seals-and-references-container {
@@ -560,6 +560,16 @@ p.card-text {
     width: 100%;
     margin: 0;
 }
+
+.product-details-container,
+.de-card, .delivery-card {
+    color: #312244;
+    background-color: white;
+    width: 100%;
+    margin: 0;
+    padding: 5px;
+}
+
 /* ---- Media Queries ---- */
 /* For screens up to 1024px */
 @media (min-width: 769px) and (max-width: 1024px) {

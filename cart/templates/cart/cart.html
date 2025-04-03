@@ -22,10 +22,47 @@
 
         <div class="row">
             <div class="col">
-                {% if bag_items %}
-                    <div class="table-responsive rounded"></div>
+                {% if request.session.cart %}
+                    <div class="table-responsive rounded">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Size</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Total</th>
+                                    <th>Remove</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for cart_item_key, item in request.session.cart.items %}
+                                    <tr>
+                                        <td>{{ item.product_id }}</td>
+                                        <td>{{ item.size }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>€{{ item.price }}</td>
+                                        <td>€{{ item.quantity|multiply:item.price }}</td>
+                                        <td>
+                                            <a href="{% url 'remove_from_cart' cart_item_key %}" class="btn btn-danger">
+                                                <i class="fas fa-trash-alt"></i> Remove
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <div class="row">
+                            <div class="col">
+                                <p class="lead">Total: €{{ cart_total }}</p>
+                                <a href="{% url 'checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
+                            </div>
+                        </div>
+
+                    </div>
                 {% else %}
-                    <p class="lead mb-5">Your bag is empty.</p>
+                    <p class="lead mb-5">Your cart is empty.</p>
                     <a href="{% url 'products' %}" class="btn rounded-0 btn-lg">
                         <span class="icon">
                             <i class="fas fa-chevron-left"></i>
