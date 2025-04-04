@@ -728,92 +728,121 @@ p.card-text {
     }
 }
 
+
 /* For screens up to 320px */
 @media (max-width: 320px) {
     body {
-      padding-top: 50px;
+        padding-top: 50px !important;
     }
 
     #site-links {
-      padding-top: 150px;
+        padding-top: 100px !important;
     }
 
     .product-container {
-      padding-top: 250px;
+        padding-top: 150px !important;
     }
 
     .about-card {
-      max-width: 100%;
-      margin-top: 280px;
-      padding: 20px;
+        max-width: 100% !important;
+        margin-top: 220px !important;
+        padding: 15px !important;
     }
+
     .navbar-nav {
-      display: block !important;
-      width: 100%;
-      text-align: left;
-      padding: 0;
+        display: block !important;
+        width: 100% !important;
+        text-align: left !important;
+        padding: 0 !important;
     }
+
     .nav-item {
-      display: block !important;
-      margin: 10px 0;
-      width: 100%;
+        display: block !important;
+        margin: 8px 0 !important;
+        width: 100% !important;
     }
+
     .dropdown-menu {
-      width: 100%;
-      padding-left: 10px;
+        width: 100% !important;
+        padding-left: 10px !important;
     }
+
     .dropdown-item {
-      padding: 10px 20px;
+        padding: 8px 20px !important;
     }
+
     .btn-lg {
-      font-size: 1rem;
-      padding: 8px 12px;
+        font-size: 1rem !important;
+        padding: 8px 12px !important;
     }
+
     .modal-dialog {
-      max-width: 90%;
+        max-width: 90% !important;
     }
+
     .modal-body img {
-      width: 100%;
+        width: 100% !important;
     }
+
     #topnav {
-      flex-direction: column;
-      height: auto;
-      padding: 5px;
+        flex-direction: column !important;
+        height: auto !important;
+        padding: 5px !important;
+    }
+
+    #navbarIcons {
+        display: none !important;
+    }
+
+    #navbarIcons.collapse.show {
+        display: block !important;
     }
 
     .navbar-logo {
-      height: 30px;
+        height: 30px !important;
     }
 
     .navbar-search {
-      width: 90%;
-      margin: 5px auto;
+        width: 90% !important;
+        margin: 5px auto !important;
     }
 
     .navbar-search input {
-      font-size: 12px;
+        font-size: 12px !important;
     }
 
     .navbar-search button {
-      padding: 10px;
+        padding: 10px !important;
     }
 
     .icon-ul {
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 5px 0;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        padding: 5px 0 !important;
     }
 
     .nav-icon {
-      margin: 5px;
-      font-size: 12px;
+        margin: 5px !important;
+        font-size: 12px !important;
     }
 
     .nav-icon a {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-decoration: none;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-decoration: none !important;
     }
-  }
 
+
+    .navbar-nav .dropdown-menu {
+        width: 100% !important;
+    }
+
+    .navbar-toggler {
+        display: block !important;
+    }
+
+    .navbar-collapse {
+        display: block !important;
+    }
+}

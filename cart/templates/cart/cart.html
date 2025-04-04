@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col">
                 <hr>
-                <h2 class="logo-font mb-4">Shopping Bag</h2>
+                <h2 class="logo-font mb-4">Cart</h2>
                 <hr>
             </div>
         </div>
@@ -38,13 +38,18 @@
                             <tbody>
                                 {% for cart_item_key, item in request.session.cart.items %}
                                     <tr>
+                                        <td>
+                                            <img src="{{ item.product_image_url }}"
+                                            alt="{{ item.product_name }}"
+                                            style="width: 50px; height: auto;"></td>
                                         <td>{{ item.product_id }}</td>
                                         <td>{{ item.size }}</td>
                                         <td>{{ item.quantity }}</td>
                                         <td>€{{ item.price }}</td>
                                         <td>€{{ item.quantity|multiply:item.price }}</td>
                                         <td>
-                                            <a href="{% url 'remove_from_cart' cart_item_key %}" class="btn btn-danger">
+                                            <a href="{% url 'remove_from_cart' cart_item_key %}"
+                                                class="btn btn-danger">
                                                 <i class="fas fa-trash-alt"></i> Remove
                                             </a>
                                         </td>
@@ -56,14 +61,14 @@
                         <div class="row">
                             <div class="col">
                                 <p class="lead">Total: €{{ cart_total }}</p>
-                                <a href="{% url 'checkout' %}" class="btn btn-primary">Proceed to Checkout</a>
+                                <a href="{% url 'checkout' %}" class="btn">Proceed to Checkout</a>
                             </div>
                         </div>
 
                     </div>
                 {% else %}
                     <p class="lead mb-5">Your cart is empty.</p>
-                    <a href="{% url 'products' %}" class="btn rounded-0 btn-lg">
+                    <a href="{% url 'products' %}" class="btn rounded-1 btn-lg">
                         <span class="icon">
                             <i class="fas fa-chevron-left"></i>
                         </span>

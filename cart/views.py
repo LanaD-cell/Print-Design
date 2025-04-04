@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Cart, CartItem
 from products.models import Product
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import AnonymousUser
 
 
 @login_required
@@ -14,6 +15,10 @@ def view_cart(request):
 
 # This view is for adding the product to the cart
 def add_to_cart(request, product_id):
+    if not request.user.is_authenticated:
+        return redirect('login')
+    user_id = request.user.id
+
     """ Add a product to the cart """
     product = get_object_or_404(Product, id=product_id)
 
@@ -33,6 +38,7 @@ def add_to_cart(request, product_id):
         cart=cart,
         product=product,
         size=size,
+        user=request.user if request.user.is_authenticated else None
     )
     if created:
         cart_item.quantity = quantity

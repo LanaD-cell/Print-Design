@@ -1,5 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Product, Category
+from .models import (Product,
+                    Category,
+                    ProductSize,
+                    QuantityOption,
+                    )
 import json
 from django.conf import settings
 
@@ -65,9 +69,12 @@ def category_detail(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     products = Product.objects.filter(category=category)
 
+    quantity_options = {}
+
     context = {
         'products': products,
         'category': category,
+        'quantity_options': quantity_options,
     }
 
     return render(request, 'products/products.html', context)
@@ -84,3 +91,38 @@ def main_nav(request):
 
     return render(request, 'includes/main-nav.html', {'products': products})
 
+def get_quantity_options(request, size):
+    # Get all ProductSize objects matching the selected size
+    product_sizes = ProductSize.objects.filter(size=size)
+
+    # Get all QuantityOption objects related to the
+    # products associated with the selected size
+    quantity_options = []
+    for product_size in product_sizes:
+        options = QuantityOption.objects.filter(product=product_size.product)
+        for option in options:
+            quantity_options.append({
+                'id': option.id,
+                'quantity': option.quantity,
+                'price': option.price
+            })
+
+    return JsonResponse({'quantity_options': quantity_options})
+
+def calculate_price(request, product_id):
+    product = Product.objects.get(id=product_id)
+    selected_size = request.POST.get('product_size')
+    selected_quantity = int(request.POST.get('product_quantity'))
+
+    quantity_option = product.quantity_options.filter(
+        product_size__size=selected_size,
+        quantity=selected_quantity
+    ).first()
+
+    if quantity_option:
+        unit_price = quantity_option.price
+        total_price = unit_price * selected_quantity
+    else:
+        total_price = product.price * selected_quantity
+
+    return total_price
