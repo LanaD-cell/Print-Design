@@ -262,7 +262,7 @@ footer .social-icons a:hover {
 
 }
 
-/* ---- Login, Sign-up ---- */
+/* ---- Login, Sign-up, Logout ---- */
 .signup-card, .login-card {
     max-width: 400px;
     margin: auto;
@@ -301,7 +301,7 @@ footer .social-icons a:hover {
 .signup button, .login button {
     width: 100%;
     padding: 10px;
-    background: #007bff;
+    background: #006466;
     color: white;
     border: none;
     border-radius: 5px;
@@ -311,6 +311,55 @@ footer .social-icons a:hover {
 .signup button:hover, .login button:hover {
     background: #0056b3;
 }
+
+.logout-page {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .logout-card {
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: white;
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .logout-card-body {
+    padding: 2rem;
+    text-align: center;
+  }
+
+  .logout-card-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #272640;
+  }
+
+  .logout-card-text {
+    font-size: 16px;
+    color: #272640;
+    margin-bottom: 1.5rem;
+  }
+
+  .logout-btn {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #006466;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+  }
+
+  .logout-btn:hover {
+    background-color: red;
+  }
 
 /* ---- About ---- */
 
@@ -336,7 +385,7 @@ footer .social-icons a:hover {
 }
 
 .about-card .card-body {
-    overflow: hidden; /* Ensures text wraps properly */
+    overflow: hidden;
 }
 
 h4.card-subtitle {
