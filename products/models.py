@@ -33,10 +33,9 @@ class ProductSize(models.Model):
     """
     product = models.ForeignKey('Product', related_name='product_sizes', on_delete=models.CASCADE)
     size = models.CharField(max_length=100)
-    customer_order_quantity = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        return f'{self.size} - {self.product.name}'
+         return f"{self.product.name} - {self.size}"
 
 class QuantityOption(models.Model):
     """
@@ -47,7 +46,7 @@ class QuantityOption(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
-        return f"{self.product.name} - {self.quantity} @ (€{self.price} netto)"
+        return f"{self.product.name} - {self.quantity} @ €{self.price} netto"
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
