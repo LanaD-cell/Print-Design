@@ -1,152 +1,141 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block about %}
-<div class="container about-section">
-  <div class="row">
-    <div class="col-md-4 text-center">
-      <div class="about-image">
-        <img src="/static/images/about-logo.png" alt="About Photo"
-             class="img-fluid mb-3" style="width: 180px; height: 180px; border: 5px solid #fff;">
-      </div>
-      <h4 class="card-subtitle mb-2 text-muted">Where design comes to life in Pixels and Ink!</h4>
-    </div>
-
-    <div class="col-md-8">
-      <div class="about-card">
-        <div class="card-body">
-          <p class="card-text">We are a passionate, dynamic collaboration between myself, Illana, and my sister-in-law, Wilri. With years of experience in various industries, we have come together to offer a unique combination of creativity, technical expertise, and practical knowledge in the graphic design and printing sectors.</p>
-
-          <div class="about-team">
-            <div class="row">
-              <div class="col-6 text-center">
-                <img src="/static/images/profile-lana.png" alt="Lana" class="img-fluid mb-3" style="width: 150px; height: 150px; border: 2px solid #fff;">
-                <h5>Lana</h5>
-                <p>Creative Director</p>
-              </div>
-
-              <div class="col-6 text-center">
-                <img src="/static/images/wilri-profile.webp" alt="Wilri" class="img-fluid mb-3" style="width: 150px; height: 150px; border: 2px solid #fff;">
-                <h5>Wilri</h5>
-                <p>Graphic Designer</p>
-              </div>
-            </div>
-          </div>
-
-          <h4 class="card-subtitle mb-2 mt-4">About Us</h4>
-          <p class="card-text">At Print & Design, we specialize in delivering high-quality design services and offering affordable printing solutions to businesses and individuals alike. Whether you're looking to create professional branding, print marketing materials, or bring your custom designs to life, we are here to make your vision a reality.</p>
-
-          <p class="card-text">I, Illana, hold a degree in logistics, with years of experience in graphic design and marketing, particularly in the fast-moving consumer goods (FMCG) sector.</p>
-
-          <p class="card-text">Wilri, my sister-in-law, is an expert in graphic design, and her creativity and artistic eye ensure that every project we take on is aesthetically compelling and impactful.</p>
-
-          <p class="card-text">Thank you for choosing Print & Design. We look forward to collaborating with you!</p>
-
-          <div class="mt-4">
-            <a href="/products/products/" class="btn btn-lg btn-primary mb-2">Shop Now!</a>
-            <a href="#" class="btn btn-lg btn-secondary" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us!</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{% endblock %}
-
-
-{% block carousel %}
 <div class="container-fluid">
   <div class="row">
-    <!-- Carousel Section (taking more space) -->
-    <div class="col-11 col-md-9">
-      <div id="carousel-hp" class="carousel slide">
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#carousel-hp" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carousel-hp" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#carousel-hp" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    <div class="col-12">
+      {% block carousel %}
+      <!-- Carousel Section -->
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-11 col-md-9">
+            <div id="carousel-hp" class="carousel slide">
+              <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carousel-hp" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carousel-hp" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carousel-hp" data-bs-slide-to="2" aria-label="Slide 3"></button>
+              </div>
+              <div class="carousel-inner">
+                <div class="carousel-item active">
+                  <img src="/static/images/carousel3.webp" class="d-block w-100" alt="..." style="border: 2px solid white; border-radius: 5px;">
+                  <div class="carousel-caption d-none d-md-block bg-dark text-white p-2">
+                    <p>Actions speak almost as loud as Awards!</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="/static/images/carousel1.webp" class="d-block w-100" alt="..." style="border: 2px solid white; border-radius: 5px;">
+                  <div class="carousel-caption d-none d-md-block bg-dark text-white p-2">
+                    <p>As a printing company, dependent on nature for our basic product, we support various Environmental programs.</p>
+                  </div>
+                </div>
+                <div class="carousel-item">
+                  <img src="/static/images/carousel2.webp" class="d-block w-100" alt="..." style="border: 2px solid white; border-radius: 5px;">
+                  <div class="carousel-caption d-none d-md-block bg-white text-dark p-2">
+                    <p>A wide range of quality, environmentally friendly merchandising options available. Contact us for more info.</p>
+                  </div>
+                </div>
+              </div>
+              <button class="carousel-control-prev" type="button" data-bs-target="#carousel-hp" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+              </button>
+              <button class="carousel-control-next" type="button" data-bs-target="#carousel-hp" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+              </button>
+            </div>
+          </div>
         </div>
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="/static/images/carousel3.webp" class="d-block w-100" alt="..." style="border: 2px solid white; border-radius: 1px;">
-            <div class="carousel-caption d-none d-md-block" style="background-color: #212f45; color: white; display: inline-block; padding: 10px; width: auto;">
-              <p>Actions speak almost as loud as Awards!</p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="/static/images/carousel1.webp" class="d-block w-100" alt="..." style="border: 2px solid white; border-radius: 1px;">
-            <div class="carousel-caption d-none d-md-block" style="background-color: #212f45; color: white; display: inline-block; padding: 10px; width: auto;">
-              <p>As a printing company, dependent on nature for our basic product, we support various Environmental programs.</p>
-            </div>
-          </div>
-          <div class="carousel-item">
-            <img src="/static/images/carousel2.webp" class="d-block w-100" alt="..." style="border: 2px solid white; border-radius: 1px;">
-            <div class="carousel-caption d-none d-md-block" style="color: #212f45; background-color: white; display: inline-block; padding: 10px; width: auto;">
-              <p>A wide range of quality, environmentally friendly merchandising options available. Contact us for more Info.</p>
-            </div>
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carousel-hp" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carousel-hp" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
       </div>
+      {% endblock %}
     </div>
+  </div>
 
-    <!-- Seals Section (taking up less space) -->
-    <div class="col-md-3">
-      <div class="floating-right-bar">
-        <div class="seals-and-references-container">
-          <div class="seals-section">
-            <div class="section" id="section_1">
-              <div class="section" id="section_1">
-                <a href="" class="seal-col">
-                  <img
-                    src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal3_c49pnq.webp"
-                    alt="Seal Image 3"
-                    title="Seal 3"
-                    class="img-fluid"
-                    style="width: 150px; height: 150px"
-                    onError="this.onerror=null; this.src='/static/images/seal3.webp';">
-                </a>
-              </div>
-              <div class="section" id="section_1">
-                <a href="" class="seal-col">
-                  <img
-                    src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal2_yh205p.webp"
-                    alt="Seal Image 2"
-                    title="Seal 2"
-                    class="img-fluid"
-                    style="width: 150px; height: 150px;"
-                    onError="this.onerror=null; this.src='/static/images/seal2.webp';">
-                </a>
-              </div>
-              <div class="section" id="section_1">
-                <a href="" class="seal-col">
-                  <img
-                    src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal1_faqxth.webp"
-                    alt="Seal Image 1"
-                    title="Seal 1"
-                    class="img-fluid"
-                    style="width: 150px; height: 150px;"
-                    onError="this.onerror=null; this.src='/static/images/seal1.webp';">
-                </a>
-              </div>
-              </a>
+  <!-- Seals Section (Now evenly spaced in one row) -->
+<div class="row justify-content-center my-4">
+  {% block seals %}
+  <div class="col-12">
+    <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap">
+      <a href="">
+        <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal3_c49pnq.webp"
+             alt="Seal Image 3"
+             title="Seal 3"
+             class="img-fluid"
+             style="width: 120px; height: 120px;"
+             onError="this.onerror=null; this.src='/static/images/seal3.webp';">
+      </a>
+      <a href="">
+        <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal2_yh205p.webp"
+             alt="Seal Image 2"
+             title="Seal 2"
+             class="img-fluid"
+             style="width: 120px; height: 120px;"
+             onError="this.onerror=null; this.src='/static/images/seal2.webp';">
+      </a>
+      <a href="">
+        <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal1_faqxth.webp"
+             alt="Seal Image 1"
+             title="Seal 1"
+             class="img-fluid"
+             style="width: 120px; height: 120px;"
+             onError="this.onerror=null; this.src='/static/images/seal1.webp';">
+      </a>
+    </div>
+  </div>
+  {% endblock %}
+</div>
+
+
+  <div class="row">
+    <div class="col-12">
+      {% block about %}
+      <!-- About Section -->
+      <div class="container about-section">
+        <div class="row">
+          <div class="col-md-4 text-center">
+            <div class="about-image">
+              <img src="/static/images/about-logo.png" alt="About Photo"
+                   class="img-fluid mb-3" style="width: 180px; height: 180px; border: 5px solid #fff;">
             </div>
+            <h4 class="card-subtitle mb-2 text-muted">Where design comes to life in Pixels and Ink!</h4>
+          </div>
+          <div class="col-md-8">
+            <div class="about-card">
+              <div class="card-body">
+                <p class="card-text">We are a passionate, dynamic collaboration between myself, Illana, and my sister-in-law, Wilri. With years of experience in various industries, we have come together to offer a unique combination of creativity, technical expertise, and practical knowledge in the graphic design and printing sectors.</p>
+
+                <div class="about-team">
+                  <div class="row">
+                    <div class="col-6 text-center">
+                      <img src="/static/images/profile-lana.png" alt="Lana" class="img-fluid mb-3" style="width: 150px; height: 150px; border: 2px solid #fff;">
+                      <h5>Lana</h5>
+                      <p>Creative Director</p>
+                    </div>
+                    <div class="col-6 text-center">
+                      <img src="/static/images/wilri-profile.webp" alt="Wilri" class="img-fluid mb-3" style="width: 150px; height: 150px; border: 2px solid #fff;">
+                      <h5>Wilri</h5>
+                      <p>Graphic Designer</p>
+                    </div>
+                  </div>
+                </div>
+
+                <h4 class="card-subtitle mb-2 mt-4">About Us</h4>
+                <p class="card-text">At Print & Design, we specialize in delivering high-quality design services and offering affordable printing solutions to businesses and individuals alike.</p>
+
+                <div class="mt-4">
+                  <a href="/products/products/" class="btn btn-lg btn-primary mb-2">Shop Now!</a>
+                  <a href="#" class="btn btn-lg btn-secondary" data-bs-toggle="modal" data-bs-target="#contactModal">Contact Us!</a>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+      {% endblock %}
     </div>
   </div>
 </div>
-{% endblock %}
+
 
 {% block content %}
   <div class="main-content-section p-3-5">
