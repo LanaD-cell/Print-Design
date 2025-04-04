@@ -61,7 +61,20 @@ def all_products(request):
 # This view is for displaying individual product details
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-    return render(request, 'products/product_detail.html', {'product': product})
+
+    # Fetch all available sizes for this product
+    sizes = product.product_sizes.all()
+
+    # Fetch all available quantities for this product
+    quantity_options = product.quantity_options.all()
+
+    context = {
+        'product': product,
+        'sizes': sizes,
+        'quantity_options': quantity_options
+    }
+
+    return render(request, 'products/product_detail.html', context)
 
 # This view is for displaying products by category
 def category_detail(request, category_id):
@@ -69,12 +82,9 @@ def category_detail(request, category_id):
     category = get_object_or_404(Category, pk=category_id)
     products = Product.objects.filter(category=category)
 
-    quantity_options = {}
-
     context = {
         'products': products,
         'category': category,
-        'quantity_options': quantity_options,
     }
 
     return render(request, 'products/products.html', context)

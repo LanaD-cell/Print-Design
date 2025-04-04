@@ -35,29 +35,29 @@
                             <form method="post">
                                 {% csrf_token %}
 
-                                <!-- Size Selection -->
-                                <div class="form-group">
-                                    <label for="size_select">Select Size:</label>
-                                    <select name="size" class="select form-control" id="size_select">
-                                        <option value="">Select Size</option>
-                                        {% for size in product.product_sizes.all %}
-                                            <option value="{{ size.size }}">{{ size.size }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                            <!-- Size Selection -->
+                            <div class="form-group">
+                                <label for="size_select">Select Size:</label>
+                                <select name="size" class="select form-control" id="size_select">
+                                    <option value="">Select Size</option>
+                                    {% for size in sizes %}
+                                        <option value="{{ size.size }}">{{ size.size }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
-                                <!-- Quantity Options (Dynamically Loaded via JS) -->
-                                <div class="form-group">
-                                    <label for="quantity_select">Select Quantity:</label>
-                                    <select name="quantity_option" class="select form-control" id="quantity_select">
-                                        <option value="">Quantity</option>
-                                        {% for option in quantity_options %}
-                                            <option value="{{ option.quantity }}">
-                                                Quantity: {{ option.quantity }} - Price: €{{ option.price }}
-                                            </option>
-                                        {% endfor %}
-                                    </select>
-                                </div>
+                            <!-- Quantity Options -->
+                            <div class="form-group">
+                                <label for="quantity_select">Select Quantity:</label>
+                                <select name="quantity_option" class="select form-control" id="quantity_select">
+                                    <option value="">Select Quantity</option>
+                                    {% for option in quantity_options %}
+                                        <option value="{{ option.quantity }}">
+                                            Quantity: {{ option.quantity }} - Price: €{{ option.price }}
+                                         </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
 
                                 <h3>Additional Services:</h3>
                                 <div class="card de-card service-option-section">
@@ -292,39 +292,26 @@
 </script>
 
 <script>
-     function updateQuantityDropdown(sizeSelect) {
-        // Get the selected size value
-        var sizeValue = sizeSelect.value;
+    function updateQuantityDropdown(productSelect) {
+    // Get the selected product ID (if needed for dynamic product selection)
+    var productId = productSelect.value;
 
-        // Get the reference to the quantity select dropdown and its group
-        var quantitySelectGroup = document.getElementById('quantity_select_group');
-        var quantitySelect = document.getElementById('quantity_select');
+    // Get the reference to the quantity dropdown
+    var quantitySelect = document.getElementById('quantity_select');
+    quantitySelect.innerHTML = '';  // Clear existing options
 
-        // Hide the quantity dropdown initially
-        quantitySelectGroup.style.display = 'none';
-        quantitySelect.innerHTML = '';  // Clear previous quantity options
-
-        if (!sizeValue) {
-            return;  // Do nothing if no size is selected
-        }
-
-        // Now filter the quantity options based on the selected size
-        {% for size in product.product_sizes.all %}
-            if ("{{ size.size }}" === sizeValue) {
-                // Show the quantity dropdown
-                quantitySelectGroup.style.display = 'block';
-
-                // Loop through the quantity options for this size
-                {% for option in size.quantity_options.all %}
-                    // Create option element for each quantity option
-                    var optionElement = document.createElement('option');
-                    optionElement.value = "{{ option.quantity }}";
-                    optionElement.textContent = "Quantity: {{ option.quantity }} - Price: €{{ option.price }}";
-                    quantitySelect.appendChild(optionElement);
-                {% endfor %}
-                break;  // Stop once the matching size is found
-            }
-        {% endfor %}
-    }
+    // Make an AJAX request to fetch quantity options for the selected product
+    fetch(`/get_quantity_options/${productId}/`)
+        .then(response => response.json())
+        .then(data => {
+            // Populate the quantity dropdown with options from the response
+            data.quantity_options.forEach(option => {
+                var optionElement = document.createElement('option');
+                optionElement.value = option.id;
+                optionElement.textContent = `Quantity: ${option.quantity} - Price: €${option.price}`;
+                quantitySelect.appendChild(optionElement);
+            });
+        });
+}
 </script>
 
