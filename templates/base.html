@@ -51,7 +51,7 @@
             </div>
 
             <!-- Search Section -->
-            <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center">
+            <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center" id="searchbar">
                 <form method="GET" action="{% url 'products' %}">
                     <div class="navbar-search button w-100">
                         <input class="form-control border-0" type="text" name="q" placeholder="Search">
@@ -62,63 +62,88 @@
                 </form>
             </div>
 
-            <!-- Icons Section (Always aligned horizontally) -->
-            <div class="col-12 col-lg-4 my-auto py-1 py-lg-0 text-center">
-                <ul class="icon-ul d-flex justify-content-center align-items-center my-0">
-                    <!-- Home Icon -->
-                    <li class="nav-icon mx-2 text-center">
-                        <a href="{% url 'homepage' %}" class="nav-link">
-                            <i class="fa-solid fa-house d-block"></i>
-                            <span>Home</span>
-                        </a>
-                    </li>
+            <!-- Navbar Section (Collapsible on Small Screens) -->
+            <div class="col-12 col-lg-4 my-auto text-center text-lg-right">
+                <nav class="navbar navbar-expand-lg navbar-light">
+                    <!-- Burger Icon Button for Small Screens -->
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#navbarNav" aria-controls="navbarNav"
+                            aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
 
-                    <!-- Profile Dropdown -->
-                    <li class="nav-icon dropdown mx-2 text-center">
-                        <a class="nav-link dropdown-toggle d-flex flex-column align-items-center" href="#" id="user-options" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-user d-block"></i>
-                            <span style="font-weight: normal;">Profile</span>
-                        </a>
-                        <ul class="dropdown-menu border-0" aria-labelledby="user-options">
-                            {% if request.user.is_authenticated %}
-                                {% if request.user.is_superuser %}
-                                    <li><a href="#" class="dropdown-item">Product Management</a></li>
-                                {% endif %}
-                                <li><a href="#" class="dropdown-item">My Profile</a></li>
-                                <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
-                            {% else %}
-                                <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
-                                <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
-                            {% endif %}
-                        </ul>
-                    </li>
-
-                    <!-- Cart Icon -->
-                    <li class="nav-icon mx-2 text-center">
-                        <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="{% url 'view_cart' %}">
-                            <div class="text-center">
-                                <i class="fa-solid fa-cart-shopping"></i>
-                                <p class="my-0">
-                                    {% if grand_total %}
-                                        ${{ grand_total|floatformat:2 }}
+                    <!-- Icons Section (Collapsible on Small Screens) -->
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav d-flex justify-content-center align-items-center mx-auto">
+                            <!-- Home Icon -->
+                            <li class="nav-item mx-2 text-center">
+                                <a href="{% url 'homepage' %}" class="nav-link">
+                                    <i class="fa-solid fa-house d-block"></i>
+                                    <span>Home</span>
+                                </a>
+                            </li>
+                            <!-- Profile Dropdown -->
+                            <li class="nav-item dropdown mx-2 text-center">
+                                <a class="nav-link dropdown-toggle d-flex flex-column align-items-center"
+                                   href="#" id="user-options" role="button"
+                                   data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="fa-solid fa-user d-block"></i>
+                                    <span style="font-weight: normal;">Profile</span>
+                                </a>
+                                <ul class="dropdown-menu border-0" aria-labelledby="user-options">
+                                    {% if request.user.is_authenticated %}
+                                        {% if request.user.is_superuser %}
+                                            <li><a href="#" class="dropdown-item">Product Management</a></li>
+                                        {% endif %}
+                                        <li><a href="#" class="dropdown-item">My Profile</a></li>
+                                        <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
                                     {% else %}
-                                        €<span class="small-text">0.00</span>
+                                        <li><a href="{% url 'account_signup' %}" class="dropdown-item">Register</a></li>
+                                        <li><a href="{% url 'account_login' %}" class="dropdown-item">Login</a></li>
                                     {% endif %}
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+                                </ul>
+                            </li>
 
-        {% include 'includes/main-nav.html' %}
-        <div id="delivery-banner" class="row text-center">
-            <div class="col" style="color: white; background-color: #212f45;">
-                <h4 class="logo-font my-1">Free delivery on orders over €{{ free_delivery_threshold }}!</h4>
-            </div>
+
+                        <!-- Contact Links -->
+                        <li class="nav-link">
+                            <a class="font-weight-bold nav-link" href="#"
+                                    id="contact-link"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#contactModal"
+                                    style="color: #272640">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <span style="font-weight: normal;">Contact</span>
+                            </a>
+                        </li>
+
+                        <!-- Cart Icon -->
+                        <li class="nav-link mx-2 text-center">
+                            <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="{% url 'view_cart' %}">
+                                <div class="text-center">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    <p class="my-0">
+                                        {% if grand_total %}
+                                            ${{ grand_total|floatformat:2 }}
+                                        {% else %}
+                                            €<span class="small-text">0.00</span>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
         </div>
-    </header>
+    </div>
+    {% include "includes/main-nav.html" %}
+    <div id="delivery-banner" class="row text-center">
+      <div class="col-12" style="color: white; background-color: #212f45;">
+        <h4 class="logo-font my-1">Free delivery on orders over €{{ free_delivery_threshold }}!</h4>
+      </div>
+    </div>
+</header>
 
     <div class="main-content">
         {% if messages %}
@@ -158,22 +183,10 @@
                 </div>
                 <div class="col-12 col-md-6 text-center">
                     <!-- Delivery Partners Section -->
-                    <h5>Our Delivery Partners</h5>
+                    <h5>Our Delivery Partner</h5>
                     <div class="social-icons">
                         <a href="https://www.facebook.com" target="_blank" class="text-dark mx-3">
-                            <i class="fab fa-facebook-f"></i>
-                        </a>
-                        <a href="https://www.x.com" target="_blank" class="text-dark mx-3">
-                            <i class="fab fa-x"></i>
-                        </a>
-                        <a href="https://www.instagram.com" target="_blank" class="text-dark mx-3">
-                            <i class="fab fa-instagram"></i>
-                        </a>
-                        <a href="https://www.linkedin.com" target="_blank" class="text-dark mx-3">
-                            <i class="fab fa-linkedin-in"></i>
-                        </a>
-                        <a href="https://www.youtube.com" target="_blank" class="text-dark mx-3">
-                            <i class="fab fa-youtube"></i>
+                          <i class="fa-brands fa-dhl" style="font-size: 50px;"></i>
                         </a>
                     </div>
                 </div>
@@ -186,10 +199,165 @@
         </div>
     </footer>
 
+
+    <!-- Modal for Product Details -->
+  <div class="modal fade"
+  id="productDetailModal"
+  tabindex="-1"
+  aria-labelledby="productDetailModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productDetailModalLabel">
+          Product Details
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <img id="product-image" class="img-fluid" src="" alt="Product Image" />
+        <h3 id="product-name"></h3>
+        <p id="product-description"></p>
+        <p id="product-price"></p>
+        <p id="product-rating"></p>
+      </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn"
+          style="background-color: #006466; color: white"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal for Contact Details -->
+<div
+  class="modal fade"
+  id="contactModal"
+  tabindex="-1"
+  aria-labelledby="contactModalLabel"
+  aria-hidden="true"
+  data-bs-backdrop="false"
+>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="contactModalLabel">Contact Details</h5>
+      </div>
+      <div class="modal-body">
+        <p><strong>Phone Number:</strong> +1234567890</p>
+        <p><strong>Email:</strong> contact@printanddesign.com</p>
+        <p><strong>Address:</strong> 123 Design Street, City, Country</p>
+
+        <form class="row g-3">
+          <div class="col-md-4">
+            <label for="validationDefault01" class="form-label">First name</label>
+            <input type="text" class="form-control" id="validationDefault01" required>
+          </div>
+          <div class="col-md-4">
+            <label for="validationDefault02" class="form-label">Last name</label>
+            <input type="text" class="form-control" id="validationDefault02" required>
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlInput1" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
+          </div>
+          <div class="mb-3">
+            <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+          </div>
+          <div class="col-12">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
+                <label class="form-check-label" for="invalidCheck2">
+                    Agree to <a href="{% url 'terms' %}" target="_blank">terms and conditions</a>
+                </label>
+            </div>
+          </div>
+          <div class="col-12">
+            <button class="btn btn-primary" type="submit">Submit form</button>
+          </div>
+        </form>
+    </div>
+      <div class="modal-footer">
+        <button
+          type="button"
+          class="btn"
+          style="background-color: #006466; color: white"
+          data-bs-dismiss="modal"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
     <!-- Bootstrap Bundle JS (Includes Popper) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
     <!-- Summernote -->
     <script src="{% static 'summernote/summernote-bs4.min.js' %}"></script>
+
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        console.log("Dropdown setup initialized");
+
+  // Handle dropdown toggle for submenus
+  const dropdownSubmenus = document.querySelectorAll('.dropdown-submenu > a');
+
+  dropdownSubmenus.forEach(submenu => {
+    submenu.addEventListener('click', function (e) {
+      e.preventDefault();  // Prevent default link behavior
+      const submenuMenu = this.nextElementSibling;  // Get the corresponding dropdown menu (<ul>)
+
+      // Toggle the submenu visibility
+      if (submenuMenu.classList.contains('show')) {
+        submenuMenu.classList.remove('show');  // If open, close it
+      } else {
+        // Close any other open submenus
+        document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(menu => {
+          menu.classList.remove('show');
+        });
+        submenuMenu.classList.add('show');  // Open the clicked submenu
+      }
+    });
+  });
+
+  // Close all dropdowns when clicking outside
+  document.addEventListener('click', function (e) {
+    if (!e.target.closest('.dropdown-submenu') && !e.target.closest('.dropdown-menu')) {
+      document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(menu => {
+        menu.classList.remove('show');
+      });
+    }
+  });
+
+  // Handle modal close behavior when clicking outside modal content
+  document.querySelectorAll(".modal").forEach(modal => {
+    modal.addEventListener("click", event => {
+      if (event.target.classList.contains("modal")) {
+        const modalInstance = bootstrap.Modal.getInstance(modal);
+        if (modalInstance) modalInstance.hide();
+      }
+    });
+  });
+});
+</script>
+
     {% block scripts %}{% endblock %}
   </body>
 </html>
