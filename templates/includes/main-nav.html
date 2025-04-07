@@ -1,98 +1,49 @@
 <div class="navbar-nav w-auto mx-auto" id="site-links">
   <ul class="navbar-nav w-auto mx-auto">
-    <!-- All Products Dropdown -->
+    <!-- Products & Services Dropdown -->
     <li class="nav-item dropdown">
       <a
         class="font-weight-bold nav-link mr-5 dropdown-toggle"
         href="#"
-        id="all_products"
+        id="products_services"
         data-bs-toggle="dropdown"
         aria-haspopup="true"
         aria-expanded="false"
       >
-        All Products
+        Products & Services
       </a>
-      <div class="dropdown-menu border-0" aria-labelledby="all-products-link">
+      <div class="dropdown-menu border-0" aria-labelledby="products_services">
+        <h5 dropdown-header>Products by Category</h5>
         <a href="{% url 'products' %}?sort=price&direction=asc" class="dropdown-item">By Price</a>
         <a href="{% url 'products' %}?sort=rating&direction=desc" class="dropdown-item">By Rating</a>
         <a href="{% url 'products' %}?sort=category&direction=asc" class="dropdown-item">By Category</a>
         <a href="{% url 'products' %}" class="dropdown-item">All Products</a>
+        <div class="dropdown-divider"></div>
+
+
+        <!-- Printed Products Dropdown -->
+        <h5 class="dropdown-header">Printed Products</h5>
+        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal5">Banners</a>
+        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal4">Brochures</a>
+        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal12">Digital Art</a>
+        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal9">FMCG Products</a>
+        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal2">Flyers</a>
+        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal7">Invitations</a>
+        <div class="dropdown-divider"></div>
+
+
+        <!-- Custom Design Services -->
+        <h5 class="dropdown-header">Custom Design Services</h5>
+        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal15">Branding</a>
+        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal16">Merchandising</a>
+        <div class="dropdown-divider"></div>
+
+
+        <!-- Digital Designs -->
+        <h5 class="dropdown-header">Digital Designs</h5>
+        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal10">Logo Design</a>
       </div>
     </li>
-
-    <!-- Printed Products Dropdown -->
-    <li class="nav-item dropdown">
-        <a
-          class="font-weight-bold nav-link mr-5 dropdown-toggle"
-          href="#"
-          id="printed_products"
-          data-bs-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          Printed Products
-        </a>
-        <div class="dropdown-menu border-0" aria-labelledby="printed_products">
-          <!-- Printed Products -->
-          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal5">Banners</a>
-          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal4">Brochures</a>
-          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal12">Digital Art</a>
-          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal9">FMCG Products</a>
-          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal2">Flyers</a>
-          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal7">Invitations</a>
-        </div>
-      </li>
-
-      <li class="nav-item dropdown">
-        <a
-          class="font-weight-bold nav-link mr-5 dropdown-toggle"
-          href="#"
-          id="custom_design_services"
-          data-bs-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          Custom Design Services
-        </a>
-        <div class="dropdown-menu border-0" aria-labelledby="custom_design_services">
-          <!-- Custom Design Services -->
-            <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal15">Branding</a>
-            <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal16">Merchandising</a>
-        </div>
-      </li>
-
-      <li class="nav-item dropdown">
-        <a
-          class="font-weight-bold nav-link mr-5 dropdown-toggle"
-          href="#"
-          id="digital_designs"
-          data-bs-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          Digital Designs
-        </a>
-        <div class="dropdown-menu border-0" aria-labelledby="digital_designs">
-          <!-- Digital Designs -->
-          <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal10">Logo Design</a>
-        </div>
-      </li>
-
-       <!-- Contact Links -->
-      <li class="nav-item">
-        <a
-          class="font-weight-bold nav-link"
-          href="#"
-          id="contact-link"
-          data-bs-toggle="modal"
-          data-bs-target="#contactModal"
-          style="color: #272640"
-        >
-          Contact
-        </a>
-      </li>
-    </ul>
-  </div>
 
   <!-- Modal for Product Details -->
   <div
@@ -136,68 +87,7 @@
     </div>
   </div>
 
-  <!-- Modal for Contact Details -->
-  <div
-    class="modal fade"
-    id="contactModal"
-    tabindex="-1"
-    aria-labelledby="contactModalLabel"
-    aria-hidden="true"
-    data-bs-backdrop="false"
-  >
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="contactModalLabel">Contact Details</h5>
-        </div>
-        <div class="modal-body">
-          <p><strong>Phone Number:</strong> +1234567890</p>
-          <p><strong>Email:</strong> contact@printanddesign.com</p>
-          <p><strong>Address:</strong> 123 Design Street, City, Country</p>
 
-          <form class="row g-3">
-            <div class="col-md-4">
-              <label for="validationDefault01" class="form-label">First name</label>
-              <input type="text" class="form-control" id="validationDefault01" required>
-            </div>
-            <div class="col-md-4">
-              <label for="validationDefault02" class="form-label">Last name</label>
-              <input type="text" class="form-control" id="validationDefault02" required>
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlInput1" class="form-label">Email address</label>
-              <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-            </div>
-            <div class="mb-3">
-              <label for="exampleFormControlTextarea1" class="form-label">Example textarea</label>
-              <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
-            </div>
-            <div class="col-12">
-              <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
-                  <label class="form-check-label" for="invalidCheck2">
-                      Agree to <a href="{% url 'terms' %}" target="_blank">terms and conditions</a>
-                  </label>
-              </div>
-            </div>
-            <div class="col-12">
-              <button class="btn btn-primary" type="submit">Submit form</button>
-            </div>
-          </form>
-      </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn"
-            style="background-color: #006466; color: white"
-            data-bs-dismiss="modal"
-          >
-            Close
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- Individual Product Modals -->
     <div class="modals-container">
         <!-- Banners -->
