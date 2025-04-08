@@ -27,26 +27,32 @@ class Category(models.Model):
     def get_friendly_name(self):
         return self.friendly_name
 
+
 class ProductSize(models.Model):
     """
     Add Sizes and Quantities for each product
     """
-    product = models.ForeignKey('Product', related_name='product_sizes', on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        'Product', related_name='product_sizes', on_delete=models.CASCADE)
     size = models.CharField(max_length=100)
 
     def __str__(self):
-         return f"{self.product.name} - {self.size}"
+        return f"{self.product.name} - {self.size}"
+
 
 class QuantityOption(models.Model):
     """
-    Stores predefined quantity options and their prices, associated with a product size.
+    Stores predefined quantity options and their
+    prices, associated with a product size.
     """
-    product = models.ForeignKey('Product', related_name='quantity_options', on_delete=models.CASCADE)
+    product = models.ForeignKey(
+        'Product', related_name='quantity_options', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return f"{self.product.name} - {self.quantity} @ €{self.price} netto"
+
 
 class Product(models.Model):
     id = models.AutoField(primary_key=True)
@@ -67,10 +73,8 @@ class Product(models.Model):
     quantities = models.JSONField(default=list, blank=True)
     additional_services = models.JSONField(default=list, blank=True)
 
-
     def __str__(self):
         return str(self.name)
-
 
     def get_image(self):
         """ Image backup for Cloudinary """
