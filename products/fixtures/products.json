@@ -1,83 +1,271 @@
 [
-    {
-      "id": 2,
-      "pk": 2,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp1002",
-        "name": "Flyers",
-        "description": "Custom printed flyers to promote your business or event.",
-        "price": 19.99,
-        "category": 1,
-        "rating": 4.5,
-        "image_url": "http://example.com/images/flyers.jpg",
-        "image": "flyers.jpg"
-      }
-    },
-    {
-      "id": 4,
-      "pk": 4,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp1004",
-        "name": "Brochures",
-        "description": "Custom designed brochures to showcase your business or products.",
-        "price": 39.99,
-        "category": 1,
-        "rating": 4.6,
-        "image_url": "http://example.com/images/brochures.jpg",
-        "image": "brochures.jpg"
-      }
-    },
-    {
-      "id": 5,
-      "pk": 5,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp1005",
-        "name": "Banners",
-        "description": "Custom printed banners for advertising events, promotions, and more.",
-        "price": 59.99,
-        "category": 1,
-        "rating": 4.9,
-        "image_url": "http://example.com/images/banners.jpg",
-        "image": "banners.jpg"
-      }
-    },
-    {
-      "id": 7,
-      "pk": 7,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp1007",
-        "name": "Invitations",
-        "description": "Cards in many formats: from DIN A8 to DIN long and up to DIN A5,
-                        Various folds and paper types for personalized invitations,
-                        Available in both large and small quantities (starting from 10 pieces),
-                        Great finishes such as UV coating, scented varnish, or glitter varnish,
-                        Professional printing, affordable prices, and free shipping",
-        "price": 19.99,
-        "category": 1,
-        "rating": 4.7,
-        "image_url": "http://example.com/images/invitations.jpg",
-        "image": "invitations.jpg"
-      }
-    },
-    {
-      "id": 8,
-      "pk": 8,
-      "model": "products.product",
-      "fields": {
-        "sku": "pp1008",
-        "name": "Labels",
-        "description": "Custom labels in various sizes and shapes for products, packages, and branding.",
-        "price": 14.99,
-        "category": 1,
-        "rating": 4.6,
-        "image_url": "http://example.com/images/labels.jpg",
-        "image": "labels.jpg"
-      }
-    },
+  {
+    "id": 2,
+    "pk": 2,
+    "model": "products.product",
+    "fields": {
+      "sku": "pp1002",
+      "name": "Flyers",
+      "description": "Custom printed flyers to promote your business or event.",
+      "price": 19.99,
+      "category": 1,
+      "rating": 4.5,
+      "image_url": "http://example.com/images/flyers.jpg",
+      "image": "flyers.jpg",
+      "sizes": [{"size": "A3", "price": 19.99}, {"size": "A4", "price": 15.00}],
+      "quantities": [{"quantity": 100, "price": 21.45}, {"quantity": 200, "price": 40.90}],
+      "additional_services": [
+        {
+          "service": "Own Print Data Upload",
+          "description": "Upload your own print data in the shopping cart or after completing the order.",
+          "price": 0.00
+        },
+        {
+          "service": "Online Designer",
+          "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+          "price": 0.00
+        },
+        {
+          "service": "Design Service",
+          "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+          "price": 40.00
+        },
+        {
+          "service": "Standard Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+          "price": 0.00
+        },
+        {
+          "service": "Priority Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+          "price": 15.00
+        },
+        {
+          "service": "48h Express Production",
+          "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+          "price": 25.00
+        },
+        {
+          "service": "24h Express Production",
+          "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+          "price": 35.00
+        }
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "pk": 4,
+    "model": "products.product",
+    "fields": {
+      "sku": "pp1004",
+      "name": "Brochures",
+      "description": "Custom designed brochures to showcase your business or products.",
+      "price": 39.99,
+      "category": 1,
+      "rating": 4.6,
+      "image_url": "http://example.com/images/brochures.jpg",
+      "image": "brochures.jpg",
+      "sizes": [{"size": "A3", "price": 39.99}, {"size": "A4", "price": 35.00}],
+      "quantities": [{"quantity": 100, "price": 42.00}, {"quantity": 250, "price": 80.00}],
+      "additional_services": [
+        {
+          "service": "Own Print Data Upload",
+          "description": "Upload your own print data in the shopping cart or after completing the order.",
+          "price": 0.00
+        },
+        {
+          "service": "Online Designer",
+          "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+          "price": 0.00
+        },
+        {
+          "service": "Design Service",
+          "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+          "price": 50.00
+        },
+        {
+          "service": "Standard Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+          "price": 0.00
+        },
+        {
+          "service": "Priority Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+          "price": 15.00
+        },
+        {
+          "service": "48h Express Production",
+          "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+          "price": 25.00
+        },
+        {
+          "service": "24h Express Production",
+          "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+          "price": 35.00
+        }
+      ]
+    }
+  },
+  {
+    "id": 5,
+    "pk": 5,
+    "model": "products.product",
+    "fields": {
+      "sku": "pp1005",
+      "name": "Banners",
+      "description": "Custom printed banners for advertising events, promotions, and more.",
+      "price": 59.99,
+      "category": 1,
+      "rating": 4.9,
+      "image_url": "http://example.com/images/banners.jpg",
+      "image": "banners.jpg",
+      "sizes": [{"size": "3x6 ft", "price": 59.99}, {"size": "4x8 ft", "price": 79.99}],
+      "quantities": [{"quantity": 10, "price": 100.00}, {"quantity": 50, "price": 450.00}],
+      "additional_services": [
+        {
+          "service": "Own Print Data Upload",
+          "description": "Upload your own print data in the shopping cart or after completing the order.",
+          "price": 0.00
+        },
+        {
+          "service": "Online Designer",
+          "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+          "price": 0.00
+        },
+        {
+          "service": "Design Service",
+          "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+          "price": 80.00
+        },
+        {
+          "service": "Standard Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+          "price": 0.00
+        },
+        {
+          "service": "Priority Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+          "price": 15.00
+        },
+        {
+          "service": "48h Express Production",
+          "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+          "price": 25.00
+        },
+        {
+          "service": "24h Express Production",
+          "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+          "price": 35.00
+        }
+      ]
+    }
+  },
+  {
+    "id": 7,
+    "pk": 7,
+    "model": "products.product",
+    "fields": {
+      "sku": "pp1007",
+      "name": "Invitations",
+      "description": "Cards in many formats: from DIN A8 to DIN long and up to DIN A5, Various folds and paper types for personalized invitations, Available in both large and small quantities (starting from 10 pieces), Great finishes such as UV coating, scented varnish, or glitter varnish, Professional printing, affordable prices, and free shipping",
+      "price": 19.99,
+      "category": 1,
+      "rating": 4.7,
+      "image_url": "http://example.com/images/invitations.jpg",
+      "image": "invitations.jpg",
+      "sizes": [{"size": "A5", "price": 19.99}, {"size": "A4", "price": 29.99}],
+      "quantities": [{"quantity": 100, "price": 25.99}, {"quantity": 200, "price": 45.99}],
+      "additional_services": [
+        {
+          "service": "Own Print Data Upload",
+          "description": "Upload your own print data in the shopping cart or after completing the order.",
+          "price": 0.00
+        },
+        {
+          "service": "Online Designer",
+          "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+          "price": 0.00
+        },
+        {
+          "service": "Design Service",
+          "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+          "price": 40.00
+        },
+        {
+          "service": "Standard Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+          "price": 0.00
+        },
+        {
+          "service": "Priority Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+          "price": 15.00
+        },
+        {
+          "service": "48h Express Production",
+          "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+          "price": 25.00
+        },
+        {
+          "service": "24h Express Production",
+          "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+          "price": 35.00
+        }
+      ]
+    }
+  },
+  {
+    "id": 8,
+    "pk": 8,
+    "model": "products.product",
+    "fields": {
+      "sku": "pp1008",
+      "name": "Labels",
+      "description": "Custom labels in various sizes and shapes for products, packages, and branding.",
+      "price": 14.99,
+      "category": 1,
+      "rating": 4.6,
+      "image_url": "http://example.com/images/labels.jpg",
+      "image": "labels.jpg",
+      "sizes": [{"size": "Small", "price": 14.99}, {"size": "Large", "price": 24.99}],
+      "quantities": [{"quantity": 500, "price": 45.00}, {"quantity": 1000, "price": 80.00}],
+      "additional_services": [
+        {
+          "service": "Own Print Data Upload",
+          "description": "Upload your own print data in the shopping cart or after completing the order.",
+          "price": 0.00
+        },
+        {
+          "service": "Online Designer",
+          "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+          "price": 0.00
+        },
+        {
+          "service": "Design Service",
+          "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+          "price": 30.00
+        },
+        {
+          "service": "Standard Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+          "price": 0.00
+        },
+        {
+          "service": "Priority Production",
+          "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+          "price": 15.00
+        },
+        {
+          "service": "48h Express Production",
+          "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+          "price": 25.00
+        },
+        {
+          "service": "24h Express Production",
+          "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+          "price": 35.00
+        },
     {
       "id": 9,
       "pk": 9,
@@ -90,7 +278,44 @@
         "category": 1,
         "rating": 4.4,
         "image_url": "http://example.com/images/fmcg-products.jpg",
-        "image": "fmcg-products.jpg"
+        "image": "fmcg-products.jpg",
+        "additional_services": [
+          {
+            "service": "Own Print Data Upload",
+            "description": "Upload your own print data in the shopping cart or after completing the order.",
+            "price": 0.00
+          },
+          {
+            "service": "Online Designer",
+            "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+            "price": 0.00
+          },
+          {
+            "service": "Design Service",
+            "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+            "price": 40.00
+          },
+          {
+            "service": "Standard Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+            "price": 0.00
+          },
+          {
+            "service": "Priority Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+            "price": 15.00
+          },
+          {
+            "service": "48h Express Production",
+            "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+            "price": 25.00
+          },
+          {
+            "service": "24h Express Production",
+            "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+            "price": 35.00
+          }
+        ]
       }
     },
     {
@@ -105,7 +330,44 @@
         "category": 2,
         "rating": 4.9,
         "image_url": "http://example.com/images/logo-design.jpg",
-        "image": "logo-design.jpg"
+        "image": "logo-design.jpg",
+        "additional_services": [
+          {
+            "service": "Own Print Data Upload",
+            "description": "Upload your own print data in the shopping cart or after completing the order.",
+            "price": 0.00
+          },
+          {
+            "service": "Online Designer",
+            "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+            "price": 0.00
+          },
+          {
+            "service": "Design Service",
+            "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+            "price": 40.00
+          },
+          {
+            "service": "Standard Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+            "price": 0.00
+          },
+          {
+            "service": "Priority Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+            "price": 15.00
+          },
+          {
+            "service": "48h Express Production",
+            "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+            "price": 25.00
+          },
+          {
+            "service": "24h Express Production",
+            "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+            "price": 35.00
+          }
+        ]
       }
     },
     {
@@ -120,7 +382,44 @@
         "category": 2,
         "rating": 4.7,
         "image_url": "http://example.com/images/digital-art.jpg",
-        "image": "digital-art.jpg"
+        "image": "digital-art.jpg",
+        "additional_services": [
+          {
+            "service": "Own Print Data Upload",
+            "description": "Upload your own print data in the shopping cart or after completing the order.",
+            "price": 0.00
+          },
+          {
+            "service": "Online Designer",
+            "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+            "price": 0.00
+          },
+          {
+            "service": "Design Service",
+            "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+            "price": 40.00
+          },
+          {
+            "service": "Standard Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+            "price": 0.00
+          },
+          {
+            "service": "Priority Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+            "price": 15.00
+          },
+          {
+            "service": "48h Express Production",
+            "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+            "price": 25.00
+          },
+          {
+            "service": "24h Express Production",
+            "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+            "price": 35.00
+          }
+        ]
       }
     },
     {
@@ -135,7 +434,44 @@
         "category": 3,
         "rating": 4.7,
         "image_url": "http://example.com/images/custom-print-orders.jpg",
-        "image": "custom-print-orders.jpg"
+        "image": "custom-print-orders.jpg",
+        "additional_services": [
+          {
+            "service": "Own Print Data Upload",
+            "description": "Upload your own print data in the shopping cart or after completing the order.",
+            "price": 0.00
+          },
+          {
+            "service": "Online Designer",
+            "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+            "price": 0.00
+          },
+          {
+            "service": "Design Service",
+            "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+            "price": 40.00
+          },
+          {
+            "service": "Standard Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+            "price": 0.00
+          },
+          {
+            "service": "Priority Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+            "price": 15.00
+          },
+          {
+            "service": "48h Express Production",
+            "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+            "price": 25.00
+          },
+          {
+            "service": "24h Express Production",
+            "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+            "price": 35.00
+          }
+        ]
       }
     },
     {
@@ -150,7 +486,44 @@
         "category": 3,
         "rating": 4.8,
         "image_url": "http://example.com/images/branding-packages.jpg",
-        "image": "branding-packages.jpg"
+        "image": "branding-packages.jpg",
+        "additional_services": [
+          {
+            "service": "Own Print Data Upload",
+            "description": "Upload your own print data in the shopping cart or after completing the order.",
+            "price": 0.00
+          },
+          {
+            "service": "Online Designer",
+            "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+            "price": 0.00
+          },
+          {
+            "service": "Design Service",
+            "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+            "price": 40.00
+          },
+          {
+            "service": "Standard Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+            "price": 0.00
+          },
+          {
+            "service": "Priority Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+            "price": 15.00
+          },
+          {
+            "service": "48h Express Production",
+            "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+            "price": 25.00
+          },
+          {
+            "service": "24h Express Production",
+            "description": "Delivery: 1 working day until Monday, 07.04.2022025* (including express shipping within Germany)",
+            "price": 35.00
+          }
+        ]
       }
     },
     {
@@ -165,7 +538,44 @@
         "category": 3,
         "rating": 4.7,
         "image_url": "http://example.com/images/merchandise-design.jpg",
-        "image": "merchandise-design.jpg"
+        "image": "merchandise-design.jpg",
+        "additional_services": [
+          {
+            "service": "Own Print Data Upload",
+            "description": "Upload your own print data in the shopping cart or after completing the order.",
+            "price": 0.00
+          },
+          {
+            "service": "Online Designer",
+            "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
+            "price": 0.00
+          },
+          {
+            "service": "Design Service",
+            "description": "Our creative team designs print data, logos, etc. according to your wishes.",
+            "price": 40.00
+          },
+          {
+            "service": "Standard Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
+            "price": 0.00
+          },
+          {
+            "service": "Priority Production",
+            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
+            "price": 15.00
+          },
+          {
+            "service": "48h Express Production",
+            "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
+            "price": 25.00
+          },
+          {
+            "service": "24h Express Production",
+            "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
+            "price": 35.00
+          }
+        ]
       }
     }
   ]
