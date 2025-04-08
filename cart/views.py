@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Cart
-from products.models import Product
+from products.models import Product, ProductSize, QuantityOption
+from cart.models import Cart
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
+from django.http import JsonResponse, HttpResponse
+from django.urls import reverse
 
 
 @login_required
@@ -15,57 +17,42 @@ def view_cart(request):
 
 
 # This view is for adding the product to the cart
-def add_to_cart(request, item_id):
+def add_to_cart(request, product_id):
     """ Add a quantity of the specified product to the shopping bag """
+    product = Product.objects.get(id=product_id)
+    size = request.POST.get('size')
+    quantity = int(request.POST.get('quantity_option'))
 
-    product = get_object_or_404(Product, pk=item_id)
+    product_size = product.product_sizes.get(size=size)
+    quantity_option = product_size.quantity_options.get(quantity=quantity)
 
-    quantity = int(request.POST.get('quantity'))
-    redirect_url = request.POST.get('redirect_url')
-    size = None
+    # Create a new cart if no cart exists
+    if 'cart' not in request.session:
+        request.session['cart'] = []
 
-    if 'product_size' in request.POST:
-        size = request.POST['product_size']
-    cart = request.session.get('cart', {})
+    cart_items = request.session['cart']
 
-    if size:
-        if item_id in list(cart.keys()):
-            if size in cart[item_id]['items_by_size'].keys():
-                cart[item_id]['items_by_size'][size] += quantity
-                messages.success(
-                    request,
-                    f'Updated size {size.upper()} {product.name} quantity to '
-                    f'{cart[item_id]["items_by_size"][size]}'
-                )
-            else:
-                cart[item_id]['items_by_size'][size] = quantity
-                messages.success(
-                    request,
-                    f'Added size {size.upper()} {product.name} to your cart'
-                )
-        else:
-            cart[item_id] = {'items_by_size': {size: quantity}}
-            messages.success(
-                request,
-                f'Added size {size.upper()} {product.name} to your cart'
-            )
+    for item in cart_items:
+        if item['product_id'] == product.id and item['size'] == size:
+            item['quantity'] += quantity
+            item['total_price'] = item['quantity'] * float(item['price'])
+            break
     else:
-        if item_id in list(cart.keys()):
-            cart[item_id] += quantity
-            messages.success(
-                request,
-                f'Updated {product.name} quantity to {cart[item_id]}'
-            )
-        else:
-            cart[item_id] = quantity
-            messages.success(
-                request,
-                f'Added {product.name} to your cart'
-            )
+        # Add new item to cart
+        cart_items.append({
+            'product_id': product.id,
+            'name': product.name,
+            'size': size,
+            'quantity': quantity,
+            'price': str(quantity_option.price),
+            'total_price': str(quantity_option.price * quantity),
+        })
 
-    request.session['cart'] = cart
-    return redirect(redirect_url)
+    # Save cart, retunr to session
+    request.session['cart'] = cart_items
+    request.session.modified = True
 
+    return redirect('product_detail', product_id=product.id)
 
 def adjust_cart(request, item_id):
     """

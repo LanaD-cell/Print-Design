@@ -62,6 +62,12 @@ class Product(models.Model):
     fallback_url = models.CharField(max_length=1024, null=True, blank=True)
     image = models.ImageField(upload_to='products/', null=True, blank=True)
 
+    # New Fields
+    sizes = models.JSONField(default=list, blank=True)
+    quantities = models.JSONField(default=list, blank=True)
+    additional_services = models.JSONField(default=list, blank=True)
+
+
     def __str__(self):
         return str(self.name)
 
@@ -77,3 +83,7 @@ class Product(models.Model):
     def get_sizes(self):
         """Returns a list of sizes, split by commas."""
         return self.sizes.split(',') if self.sizes else []
+
+    def get_quantities(self):
+        """Returns a list of quantities and their prices for this product."""
+        return [(quantity.quantity, quantity.price) for quantity in self.quantities.all()] if self.quantities.exists() else []
