@@ -1,12 +1,13 @@
+from pathlib import Path
+import cloudinary.api
+import cloudinary
+import cloudinary.uploader
 import os
 import dj_database_url
 if os.path.isfile('env.py'):
     import env
 from dotenv import load_dotenv
-from pathlib import Path
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,8 +85,8 @@ TEMPLATES = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',  # login by username
-    'allauth.account.auth_backends.AuthenticationBackend',  # login via email (allauth)
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 SITE_ID = 1
@@ -103,7 +104,8 @@ LOGIN_REDIRECT_URL = '/'
 WSGI_APPLICATION = 'print_design.wsgi.application'
 
 DATABASES = {
-    'default': dj_database_url.config(default=f'sqlite:///{BASE_DIR}/db.sqlite3')
+    'default': dj_database_url.config(
+        default=f'sqlite:///{BASE_DIR}/db.sqlite3')
 }
 
 # Password validation settings

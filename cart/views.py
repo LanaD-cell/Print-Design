@@ -1,12 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
+from django.http import JsonResponse, HttpResponse
 from products.models import Product, ProductSize, QuantityOption
 from cart.models import Cart
-from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.contrib.auth.models import AnonymousUser
-from django.http import JsonResponse, HttpResponse
-from django.urls import reverse
-
 
 @login_required
 # View to return Cart
@@ -53,6 +52,7 @@ def add_to_cart(request, product_id):
     request.session.modified = True
 
     return redirect('product_detail', product_id=product.id)
+
 
 def adjust_cart(request, item_id):
     """

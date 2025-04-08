@@ -11,9 +11,11 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/freepik__the-style-is-candid-image-photography-with-natural__21526_izzgyt.png'),
+    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/freepik__the-style-is-candid-image-photography-with-natural__21526_izzgyt.png') no-repeat,
                 url('/static/images/bgimg.png') no-repeat center center;
     background-size: cover;
+    background-position: center center;
+    background-attachment: fixed;
     width: 100%;
     min-height: 100vh;
     color: #272640;
@@ -26,10 +28,13 @@ body {
     padding: 0;
 }
 
+#delivery-banner {
+    min-width: 100%;
+}
 .main-content {
     min-height: 90vh;
     padding-bottom: 50px;
-    padding-top: 150px;
+    padding-top: 100px;
     display: flex;
     flex-direction: column;
     z-index: 500;
@@ -66,14 +71,13 @@ strong {
     justify-content: space-between;
     padding: 10px 20px;
     flex-wrap: wrap;
-    height: 80px;
 }
 
 #site-links {
     color: #312244;
     background-color: white;
     z-index: 999;
-    padding-top: 100px;
+    padding-top: 120px;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -104,13 +108,6 @@ strong {
     height: 40px;
     width: auto;
     margin-right: 10px;
-}
-
-.navbar-collapse {
-    background-color: white;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    padding: 15px 0;
-    transition: all 0.3s ease-in-out;
 }
 .main-logo-link {
     display: flex;
@@ -208,7 +205,7 @@ footer .social-icons a:hover {
 
 /* About Card Styling */
 .about-card {
-    color: white; /* Text color */
+    color: white;
     background-color: rgba(27, 58, 75, 0.9);
     max-width: 100%;
     margin: 30px auto;
@@ -217,7 +214,7 @@ footer .social-icons a:hover {
     text-align: center;
 }
 
-/* Title Styling */
+
 .about-card .about-card-title {
     font-family: 'Tangerine', cursive;
     font-size: 6rem;
@@ -442,6 +439,7 @@ p.card-text {
     max-width: 80%;
     margin: 0 auto;
     height: 400px;
+    padding-top: 15px;
 }
 
 
@@ -617,7 +615,6 @@ p.card-text {
     margin: 0;
 }
 
-.product-details-container,
 .de-card, .delivery-card {
     color: #312244;
     background-color: white;
@@ -628,7 +625,7 @@ p.card-text {
 
 /* ---- Media Queries ---- */
 /* For screens up to 1024px */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (max-width: 1024px) {
     #topnav {
         padding: 15px;
     }
@@ -648,6 +645,10 @@ p.card-text {
     .shop-now-button, .btn-dark {
         font-size: 20px;
         padding: 16px;
+    }
+
+    #site-links {
+        padding-top: 120px;
     }
 }
 
@@ -693,14 +694,24 @@ p.card-text {
         padding-top: 150px;
     }
     #site-links {
-        padding-top: 150px;
+        padding-top: 200px;
     }
 
     .product-container {
         padding-top: 100px;
     }
-}
+    .navbar-collapse {
+        display: none !important;
+    }
 
+    .navbar-collapse.show {
+        display: block !important;
+    }
+
+    #searchbar {
+        padding-right: 30px;
+    }
+}
 
 /* For screens up to 425px */
 @media (max-width: 425px) {
@@ -727,17 +738,25 @@ p.card-text {
     }
 
     #site-links {
-        padding-top: 150px;
+        padding-top: 180px;
     }
 
     .product-container {
         padding-top: 150px;
     }
-    #delivery-banner {
-        padding-top: 100px;
+
+    .navbar-collapse {
+        display: none !important;
+    }
+
+    .navbar-collapse.show {
+        display: block !important;
+    }
+
+    #searchbar {
+        padding-right: 15px;
     }
 }
-
 
 /* For screens up to 320px */
 @media (max-width: 320px) {
@@ -746,7 +765,7 @@ p.card-text {
     }
 
     #site-links {
-        padding-top: 100px !important;
+        padding-top: 150px !important;
     }
 
     .product-container {
@@ -850,7 +869,11 @@ p.card-text {
         display: block !important;
     }
 
-    #delivery-banner {
-        padding-top: 120px;
+    .main-content {
+        padding-top: 150px;
+    }
+    .delivery-banner {
+        max-width: 100%;
+
     }
 }
