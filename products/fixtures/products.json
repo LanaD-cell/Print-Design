@@ -7,13 +7,20 @@
       "sku": "pp1002",
       "name": "Flyers",
       "description": "Custom printed flyers to promote your business or event.",
-      "price": 19.99,
       "category": 1,
       "rating": 4.5,
       "image_url": "http://example.com/images/flyers.jpg",
       "image": "flyers.jpg",
-      "sizes": [{"size": "A3", "price": 19.99}, {"size": "A4", "price": 15.00}],
-      "quantities": [{"quantity": 100, "price": 21.45}, {"quantity": 200, "price": 40.90}],
+      "sizes": [{"size": "A3"},{"size": "A4"}, {"size": "A5"}, {"size": "A6"}],
+      "quantities": [
+        { "quantity": 25, "price": 12.40 },
+        { "quantity": 50, "price": 15.32 },
+        { "quantity": 100, "price": 21.45 },
+        { "quantity": 200, "price": 36.03 },
+        { "quantity": 300, "price": 60.34 },
+        { "quantity": 500, "price": 61.75 },
+        { "quantity": 1000, "price": 78.15 }
+      ],
       "additional_services": [
         {
           "service": "Own Print Data Upload",
