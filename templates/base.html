@@ -123,11 +123,13 @@
                                 <div class="text-center">
                                     <i class="fa-solid fa-cart-shopping"></i>
                                     <p class="my-0">
+                                      €<span id="navbar-cart-total">
                                         {% if grand_total %}
-                                            ${{ grand_total|floatformat:2 }}
+                                            {{ grand_total|floatformat:2 }}
                                         {% else %}
-                                            €<span class="small-text">0.00</span>
+                                            0.00
                                         {% endif %}
+                                      </span>
                                     </p>
                                 </div>
                             </a>

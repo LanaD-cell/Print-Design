@@ -67,8 +67,6 @@ class Product(models.Model):
     image_url = models.URLField(max_length=1024, null=True, blank=True)
     fallback_url = models.CharField(max_length=1024, null=True, blank=True)
     image = models.ImageField(upload_to='products/', null=True, blank=True)
-
-    # New Fields
     sizes = models.JSONField(default=list, blank=True)
     quantities = models.JSONField(default=list, blank=True)
     additional_services = models.JSONField(default=list, blank=True)
