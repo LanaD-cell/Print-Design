@@ -2,71 +2,38 @@
 {% load static %}
 
 {% block page_header %}
-<div class="container header-container">
-  <div class="row">
-    <div class="col"></div>
-  </div>
-</div>
+    <div class="container header-container">
+        <div class="row">
+            <div class="col"></div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block content %}
-<div class="overlay"></div>
-<div class="container mb-2">
-  <div class="row">
-    <div class="col">
-      <hr />
-      <h2 class="logo-font mb-4">Shopping Cart</h2>
-      <hr />
-    </div>
-  </div>
+    <div class="overlay"></div>
+    <div class="container mb-2">
+        <div class="row">
+            <div class="col">
+                <hr>
+                <h2 class="logo-font mb-4">Shopping Cart</h2>
+                <hr>
+            </div>
+        </div>
 
-  <div class="row">
-    <div class="col">
-      {% if cart_items %}
-      <div class="table-responsive rounded">
-        <table class="table table-sm table-borderless">
-          <thead>
-            <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">Unit Price</th>
-              <th scope="col">Service</th>
-              <th scope="col">Delivery</th>
-              <th scope="col">Subtotal</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for item in cart_items %}
-            <tr>
-              <td>{{ item.product_name }}</td>
-              <td>{{ item.quantity }}</td>
-              <td>€{{ item.price|floatformat:2 }}</td>
-              <td>€{{ item.service_price|floatformat:2 }}</td>
-              <td>€{{ item.delivery_price|floatformat:2 }}</td>
-              <td>€{{ item.total_price|floatformat:2 }}</td>
-            </tr>
-            {% endfor %}
-
-            <tr>
-              <td colspan="5" class="text-end fw-bold">Grand Total:</td>
-              <td>€{{ grand_total|floatformat:2 }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      {% else %}
-      <p class="lead mb-5">Your cart is empty.</p>
-      <a
-        href="{% url 'products' %}"
-        class="btn btn-outline-black rounded-0 btn-lg"
-      >
-        <span class="icon">
-          <i class="fas fa-chevron-left"></i>
-        </span>
-        <span class="text-uppercase">Keep Shopping</span>
-      </a>
-      {% endif %}
+        <div class="row">
+            <div class="col">
+                {% if cart_items %}
+                    <div class="table-responsive rounded"></div>
+                {% else %}
+                    <p class="lead mb-5">Your cart is empty.</p>
+                    <a href="{% url 'products' %}" class="btn btn-outline-black rounded-0 btn-lg">
+                        <span class="icon">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                        <span class="text-uppercase">Keep Shopping</span>
+                    </a>
+                {% endif %}
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 {% endblock %}

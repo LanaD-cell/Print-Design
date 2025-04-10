@@ -36,8 +36,8 @@ class ProductAdmin(SummernoteModelAdmin):
     list_display = (
         'id',
         'name',
-        'category',
         'price',
+        'category',
         'image',
         'rating',
     )
