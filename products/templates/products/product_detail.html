@@ -29,7 +29,7 @@
             </div>
         </div>
 
-        <form method="POST" id="orderform" class="col-12 col-md-6 col-lg-4" action="{% url 'cart:add_to_cart' %}">
+        <form method="POST" id="orderform" class="col-12 col-md-6 col-lg-4" action="{% url 'cart:add' %}">
             {% csrf_token %}
             <div class="product-details-container mb-5 mt-md-5">
                 <h1>{{ product.name }}</h1>
@@ -131,12 +131,6 @@
                     <p>Total Price: <span id="summary_price">€0.00</span></p>
                 </div>
 
-                <!-- Hidden fields for submission -->
-                <input type="hidden" name="product_id" value="{{ product.id }}">
-                <input type="hidden" id="hidden_size" name="size">
-                <input type="hidden" id="hidden_quantity" name="quantity_option">
-                <input type="hidden" id="hidden_services" name="services">
-                <input type="hidden" id="hidden_delivery" name="delivery_option">
 
                 <!-- Add to Cart Button -->
                 <button type="submit" class="btn rounded-1 text-uppercase mt-5" style="color: white;">
@@ -178,7 +172,7 @@
     // Corrected selector for "Design Service" checkboxes
     const serviceCheckboxes = document.querySelectorAll('input[name="own_print_data_option"], input[name="online_designs"], input[name="design_services"]');
 
-    // Corrected selector for delivery radio buttons (now all share the same 'name="delivery_options"')
+    // Corrected selector for delivery radio buttons
     const deliveryRadios = document.querySelectorAll('input[name="delivery_options"]');
 
     const summarySize = document.getElementById('summary_size');
@@ -187,24 +181,18 @@
     const summaryDelivery = document.getElementById('summary_delivery');
     const summaryPrice = document.getElementById('summary_price');
 
-    // Hidden input fields to store form data for submission
-    const hiddenSize = document.getElementById('hidden_size');
-    const hiddenQuantity = document.getElementById('hidden_quantity');
-    const hiddenServices = document.getElementById('hidden_services');
-    const hiddenDelivery = document.getElementById('hidden_delivery');
-
     // Define the fixed prices for services
     const servicePrices = {
-        'own_print_data_option': 0,    // Free of charge
-        'online_designs': 35.00,       // €35.00 for Online Design
-        'design_services': 40.00       // €40.00 for Design Service
+        'own_print_data_option': 0,
+        'online_designs': 35.00,
+        'design_services': 40.00
     };
 
     // Delivery prices
     const deliveryPrices = {
-        'Standard Production': 5.00,      // €5.00 for Standard Delivery
-        '48h Express Production': 10.00,  // €10.00 for Priority Delivery
-        '24h Express Production': 15.00   // €15.00 for Express Delivery
+        'Standard Production': 5.00,
+        '48h Express Production': 10.00,
+        '24h Express Production': 15.00
     };
 
     // Function to update the summary
@@ -225,15 +213,15 @@
         });
 
         // Clean up extra commas in services
-        selectedServices = selectedServices.slice(0, -2); // Remove last comma
+        selectedServices = selectedServices.slice(0, -2);
 
         // Get selected delivery option
         let selectedDelivery = '';
         let deliveryPrice = 0;
         deliveryRadios.forEach(function(radio) {
             if (radio.checked) {
-                selectedDelivery = radio.nextElementSibling.textContent.trim();  // Capture label text for the selected radio button
-                deliveryPrice = deliveryPrices[radio.value] || 0;  // Map the value to the corresponding price
+                selectedDelivery = radio.nextElementSibling.textContent.trim();
+                deliveryPrice = deliveryPrices[radio.value] || 0;
             }
         });
 
@@ -270,7 +258,7 @@
         radio.addEventListener('change', updateSummary);
     });
 
-    const addToCartForm = document.querySelector('form[action$="add_to_cart"]');
+    const addToCartForm = document.querySelector('form[action$="/cart/add/"]');
     if (addToCartForm) {
         addToCartForm.addEventListener('submit', updateSummary);
 }

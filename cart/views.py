@@ -22,9 +22,6 @@ def view_cart(request):
 
     return render(request, 'cart/cart.html', context)
 
-from decimal import Decimal
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Cart, CartItem
 
 def add_to_cart(request):
     if request.method == 'POST':
@@ -32,7 +29,6 @@ def add_to_cart(request):
 
         # Get the product ID from the POST data
         product_id = request.POST.get('product_id')
-
         # Retrieve the product from the database
         product = get_object_or_404(Product, id=product_id)
 
@@ -42,7 +38,7 @@ def add_to_cart(request):
         selected_services = request.POST.getlist('services')
         selected_delivery = request.POST.get('delivery_options')
 
-         # Ensure only one size and quantity are selected
+        # Ensure only one size and quantity are selected
         if isinstance(selected_size, list):
             selected_size = selected_size[0]
 
@@ -103,19 +99,25 @@ def add_to_cart(request):
         # Save the CartItem
         cart_item.save()
 
-
+        # Update cart total price
         cart.total_price += total_item_price
         cart.save()
+
+        # Save cart data to session (for view_cart)
+        request.session['selected_size'] = selected_size
+        request.session['selected_quantity'] = selected_quantity
+        request.session['selected_services'] = selected_services
+        request.session['selected_delivery'] = selected_delivery
+        request.session['total_price'] = cart.total_price
 
         # Print for debugging
         print(f"Added to cart: Product {product.name}, Size: {selected_size}, Quantity: {selected_quantity}, Total Price: €{total_item_price}")
 
-
-        return redirect('cart:cart')
+        return redirect('cart')
 
     else:
+        return redirect('cart')
 
-        return redirect('cart:cart')
 
 def create_order(request):
     # Ensure the user is logged in
