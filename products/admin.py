@@ -20,17 +20,24 @@ class QuantityOptionForm(forms.ModelForm):
         if not quantity or not price:
             raise forms.ValidationError("Both quantity and price must be provided.")
 
+        # Ensure price is greater than zero
+        if price <= 0:
+            raise forms.ValidationError("Price must be greater than zero.")
+
         return cleaned_data
+
 
 class ProductSizeInline(admin.TabularInline):
     model = ProductSize
     extra = 1
+
 
 class QuantityOptionInline(admin.TabularInline):
     model = QuantityOption
     form = QuantityOptionForm
     extra = 1
     fields = ['quantity', 'price']
+
 
 class ProductAdmin(SummernoteModelAdmin):
     list_display = (
@@ -47,19 +54,20 @@ class ProductAdmin(SummernoteModelAdmin):
     # Add Summernote editor for 'description' field
     summernote_fields = ('description',)
 
-    # Include ProductSize inline form to manage
-    # sizes and quantities directly in the
-    # Product admin
-    inlines = [ProductSizeInline]
+    inlines = [ProductSizeInline, QuantityOptionInline]
 
     def save_model(self, request, obj, form, change):
         super().save_model(request, obj, form, change)
+
 
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'friendly_name',
         'name',
     )
+
+    search_fields = ('name', 'friendly_name')
+
 
 # Register the models with the admin
 admin.site.register(Product, ProductAdmin)

@@ -58,66 +58,71 @@ def all_products(request):
 
 
 
+def category_detail(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    return render(request, 'products/product_detail.html', {'category': category})
+
+
 # This view is for displaying individual product details
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
 
-    # Fetch all available sizes for this product
-    sizes = product.product_sizes.all()
+    # Fetch all available sizes and quantity options
+    sizes = product.product_sizes_set.all()
+    quantity_options = product.quantity_options_set.all()
 
-    # Fetch all available quantities for this product
-    quantity_options = product.quantity_options.all()
+    # Initialize default selected values (None)
+    selected_size = None
+    selected_quantity = None
+    selected_services = []
+    selected_delivery = None
+    total_price = 0.00
+
+    # Check if the form is submitted
+    if request.method == 'POST':
+        selected_size = request.POST.get('size')
+        selected_quantity = request.POST.get('quantity')
+        selected_services = request.POST.getlist('additional_services')  # Handles multiple services
+        selected_delivery = request.POST.get('delivery_option')
+
+        # Get the price for the selected size and quantity
+        size_obj = ProductSize.objects.filter(product=product, size=selected_size).first()
+        quantity_obj = QuantityOption.objects.filter(product=product, quantity=int(selected_quantity)).first()
+
+        # Calculate the total price based on selected size and quantity
+        if size_obj and quantity_obj:
+            total_price = quantity_obj.price  # Add more logic if needed for services or delivery
+
+        # Optionally, add additional service prices to the total price
+        for service in selected_services:
+            # For simplicity, let's assume we just add a fixed price per service.
+            if service == "Design Service":
+                total_price += 40.00
+
+        # Add delivery cost to the total price
+        # based on the selected delivery option
+        if selected_delivery == "Priority Delivery":
+            total_price += 15.00
+        elif selected_delivery == "Express Delivery":
+            total_price += 25.00
+        else:
+            total_price += 0.00  # Standard Delivery
 
     context = {
         'product': product,
         'sizes': sizes,
-        'quantity_options': quantity_options
+        'quantity_options': quantity_options,
+        'selected_size': selected_size,
+        'selected_quantity': selected_quantity,
+        'selected_services': selected_services,
+        'selected_delivery': selected_delivery,
+        'total_price': total_price,
     }
 
     return render(request, 'products/product_detail.html', context)
 
-# This view is for displaying products by category
-def category_detail(request, category_id):
-    """ View to show products in a specific category using the same template as all products """
-    category = get_object_or_404(Category, pk=category_id)
-    products = Product.objects.filter(category=category)
-
-    context = {
-        'products': products,
-        'category': category,
-    }
-
-    return render(request, 'products/products.html', context)
-
-def terms_and_conditions(request):
+def terms(request):
     return render(request, 'terms.html')
-
-def main_nav(request):
-    """ View to return main navigation with product data for modal """
-    json_file_path = settings.BASE_DIR / 'products.json'
-
-    with open(json_file_path) as f:
-        products = json.load(f)
-
-    return render(request, 'includes/main-nav.html', {'products': products})
-
-def get_quantity_options(request, size):
-    # Get all ProductSize objects matching the selected size
-    product_sizes = ProductSize.objects.filter(size=size)
-
-    # Get all QuantityOption objects related to the
-    # products associated with the selected size
-    quantity_options = []
-    for product_size in product_sizes:
-        options = QuantityOption.objects.filter(product=product_size.product)
-        for option in options:
-            quantity_options.append({
-                'id': option.id,
-                'quantity': option.quantity,
-                'price': option.price
-            })
-
-    return JsonResponse({'quantity_options': quantity_options})
 
 def calculate_price(request, product_id):
     product = Product.objects.get(id=product_id)
@@ -136,3 +141,6 @@ def calculate_price(request, product_id):
         total_price = product.price * selected_quantity
 
     return total_price
+
+def main_nav(request):
+    return render(request, 'main-nav.html')
