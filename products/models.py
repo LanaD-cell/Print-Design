@@ -1,19 +1,11 @@
-"""
-Create models for Product and Category in Admin.
-"""
 from django.db import models
-
 
 class Category(models.Model):
     """
-    Create Categroy for search functionality in Admin and site
+    Create Category for search functionality in Admin and site
     """
-
     class Meta:
         verbose_name_plural = "Categories"
-    """
-    Adress plural error of Category in Admin
-    """
 
     name = models.CharField(max_length=255)
     friendly_name = models.CharField(max_length=255, null=True, blank=True)
@@ -33,7 +25,7 @@ class ProductSize(models.Model):
     Add Sizes and Quantities for each product
     """
     product = models.ForeignKey(
-        'Product', related_name='product_sizes', on_delete=models.CASCADE)
+        'Product', related_name='product_sizes_set', on_delete=models.CASCADE)
     size = models.CharField(max_length=100)
 
     def __str__(self):
@@ -46,7 +38,7 @@ class QuantityOption(models.Model):
     prices, associated with a product size.
     """
     product = models.ForeignKey(
-        'Product', related_name='quantity_options', on_delete=models.CASCADE)
+        'Product', related_name='quantity_options_set', on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -88,4 +80,4 @@ class Product(models.Model):
 
     def get_quantities(self):
         """Returns a list of quantities and their prices for this product."""
-        return [(quantity.quantity, quantity.price) for quantity in self.quantities.all()] if self.quantities.exists() else []
+        return [(quantity.quantity, quantity.price) for quantity in self.quantity_options_set.all()] if self.quantity_options_set.exists() else []

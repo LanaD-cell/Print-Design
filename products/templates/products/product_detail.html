@@ -40,8 +40,8 @@
                     <label for="size_select">Select Size:</label>
                     <select name="size" class="select form-control" id="selected_size">
                         <option value="">Select Size</option>
-                        {% for size in sizes %}
-                            <option value="{{ size.size }}">{{ size.size }}</option>
+                        {% for size in product.sizes %}
+                        <option value="{{ size.size }}">{{ size.size }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -50,10 +50,10 @@
                     <label for="quantity_select">Select Quantity:</label>
                     <select name="quantity_option" class="select form-control" id="selected_quantity">
                         <option value="">Select Quantity</option>
-                        {% for option in quantity_options %}
-                            <option value="{{ option.quantity }}" data-price="{{ option.price }}">
-                                Quantity: {{ option.quantity }} - Price: €{{ option.price }}
-                            </option>
+                        {% for option in product.quantities %}
+                        <option value="{{ option.quantity }}" data-price="{{ option.price }}">
+                            Quantity: {{ option.quantity }} - Price: €{{ option.price }}
+                        </option>
                         {% endfor %}
                     </select>
                 </div>
@@ -66,24 +66,24 @@
                             <div id="own_print_block" class="col-12 option-box mb-1 border-green">
                                 <label for="own_print_data_option">
                                     <input type="checkbox" id="service_own_print_data_upload" name="own_print_data_option" value="1">
-                                    <span class="service-title">Own Print Data</span>
-                                    <span class="service-price-title">Free of charge</span>
+                                    <span class="service-title"><i class="fas fa-upload"></i> Own Print Data</span>
+                                    <span class="service-price-title">- Free of charge</span>
                                 </label>
                             </div>
 
-                            <div id="online_gestalten_block" class="col-12 mb-1 option-box">
-                                <label for="online_gestalten">
-                                    <input type="checkbox" id="service_online_designer" value="1">
-                                    <span class="service-title">Online Design</span>
-                                    <span class="service-price-title">Free of charge</span>
+                            <div id="online_designs_block" class="col-12 mb-1 option-box">
+                                <label for="online_designs">
+                                    <input type="checkbox" id="service_online_designer" name="online_designs" value="1">
+                                    <span class="service-title"><i class="fas fa-pencil-alt"></i> Online Design</span>
+                                    <span class="service-price-title">- Ready to print designs</span>
                                 </label>
                             </div>
 
                             <div id="hover_slider_options_1" class="col-12 option-box">
-                                <label for="option[1]">
-                                    <input type="checkbox" id="service_design_service" name="option[1]" value="1">
-                                    <span class="service-title">Design Service</span>
-                                    <span class="service-price-title">€40.00</span>
+                                <label for="design_services">
+                                    <input type="checkbox" id="service_design_service" name="design_services" value="1">
+                                    <span class="service-title"><i class="fas fa-paint-brush"></i> Design Service</span>
+                                    <span class="service-price-title">- Let a qualified designer help</span>
                                 </label>
                             </div>
                         </div>
@@ -95,40 +95,46 @@
                     <div class="card-header">Delivery Options</div>
                     <div class="card-body">
                         <div class="card-text delivery-container">
-                            <div class="option-box">
+                            <div id="standard_delivery_block" class="col-12 option-box mb-1">
                                 <label for="standard_delivery">
-                                    <input type="radio" name="deliveryOption" value="Standard Production" checked id="standard_delivery">
-                                    Standard Delivery (3-5 working days)
+                                    <input type="radio" name="delivery_options" value="Standard Production" checked id="standard_delivery">
+                                    <span class="service-title"><i class="fas fa-truck"></i> Standard Delivery</span>
+                                    <span class="service-price-title">(3-5 working days)</span>
                                 </label>
                             </div>
-                            <div class="option-box">
+
+                            <div id="priority_delivery_block" class="col-12 mb-1 option-box">
                                 <label for="priority_delivery">
-                                    <input type="radio" name="deliveryOption"  value="48h Express Production" id="48h_express_delivery">
-                                    Priority Delivery (2-3 working days)
+                                    <input type="radio" name="delivery_options" value="48h Express Production" id="48h_express_delivery">
+                                    <span class="service-title"><i class="fas fa-exclamation-circle"></i> Priority Delivery</span>
+                                    <span class="service-price-title">(2-3 working days)</span>
                                 </label>
                             </div>
-                            <div class="option-box">
+
+                            <div id="express_delivery_block" class="col-12 option-box">
                                 <label for="express_delivery">
-                                    <input type="radio" name="deliveryOption" value="24h Express Production" id="24h_express_delivery">
-                                    Express Delivery (Next day)
+                                    <input type="radio" name="delivery_options" value="24h Express Production" id="24h_express_delivery">
+                                    <span class="service-title"><i class="fas fa-clock"></i> Express Delivery</span>
+                                    <span class="service-price-title">(Next day)</span>
                                 </label>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div id="selection-summary">
+                <div class="selected-summary">
+                    <h3>Selected Summary</h3>
                     <p>Selected Size: <span id="summary_size">None</span></p>
                     <p>Selected Quantity: <span id="summary_quantity">None</span></p>
                     <p>Additional Services: <span id="summary_services">None</span></p>
                     <p>Delivery Service: <span id="summary_delivery">None</span></p>
-                    <br>
                     <p>Total Price: <span id="summary_price">€0.00</span></p>
                 </div>
 
                 <input type="hidden" name="redirect_url" value="{% url 'cart:cart' %}">
             </div>
         </form>
+
         <div class="col">
             <a href="{% url 'products' %}" class="btn rounded-1 mt-5">
                 <span class="icon" style="color: white;">
@@ -136,7 +142,7 @@
                 </span>
                 <span class="text-uppercase" style="color: white;">Keep Shopping</span>
             </a>
-            <form method="POST" action="{% url 'add_to_cart' product.id %}">
+            <form method="POST" action="{% url 'cart:add_to_cart' product.id %}">
                 {% csrf_token %}
 
                 <!-- Hidden fields for size and quantity -->
@@ -164,4 +170,110 @@
 </div>
 
 {% block scripts %}
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get references to the elements
+    const sizeSelect = document.getElementById('selected_size');
+    const quantitySelect = document.getElementById('selected_quantity');
+
+    // Corrected selector for "Design Service" checkboxes
+    const serviceCheckboxes = document.querySelectorAll('input[name="own_print_data_option"], input[name="online_designs"], input[name="design_services"]');
+
+    // Corrected selector for delivery radio buttons (now all share the same 'name="delivery_options"')
+    const deliveryRadios = document.querySelectorAll('input[name="delivery_options"]');
+
+    const summarySize = document.getElementById('summary_size');
+    const summaryQuantity = document.getElementById('summary_quantity');
+    const summaryServices = document.getElementById('summary_services');
+    const summaryDelivery = document.getElementById('summary_delivery');
+    const summaryPrice = document.getElementById('summary_price');
+
+    // Hidden input fields to store form data for submission
+    const hiddenSize = document.getElementById('hidden_size');
+    const hiddenQuantity = document.getElementById('hidden_quantity');
+    const hiddenServices = document.getElementById('hidden_services');
+    const hiddenDelivery = document.getElementById('hidden_delivery');
+
+    // Define the fixed prices for services
+    const servicePrices = {
+        'own_print_data_option': 0,    // Free of charge
+        'online_designs': 35.00,       // €35.00 for Online Design
+        'design_services': 40.00       // €40.00 for Design Service
+    };
+
+    // Delivery prices
+    const deliveryPrices = {
+        'Standard Production': 5.00,      // €5.00 for Standard Delivery
+        '48h Express Production': 10.00,  // €10.00 for Priority Delivery
+        '24h Express Production': 15.00   // €15.00 for Express Delivery
+    };
+
+    // Function to update the summary
+    function updateSummary() {
+        // Get selected size and quantity
+        const selectedSize = sizeSelect.value || 'None';
+        const selectedQuantity = quantitySelect.value || 'None';
+        const selectedQuantityPrice = document.querySelector(`#selected_quantity option:checked`)?.dataset?.price || 0;
+
+        // Get selected services
+        let selectedServices = '';
+        let additionalServicesPrice = 0;
+        serviceCheckboxes.forEach(function(checkbox) {
+            if (checkbox.checked) {
+                selectedServices += checkbox.nextElementSibling.textContent.trim() + ', ';
+                additionalServicesPrice += servicePrices[checkbox.name] || 0;
+            }
+        });
+
+        // Clean up extra commas in services
+        selectedServices = selectedServices.slice(0, -2); // Remove last comma
+
+        // Get selected delivery option
+        let selectedDelivery = '';
+        let deliveryPrice = 0;
+        deliveryRadios.forEach(function(radio) {
+            if (radio.checked) {
+                selectedDelivery = radio.nextElementSibling.textContent.trim();  // Capture label text for the selected radio button
+                deliveryPrice = deliveryPrices[radio.value] || 0;  // Map the value to the corresponding price
+            }
+        });
+
+        // If no delivery option is selected, set to "None"
+        if (!selectedDelivery) {
+            selectedDelivery = 'None';
+            deliveryPrice = 0;
+        }
+
+        // Calculate total price
+        const totalPrice = parseFloat(selectedQuantityPrice) + additionalServicesPrice + deliveryPrice;
+
+        // Update the summary section
+        summarySize.textContent = selectedSize;
+        summaryQuantity.textContent = `Quantity: ${selectedQuantity} - Price: €${selectedQuantityPrice}`;
+        summaryServices.textContent = selectedServices || 'None';
+        summaryDelivery.textContent = selectedDelivery || 'None';
+        summaryPrice.textContent = `€${totalPrice.toFixed(2)}`;
+
+        // Update hidden form fields for submission
+        hiddenSize.value = selectedSize;
+        hiddenQuantity.value = selectedQuantity;
+        hiddenServices.value = selectedServices || 'None';
+        hiddenDelivery.value = selectedDelivery || 'None';
+    }
+
+    // Event listeners for updating summary
+    sizeSelect.addEventListener('change', updateSummary);
+    quantitySelect.addEventListener('change', updateSummary);
+    serviceCheckboxes.forEach(function(checkbox) {
+        checkbox.addEventListener('change', updateSummary);
+    });
+    deliveryRadios.forEach(function(radio) {
+        radio.addEventListener('change', updateSummary);
+    });
+
+    // Initialize the summary on page load
+    updateSummary();
+});
+
+</script>
 {% endblock %}
