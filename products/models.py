@@ -58,18 +58,18 @@ class Product(models.Model):
     id = models.AutoField(primary_key=True)
     category = models.ForeignKey(
         'Category', null=True, blank=True, on_delete=models.SET_NULL)
-    sku = models.CharField(max_length=255, null=True, blank=True)
     name = models.CharField(max_length=255)
+    price = models.DecimalField(
+        max_digits=6, decimal_places=2)
     description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
     rating = models.DecimalField(
         max_digits=6, decimal_places=2, null=True, blank=True)
     image_url = models.URLField(max_length=1024, null=True, blank=True)
     fallback_url = models.CharField(max_length=1024, null=True, blank=True)
     image = models.ImageField(upload_to='products/', null=True, blank=True)
-    sizes = models.JSONField(default=list, blank=True)
-    quantities = models.JSONField(default=list, blank=True)
-    additional_services = models.JSONField(default=list, blank=True)
+    sizes = models.JSONField(max_length=1024, default=list, blank=True)
+    quantities = models.JSONField(max_length=1024, default=list, blank=True)
+    additional_services = models.JSONField(max_length=1024, default=list, blank=True)
 
     def __str__(self):
         return str(self.name)

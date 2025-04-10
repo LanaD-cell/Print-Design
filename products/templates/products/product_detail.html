@@ -56,7 +56,6 @@
                             </option>
                         {% endfor %}
                     </select>
-                    <input type="hidden" name="quantity_price" id="quantity_price" value="">
                 </div>
 
                 <h3>Additional Services:</h3>
@@ -127,7 +126,7 @@
                     <p>Total Price: <span id="summary_price">€0.00</span></p>
                 </div>
 
-                <input type="hidden" name="redirect_url" value="{% url 'cart' %}">
+                <input type="hidden" name="redirect_url" value="{% url 'cart:cart' %}">
             </div>
         </form>
         <div class="col">
@@ -137,7 +136,7 @@
                 </span>
                 <span class="text-uppercase" style="color: white;">Keep Shopping</span>
             </a>
-            <form id="add_to_cart_form" action="{% url 'add_to_cart' product.id %}" method="POST">
+            <form method="POST" action="{% url 'add_to_cart' product.id %}">
                 {% csrf_token %}
 
                 <!-- Hidden fields for size and quantity -->
@@ -165,172 +164,4 @@
 </div>
 
 {% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    console.log("DOM is fully loaded");
-
-    const additionalServicesData = [
-        {
-            id: 'service_own_print_data_upload',
-            label: 'Own Print Data Upload',
-            price: 0.00
-        },
-        {
-            id: 'service_online_designer',
-            label: 'Online Designer',
-            price: 0.00
-        },
-        {
-            id: 'service_design_service',
-            label: 'Design Service',
-            price: 40.00
-        }
-    ];
-
-    const deliveryOptionsData = {
-        "Standard Production": { label: "Standard Production", price: 0.00 },
-        "48h Express Production": { label: "48h Express Production", price: 25.00 },
-        "24h Express Production": { label: "24h Express Production", price: 35.00 }
-    };
-
-    const sizeSelect = document.getElementById('selected_size');
-    const quantitySelect = document.getElementById('selected_quantity');
-    const additionalServices = document.querySelectorAll('input[type="checkbox"]');
-    const deliveryOptions = document.querySelectorAll('input[name="deliveryOption"]');
-
-    const summarySize = document.getElementById('summary_size');
-    const summaryQuantity = document.getElementById('summary_quantity');
-    const summaryServices = document.getElementById('summary_services');
-    const summaryDelivery = document.getElementById('summary_delivery');
-    const summaryPrice = document.getElementById('summary_price');
-
-    function updateSummary() {
-        console.log("Updating Summary");
-
-        const selectedSize = sizeSelect ? sizeSelect.value : 'None';
-        summarySize.textContent = selectedSize || 'None';
-
-        const quantityOption = quantitySelect.options[quantitySelect.selectedIndex];
-        const selectedQuantity = quantityOption ? quantityOption.textContent : 'None';
-        const basePrice = quantityOption ? parseFloat(quantityOption.getAttribute('data-price')) : 0;
-        summaryQuantity.textContent = selectedQuantity;
-
-        let servicesSelected = [];
-        let servicesPrice = 0;
-        additionalServicesData.forEach(service => {
-            const checkbox = document.getElementById(service.id);
-            if (checkbox && checkbox.checked) {
-                servicesSelected.push(`${service.label} (€${service.price.toFixed(2)})`);
-                servicesPrice += service.price;
-            }
-        });
-        summaryServices.textContent = servicesSelected.length ? servicesSelected.join(', ') : 'None';
-
-        let deliveryLabel = 'None';
-        let deliveryPrice = 0;
-        const selectedDelivery = Array.from(deliveryOptions).find(opt => opt.checked);
-        if (selectedDelivery) {
-            const deliveryValue = selectedDelivery.value;
-            const delivery = deliveryOptionsData[deliveryValue];
-            if (delivery) {
-                deliveryLabel = delivery.label;
-                deliveryPrice = delivery.price;
-            }
-        }
-        summaryDelivery.textContent = deliveryLabel;
-
-        const total = basePrice + servicesPrice + deliveryPrice;
-        summaryPrice.textContent = `€${total.toFixed(2)}`;
-    }
-
-    if (sizeSelect) sizeSelect.addEventListener('change', updateSummary);
-    if (quantitySelect) quantitySelect.addEventListener('change', updateSummary);
-    additionalServices.forEach(service => service.addEventListener('change', updateSummary));
-    deliveryOptions.forEach(option => option.addEventListener('change', updateSummary));
-
-    updateSummary();
-
-    document.getElementById('selected_size')?.addEventListener('change', function () {
-        const hiddenSize = document.getElementById('hidden_size');
-        if (hiddenSize) {
-            hiddenSize.value = this.value;
-        }
-    });
-
-    document.getElementById('selected_quantity')?.addEventListener('change', function () {
-        const hiddenQuantity = document.getElementById('hidden_quantity');
-        if (hiddenQuantity) {
-            hiddenQuantity.value = this.value;
-        }
-
-        const selectedOption = quantitySelect.options[quantitySelect.selectedIndex];
-        const quantityPrice = selectedOption ? selectedOption.getAttribute('data-price') : 0;
-        const hiddenPrice = document.getElementById('hidden_price');
-        if (hiddenPrice) {
-            hiddenPrice.value = quantityPrice;
-        }
-    });
-
-    const addToCartForm = document.querySelector('#add-to-cart-form');
-
-    addToCartForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        // Set hidden inputs
-        document.getElementById('hidden_size').value = document.getElementById('selected_size').value;
-        const quantityOption = quantitySelect.options[quantitySelect.selectedIndex];
-        document.getElementById('hidden_quantity').value = quantityOption.value;
-
-        let servicesPrice = 0;
-        additionalServicesData.forEach(service => {
-            const checkbox = document.getElementById(service.id);
-            if (checkbox && checkbox.checked) {
-                servicesPrice += service.price;
-            }
-        });
-        document.getElementById('hidden_services').value = servicesPrice;
-
-        let deliveryPrice = 0;
-        const selectedDelivery = Array.from(deliveryOptions).find(opt => opt.checked);
-        if (selectedDelivery) {
-            const delivery = deliveryOptionsData[selectedDelivery.value];
-            if (delivery) {
-                deliveryPrice = delivery.price;
-            }
-        }
-        document.getElementById('hidden_delivery').value = deliveryPrice;
-
-        // Debugging: Log the form data
-        const formData = new FormData(addToCartForm);
-        for (let [key, value] of formData.entries()) {
-            console.log(key + ": " + value);
-        }
-
-        // Send AJAX request
-        fetch(addToCartForm.action, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-CSRFToken': document.querySelector('[name="csrfmiddlewaretoken"]').value,
-            },
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                const cartTotalElem = document.querySelector('#navbar-cart-total');
-                if (cartTotalElem) {
-                    cartTotalElem.textContent = `€${data.grand_total.toFixed(2)}`;
-                }
-                alert('Product added to cart!');
-            } else {
-                alert('Something went wrong: ' + data.error);
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-        });
-    });
-});
-
-</script>
 {% endblock %}
