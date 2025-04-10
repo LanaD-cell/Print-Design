@@ -22,8 +22,25 @@
 
         <div class="row">
             <div class="col">
-                {% if cart_items %}
-                    <div class="table-responsive rounded"></div>
+                {% if selected_size != 'None' %}
+                    <h3>Selected Summary</h3>
+                    <p>Selected Size: {{ selected_size }}</p>
+                    <p>Selected Quantity: {{ selected_quantity }}</p>
+                    <p>Additional Services: {% if selected_services %}{{ selected_services|join:', ' }}{% else %}None{% endif %}</p>
+                    <p>Delivery Service: {{ selected_delivery }}</p>
+                    <p>Total Price: €{{ total_price }}</p>
+
+                    <!-- Checkout Button to Trigger create_order -->
+                    <form method="POST" action="{% url 'cart:create_order' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-outline-black rounded-0 btn-lg">
+                            <span class="icon">
+                                <i class="fas fa-credit-card"></i>
+                            </span>
+                            <span class="text-uppercase">Proceed to Checkout</span>
+                        </button>
+                    </form>
+
                 {% else %}
                     <p class="lead mb-5">Your cart is empty.</p>
                     <a href="{% url 'products' %}" class="btn btn-outline-black rounded-0 btn-lg">

@@ -75,9 +75,9 @@ class Product(models.Model):
         return '/path/to/default/image.jpg'
 
     def get_sizes(self):
-        """Returns a list of sizes, split by commas."""
-        return self.sizes.split(',') if self.sizes else []
+        """Returns a list of sizes from the JSON field."""
+        return self.sizes if self.sizes else []
 
     def get_quantities(self):
-        """Returns a list of quantities and their prices for this product."""
-        return [(quantity.quantity, quantity.price) for quantity in self.quantity_options_set.all()] if self.quantity_options_set.exists() else []
+        """Returns a list of quantities and their corresponding prices from the JSON field."""
+        return self.quantities if self.quantities else []
