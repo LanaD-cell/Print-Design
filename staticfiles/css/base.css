@@ -629,10 +629,70 @@ p.card-text {
 }
 
 /* ---- Cart ---- */
+#cart-form {
+    background-color: #fff; /* White background for the cart */
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Table styling specific to the cart */
+#cart-form .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+#cart-form .table th, #cart-form .table td {
+    padding: 15px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+#cart-form .table th {
+    background-color: #f8f8f8;
+}
+
+#cart-form .table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Button styles specific to the cart */
+#cart-form .btn {
+    display: inline-flex;
+    align-items: center;
+    background-color: #272640;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+#cart-form .btn:hover {
+    background-color: #3a3a6c;
+}
+
+#cart-form .btn i {
+    margin-right: 8px;
+}
+
+/* Styling for the Total Price */
+#cart-form .text-right {
+    text-align: right;
+    margin-top: 20px;
+}
+
 #keepshopping {
     margin-top: 0.5rem;
-
 }
+
+.checkout-btn {
+    padding: 0;
+}
+
 
 /* ---- Media Queries ---- */
 /* For screens up to 1024px */
@@ -722,6 +782,42 @@ p.card-text {
     #searchbar {
         padding-right: 30px;
     }
+
+    #cart-form {
+        padding: 25px;
+
+    }
+
+    #cart-form .table th, #cart-form .table td {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    #cart-form .table {
+        font-size: 14px;
+    }
+
+    /* Keep Shopping Button styling */
+    #cart-form #keepshopping a {
+        font-size: 12px;
+        padding: 8px 16px;
+        width: 100%;
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    #cart-form .btn {
+        font-size: 12px;
+        padding: 8px 16px;
+        width: 100%;
+        text-align: center;
+    }
+
+    #cart-form .text-right {
+        text-align: center;
+        margin-top: 10px;
+    }
+
 }
 
 /* For screens up to 425px */
@@ -767,6 +863,52 @@ p.card-text {
     #searchbar {
         padding-right: 15px;
     }
+
+    /* General Cart Form */
+.cart-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Default table layout (for larger screens) */
+.cart-items {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.cart-item {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+}
+
+.cart-item-details {
+    margin-bottom: 10px;
+}
+
+.cart-item-name,
+.cart-item-size,
+.cart-item-quantity,
+.cart-item-price,
+.cart-item-service,
+.cart-item-delivery,
+.cart-item-total {
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+/* Remove Button Styling */
+.cart-item-remove {
+    margin-top: 10px;
+    text-align: center;
 }
 
 /* For screens up to 320px */
@@ -887,4 +1029,48 @@ p.card-text {
         max-width: 100%;
 
     }
+
+    .cart-form {
+        padding: 5px;
+    }
+
+    .table th, .table td {
+        font-size: 10px;  /* Smaller text for tiny screens */
+    }
+
+    .checkout-btn,
+    .keepshopping-btn {
+        font-size: 10px;
+        padding: 8px 14px;
+    }
+
+    .d-grid {
+        gap: 0.5rem;
+    }
+
+    .d-grid a, .d-grid button {
+        width: 100%;
+        font-size: 12px;
+    }
+
+    /* Table adjustments for better fit */
+    .table-responsive {
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    }
+
+    .remove-item-btn {
+        font-size: 10px;
+        padding: 4px 6px;
+    }
+
+    .cart-item-name,
+    .cart-item-size,
+    .cart-item-quantity,
+    .cart-item-price,
+    .cart-item-service,
+    .cart-item-delivery,
+    .cart-item-total {
+        font-size: 10px;
+    }
+
 }

@@ -25,6 +25,7 @@ def view_cart(request):
 
     return render(request, 'cart/cart.html', context)
 
+
 def add_to_cart(request):
     if request.method == 'POST':
         print("POST data:", request.POST)
@@ -65,7 +66,8 @@ def add_to_cart(request):
             '24h Express Production': Decimal('15.00')
         }
 
-        service_price = sum(servicePrices.get(service, Decimal('0.00')) for service in selected_services)
+        service_price = sum(servicePrices.get(
+            service, Decimal('0.00')) for service in selected_services)
         delivery_price = deliveryPrices.get(selected_delivery, Decimal('0.00'))
 
         # Get or create the cart for the user
