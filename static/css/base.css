@@ -628,6 +628,12 @@ p.card-text {
     padding: 5px;
 }
 
+/* ---- Cart ---- */
+#keepshopping {
+    margin-top: 0.5rem;
+
+}
+
 /* ---- Media Queries ---- */
 /* For screens up to 1024px */
 @media (max-width: 1024px) {

@@ -442,6 +442,11 @@ p.card-text {
     padding-top: 15px;
 }
 
+.carousel-item {
+    border: 2px solid white;
+    border-radius: 5px;
+
+}
 
 #carousel-hp .carousel-inner .carousel-item img {
     max-height: 400px;
@@ -621,6 +626,12 @@ p.card-text {
     width: 100%;
     margin: 0;
     padding: 5px;
+}
+
+/* ---- Cart ---- */
+#keepshopping {
+    margin-top: 0.5rem;
+
 }
 
 /* ---- Media Queries ---- */

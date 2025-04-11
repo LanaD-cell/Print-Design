@@ -4,26 +4,26 @@ from decimal import Decimal
 
 
 def view_cart(request):
-
+    # Check if the user is authenticated
     if not request.user.is_authenticated:
         return redirect('login')
 
-    # Get the cart for the user (based on session or direct fetch)
+    # Get the user's cart
     cart = Cart.objects.get(user=request.user)
-    cart_items = CartItem.objects.filter(cart=cart)
 
-    # Debugging output
-    print(f"Cart Items in view_cart: {cart_items}")  # Check if cart items are being fetched
+    # Get the related CartItems
+    cart_items = cart.items.all()
 
-    total_price = sum(item.total_price() for item in cart_items)
+    # Use the method from the Cart model to calculate the total price
+    total_price = cart.total_price()
 
+    # Prepare the context to pass to the template
     context = {
         'cart_items': cart_items,
         'total_price': total_price,
     }
 
     return render(request, 'cart/cart.html', context)
-
 
 def add_to_cart(request):
     if request.method == 'POST':
@@ -71,8 +71,10 @@ def add_to_cart(request):
         # Get or create the cart for the user
         cart, _ = Cart.objects.get_or_create(user=request.user)
 
+        # Calculate the total item price
         total_item_price = selected_price + service_price + delivery_price
 
+        # Create the CartItem without the total_price field
         cart_item = CartItem(
             cart=cart,
             product=product,
@@ -96,9 +98,10 @@ def add_to_cart(request):
         print(f"Added to cart: {product.name}, Size: {selected_size}, Quantity: {selected_quantity}, Total Price: €{total_item_price}")
         print(f"Cart ID in session: {request.session.get('cart_id')}")
 
-        return redirect('cart')
+        return redirect('cart:cart_details')
     else:
-        return redirect('cart')
+        return redirect('cart:cart_details')
+
 
 def create_order(request):
     if not request.user.is_authenticated:
@@ -136,3 +139,12 @@ def create_order(request):
     grand_total = order.get_grand_total()
 
     return render(request, 'order_summary.html', {'order': order, 'grand_total': grand_total})
+
+def remove_item(request, item_id):
+    try:
+        item = CartItem.objects.get(id=item_id)
+        item.delete()
+    except CartItem.DoesNotExist:
+        pass
+
+    return redirect('cart:cart_details')
