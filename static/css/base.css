@@ -442,6 +442,11 @@ p.card-text {
     padding-top: 15px;
 }
 
+.carousel-item {
+    border: 2px solid white;
+    border-radius: 5px;
+
+}
 
 #carousel-hp .carousel-inner .carousel-item img {
     max-height: 400px;

@@ -2,55 +2,78 @@
 {% load static %}
 
 {% block page_header %}
-    <div class="container header-container">
-        <div class="row">
-            <div class="col"></div>
-        </div>
+<div class="container header-container">
+    <div class="row">
+        <div class="col"></div>
     </div>
+</div>
 {% endblock %}
 
 {% block content %}
-    <div class="overlay"></div>
-    <div class="container mb-2">
-        <div class="row">
-            <div class="col">
-                <hr>
-                <h2 class="logo-font mb-4">Shopping Cart</h2>
-                <hr>
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col">
-                {% if selected_size != 'None' %}
-                    <h3>Selected Summary</h3>
-                    <p>Selected Size: {{ selected_size }}</p>
-                    <p>Selected Quantity: {{ selected_quantity }}</p>
-                    <p>Additional Services: {% if selected_services %}{{ selected_services|join:', ' }}{% else %}None{% endif %}</p>
-                    <p>Delivery Service: {{ selected_delivery }}</p>
-                    <p>Total Price: €{{ total_price }}</p>
-
-                    <!-- Checkout Button to Trigger create_order -->
-                    <form method="POST" action="{% url 'cart:create_order' %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn btn-outline-black rounded-0 btn-lg">
-                            <span class="icon">
-                                <i class="fas fa-credit-card"></i>
-                            </span>
-                            <span class="text-uppercase">Proceed to Checkout</span>
-                        </button>
-                    </form>
-
-                {% else %}
-                    <p class="lead mb-5">Your cart is empty.</p>
-                    <a href="{% url 'products' %}" class="btn btn-outline-black rounded-0 btn-lg">
-                        <span class="icon">
-                            <i class="fas fa-chevron-left"></i>
-                        </span>
-                        <span class="text-uppercase">Keep Shopping</span>
-                    </a>
-                {% endif %}
-            </div>
+<div class="overlay"></div>
+<div class="container mb-2">
+    <div class="row">
+        <div class="col">
+            <hr>
+            <h2 class="logo-font mb-4">Shopping Cart</h2>
+            <hr>
         </div>
     </div>
+
+    <div class="row">
+        <div class="col">
+            {% if cart_items %}
+            <ul>
+            {% for item in cart_items %}
+                <li>{{ item.product.name }} - {{ item.size }} - {{ item.quantity }} x {{ item.price }} = {{ item.total_price }}</li>
+            {% endfor %}
+            </ul>
+            <p>Total Price: {{ total_price }}</p>
+            {% else %}
+                <p>Your cart is empty.</p>
+            {% endif %}
+
+            {% if not cart_items %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Size</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Services</th>
+                        <th>Delivery</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.size }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>€{{ item.price }}</td>
+                        <td>€{{ item.service_price }}</td>
+                        <td>€{{ item.delivery_price }}</td>
+                        <td>€{{ item.total_price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <!-- Checkout Button -->
+            <form method="POST" action="{% url 'cart:create_order' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-black rounded-0 btn-lg">
+                    <span class="icon"><i class="fas fa-credit-card"></i></span>
+                    <span class="text-uppercase">Proceed to Checkout</span>
+                </button>
+            </form>
+
+            <div class="text-right">
+                <strong>Total: €{{ total_price }}</strong>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock %}
