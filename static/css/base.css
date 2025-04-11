@@ -950,6 +950,15 @@ p.card-text {
     #site-links {
         padding-top: 120px;
     }
+    #robot {
+        max-width: 350px;
+        max-height: 600px;
+        margin-top: 50px;
+        margin-left: 20px;
+    }
+    .robot-text {
+        margin-left: 10px;
+    }
 }
 
 /* For screens up to 991px */
@@ -1045,6 +1054,13 @@ p.card-text {
     #cart-form .text-right {
         text-align: center;
         margin-top: 10px;
+    }
+
+    #robot {
+        max-width: 300px;
+        max-height: 480px;
+        margin-top: 50px;
+        margin-left: -40px;
     }
 
 }
