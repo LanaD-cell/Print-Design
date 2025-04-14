@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib import messages
 from .models import (Product,
                     Category,
                     ProductSize,
-                    QuantityOption,
+                    QuantityOption
                     )
 import json
 from django.conf import settings
@@ -36,15 +37,16 @@ def all_products(request):
                     sortkey = f'-{sortkey}'
             products = products.order_by(sortkey)
 
-
-
-    # Filter by product ID if provided
+        # Filter by product ID if provided
         if product_id:
             products = products.filter(id=product_id)
 
-    # Filter by category ID if provided
+        # Filter by category ID if provided
         if category_id:
             products = products.filter(category_id=category_id)
+
+    if not products.exists():
+        messages.error(request, 'No products found matching your search criteria.')
 
     current_sorting = f'{sort}_{direction}'
 
@@ -55,7 +57,6 @@ def all_products(request):
     }
 
     return render(request, 'products/products.html', context)
-
 
 
 def category_detail(request, category_id):
@@ -82,7 +83,7 @@ def product_detail(request, product_id):
     if request.method == 'POST':
         selected_size = request.POST.get('size')
         selected_quantity = request.POST.get('quantity')
-        selected_services = request.POST.getlist('additional_services')  # Handles multiple services
+        selected_services = request.POST.getlist('additional_services')
         selected_delivery = request.POST.get('delivery_option')
 
         # Get the price for the selected size and quantity
@@ -91,7 +92,7 @@ def product_detail(request, product_id):
 
         # Calculate the total price based on selected size and quantity
         if size_obj and quantity_obj:
-            total_price = quantity_obj.price  # Add more logic if needed for services or delivery
+            total_price = quantity_obj.price
 
         # Optionally, add additional service prices to the total price
         for service in selected_services:
@@ -106,7 +107,7 @@ def product_detail(request, product_id):
         elif selected_delivery == "Express Delivery":
             total_price += 25.00
         else:
-            total_price += 0.00  # Standard Delivery
+            total_price += 0.00
 
     context = {
         'product': product,

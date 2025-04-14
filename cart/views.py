@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Product, Cart, CartItem, Order
+from .models import Product, Cart, CartItem, Order, OrderItem
+from django.contrib import messages
 from decimal import Decimal
 
 
@@ -97,8 +98,12 @@ def add_to_cart(request):
         request.session['cart_id'] = cart.id
 
         # Debugging output
-        print(f"Added to cart: {product.name}, Size: {selected_size}, Quantity: {selected_quantity}, Total Price: €{total_item_price}")
+        print(
+            f"Added to cart: {product.name}, Size: {selected_size},"
+            f"Quantity: {selected_quantity}, Total Price: €{total_item_price}")
         print(f"Cart ID in session: {request.session.get('cart_id')}")
+
+        messages.success(request, "Item added to your Cart!")
 
         return redirect('cart:cart_details')
     else:
@@ -112,8 +117,10 @@ def create_order(request):
     cart = Cart.objects.get(user=request.user)
 
     # Calculate service and delivery price based on cart items
-    total_service_price = sum(item.service_price for item in cart.items.all())
-    total_delivery_price = sum(item.delivery_price for item in cart.items.all())
+    total_service_price = sum(
+        item.service_price for item in cart.items.all())
+    total_delivery_price = sum(
+        item.delivery_price for item in cart.items.all())
 
     cart_total = cart.total_price  # Use the cart's total price
 
@@ -140,12 +147,16 @@ def create_order(request):
 
     grand_total = order.get_grand_total()
 
-    return render(request, 'order_summary.html', {'order': order, 'grand_total': grand_total})
+    return render(
+        request, 'order_summary.html', {
+            'order': order, 'grand_total': grand_total})
+
 
 def remove_item(request, item_id):
     try:
         item = CartItem.objects.get(id=item_id)
         item.delete()
+        messages.info(request, 'Item removed from Cart.')
     except CartItem.DoesNotExist:
         pass
 

@@ -426,57 +426,6 @@
       }
     },
     {
-      "id": 14,
-      "pk": 14,
-      "model": "products.product",
-      "fields": {
-        "name": "Custom-print",
-        "price": "150.00",
-        "description": "Custom print orders for business cards, flyers, banners, and more.",
-        "category": 3,
-        "rating": 4.7,
-        "image_url": "http://example.com/images/custom-print-orders.jpg",
-        "image": "custom-print-orders.jpg",
-        "additional_services": [
-          {
-            "service": "Own Print Data Upload",
-            "description": "Upload your own print data in the shopping cart or after completing the order.",
-            "price": 0.00
-          },
-          {
-            "service": "Online Designer",
-            "description": "Quickly and easily create print data online – design it yourself or choose from millions of templates.",
-            "price": 0.00
-          },
-          {
-            "service": "Design Service",
-            "description": "Our creative team designs print data, logos, etc. according to your wishes.",
-            "price": 40.00
-          },
-          {
-            "service": "Standard Production",
-            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including free shipping within Germany)",
-            "price": 0.00
-          },
-          {
-            "service": "Priority Production",
-            "description": "Delivery: approx. 3 working days until Wednesday, 09.04.2025* (including express shipping within Germany)",
-            "price": 15.00
-          },
-          {
-            "service": "48h Express Production",
-            "description": "Delivery: 2 working days until Tuesday, 08.04.2025* (including express shipping within Germany)",
-            "price": 25.00
-          },
-          {
-            "service": "24h Express Production",
-            "description": "Delivery: 1 working day until Monday, 07.04.2025* (including express shipping within Germany)",
-            "price": 35.00
-          }
-        ]
-      }
-    },
-    {
       "id": 15,
       "pk": 15,
       "model": "products.product",
