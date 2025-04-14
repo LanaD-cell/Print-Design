@@ -48,7 +48,6 @@ strong {
     color: #272640;
 }
 
-/* Icon styles */
 .icon {
     align-items: center;
     display: inline-flex;
@@ -57,7 +56,22 @@ strong {
     width: 1.5rem;
 }
 
-/* Updated Top Navigation Bar */
+/* ---- Homepage ---- */
+
+.welcome-robot {
+    margin-top: -100px;
+    height: 650px;
+    padding-left: 80px;
+}
+
+.homepage-text {
+    color: white;
+    background-color: rgba(11, 82, 91, 0.8);
+    font-weight: bold;
+    text-align: center;
+    max-width: 1200px;
+}
+/* Top Navigation Bar */
 #topnav {
     position: fixed;
     top: 0;
@@ -156,7 +170,6 @@ strong {
     align-items: center;
 }
 
-/* Style for the UL element */
 .icon-ul {
     list-style: none;
     padding: 0;
@@ -201,7 +214,6 @@ footer .social-icons a:hover {
     color: #006466;
 }
 
-/* ---- Homepage ---- */
 
 /* About Card Styling */
 .about-card {
@@ -439,7 +451,7 @@ p.card-text {
     max-width: 80%;
     margin: 0 auto;
     height: 400px;
-    padding-top: 15px;
+    padding-top: 30px;
 }
 
 .carousel-item {
@@ -921,6 +933,83 @@ p.card-text {
 /* Side column styling */
 #cart-side-column {
     display: none; /* Hidden by default */
+}
+
+.message-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+}
+
+.toast {
+    position: fixed;
+    color: white;
+    background-color: #006466;
+    top: 4rem;
+    right: 2rem;
+    z-index: 9999;
+}
+
+.custom-toast {
+    overflow: visible;
+}
+
+.toast-capper {
+    height: 2px;
+}
+
+/* from CSS-tricks.com: https://css-tricks.com/snippets/css/css-triangle/ */
+
+.arrow-up {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 10px solid black;
+    position: absolute;
+    top: -10px;
+    right: 36px;
+}
+
+/* Convenience classes - colors copied from Bootstrap */
+.arrow-primary {
+    border-bottom-color: #007bff !important;
+}
+
+.arrow-secondary {
+    border-bottom-color: #6c757d !important;
+}
+
+.arrow-success {
+    border-bottom-color: #28a745 !important;
+}
+
+.arrow-danger {
+    border-bottom-color: #dc3545 !important;
+}
+
+.arrow-warning {
+    border-bottom-color: #ffc107 !important;
+}
+
+.arrow-info {
+    border-bottom-color: #17a2b8 !important;
+}
+
+.arrow-light {
+    border-bottom-color: #f8f9fa !important;
+}
+
+.arrow-dark {
+    border-bottom-color: #343a40 !important;
+}
+
+.cart-notification-wrapper {
+    color: white;
+    height: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 /* ---- Media Queries ---- */

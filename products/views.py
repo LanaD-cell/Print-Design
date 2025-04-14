@@ -87,8 +87,10 @@ def product_detail(request, product_id):
         selected_delivery = request.POST.get('delivery_option')
 
         # Get the price for the selected size and quantity
-        size_obj = ProductSize.objects.filter(product=product, size=selected_size).first()
-        quantity_obj = QuantityOption.objects.filter(product=product, quantity=int(selected_quantity)).first()
+        size_obj = ProductSize.objects.filter(
+            product=product, size=selected_size).first()
+        quantity_obj = QuantityOption.objects.filter(
+            product=product, quantity=int(selected_quantity)).first()
 
         # Calculate the total price based on selected size and quantity
         if size_obj and quantity_obj:
@@ -123,9 +125,17 @@ def product_detail(request, product_id):
     return render(request, 'products/product_detail.html', context)
 
 def terms(request):
+    """
+    Renders the terms and conditions when radio
+    button is clicked on the contact form
+    """
     return render(request, 'terms.html')
 
 def calculate_price(request, product_id):
+    """
+    Calculate the total price, either as a
+    set price for quantity or unit price
+    """
     product = Product.objects.get(id=product_id)
     selected_size = request.POST.get('product_size')
     selected_quantity = int(request.POST.get('product_quantity'))
