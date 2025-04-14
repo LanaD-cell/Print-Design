@@ -145,9 +145,6 @@
 </header>
 
     <div class="main-content">
-        {% if messages %}
-          <div class="message-container"></div>
-        {% endif %}
 
         {% block delivery-banner %}{% endblock %}
         {% block carousel %}{% endblock %}
@@ -155,6 +152,7 @@
         {% block about %}{% endblock %}
         {% block faq %}{% endblock %}
         {% block content %}{% endblock %}
+
     </div>
 
     <footer class="bg-white text-dark py-4 mt-5" id="footer-container">
@@ -358,6 +356,38 @@
 });
 </script>
 
-    {% block scripts %}{% endblock %}
+  {% block scripts %}{% endblock %}
+
+  {% block postloadjs %}
+  <script>
+  document.addEventListener("DOMContentLoaded", function () {
+  const toastEls = document.querySelectorAll(".toast");
+  toastEls.forEach((toastEl) => {
+    const toast = new bootstrap.Toast(toastEl, {
+      delay: 5000
+    });
+    toast.show();
+  });
+});
+</script>
+  {% endblock %}
+
+  {% if messages %}
+        <div class="message-container">
+              {% for message in messages %}
+                  {% with message.level as level %}
+                      {% if level == 40 %}
+                          {% include 'includes/toasts/toast_error.html' %}
+                      {% elif level == 30 %}
+                          {% include 'includes/toasts/toast_warning.html' %}
+                      {% elif level == 25 %}
+                          {% include 'includes/toasts/toast_success.html' %}
+                      {% else %}
+                          {% include 'includes/toasts/toast_info.html' %}
+                      {% endif %}
+                  {% endwith%}
+              {% endfor %}
+          </div>
+      {% endif %}
   </body>
 </html>
