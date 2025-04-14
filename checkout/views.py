@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from cart.models import Cart
+from django.http import Http404
 
-# Create your views here.
+
 def create_order(request):
     if not request.user.is_authenticated:
         return redirect('login')
@@ -41,3 +43,12 @@ def create_order(request):
     return render(
         request, 'order_summary.html', {
             'order': order, 'grand_total': grand_total})
+
+
+def create_order(request):
+    try:
+        cart = Cart.objects.get(user=request.user)
+    except Cart.DoesNotExist:
+        raise Http404("Cart does not exist for this user.")
+
+    return redirect('login')
