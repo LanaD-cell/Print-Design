@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'products',
     'cart',
     'checkout',
+    'crispy_forms',
 
 ]
 
@@ -99,8 +100,10 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 ACCOUNT_USERNAME_MIN_LENGTH = 4
-LOGIN_URL = '/account/login/'
+
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGIN_TEMPLATE = 'registration/login.html'
 
 WSGI_APPLICATION = 'print_design.wsgi.application'
 
@@ -166,6 +169,8 @@ JAZZMIN_SETTINGS = {
     "show_navigation": True,
     "theme": "dark",
 }
+
+CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 FREE_DELIVERY_THRESHOLD = 50
 STANDARD_DELIVERY_PERCENTAGE = 10

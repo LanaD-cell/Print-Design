@@ -1,8 +1,10 @@
 from django import forms
-from allauth.account.forms import SignupForm
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
+from .models import Order
 
-class CustomSignupForm(SignupForm):
-    full_name = forms.CharField(max_length=100, label='Full Name')
+class CustomSignupForm(UserCreationForm):
+    name = forms.CharField(max_length=100, label='Full Name')
     phone_number = forms.CharField(max_length=20, label='Phone Number')
     country = forms.CharField(max_length=100)
     postcode = forms.CharField(max_length=20, required=False)
@@ -24,7 +26,7 @@ class CustomSignupForm(SignupForm):
         user = super().save(request)
 
         profile = user.profile
-        profile.full_name = self.cleaned_data['full_name']
+        profile.name = self.cleaned_data['full_name']
         profile.phone_number = self.cleaned_data['phone_number']
         profile.country = self.cleaned_data['country']
         profile.postcode = self.cleaned_data['postcode']
@@ -41,3 +43,43 @@ class CustomSignupForm(SignupForm):
 
         profile.save()
         return user
+
+class Meta:
+    model = User
+    fields = ['username', 'name', 'email', 'password1', 'password2']
+
+class OrderForm(forms.ModelForm):
+
+    class Meta:
+        model = Order
+        fields = ('name', 'email', 'phone_number',
+                  'street_address1', 'street_address2',
+                  'town_or_city', 'postcode', 'country',
+        )
+
+    def __init__(self, *args, **kwargs):
+        """
+        Add placeholders and classes, remove auto-generated
+        labels and set autofocus on first field
+        """
+        super().__init__(*args, **kwargs)
+        placeholders = {
+            'name': 'Full Name',
+            'email': 'Email Address',
+            'phone_number': 'Phone Number',
+            'country': 'Country',
+            'postcode': 'Postal Code',
+            'town_or_city': 'Town or City',
+            'street_address1': 'Street Address 1',
+            'street_address2': 'Street Address 2',
+        }
+
+        self.fields['name'].widget.attrs['autofocus'] = True
+        for field in self.fields:
+            if self.fields[field].required:
+                placeholder = f'{placeholders[field]} *'
+            else:
+                placeholder = placeholders[field]
+            self.fields[field].widget.attrs['placeholder'] = placeholder
+            self.fields[field].widget.attrs['class'] = 'stripe-style-input'
+            self.fields[field].label = False
