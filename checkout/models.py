@@ -36,6 +36,8 @@ class Order(models.Model):
     order_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
 
+    service_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    additional_services = models.JSONField(default=list)
     service_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
@@ -51,12 +53,17 @@ class Order(models.Model):
         Update grand total each time a line item is added,
         accounting for delivery costs.
         """
-        self.order_total = self.lineitems.aggregate(Sum('lineitem_total'))['lineitem_total__sum']
+        self.order_total = self.items.aggregate(Sum('lineitem_total'))['lineitem_total__sum']
+
+         # Calculate the service cost
+        self.service_cost = sum(item['price'] for item in self.additional_services)
+
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
             self.delivery_cost = self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
         else:
             self.delivery_cost = 0
-        self.grand_total = self.order_total + self.delivery_cost
+
+        self.grand_total = self.order_total + self.delivery_cost + self.service_cost
         self.save()
 
     def save(self, *args, **kwargs):
@@ -66,6 +73,9 @@ class Order(models.Model):
         """
         if not self.order_number:
             self.order_number = self._generate_order_number()
+
+        self.update_total()
+
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -84,21 +94,35 @@ class Order(models.Model):
     def get_grand_total(self):
         return self.total_price() + self.service_price + self.delivery_price
 
-class OrderItem(models.Model):
+class OrderLineItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_size = models.CharField(max_length=2, null=True, blank=True)
     quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    lineitem_total = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, editable=False)
     service_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    additional_services = models.JSONField(default=list)
 
     def save(self, *args, **kwargs):
-        """
-        Override the original save method to set the lineitem total
-        and update the order total.
-        """
-        self.lineitem_total = self.product.price * self.quantity
+        total_price = 0
+
+        if self.product.pricing_json:
+            quantities = self.product.pricing_json.get("quantities", [])
+
+            # Look for the exact quantity in the JSON
+            for qty in quantities:
+                if self.quantity == qty["quantity"]:
+                    total_price = qty["price"]
+                    break
+
+        # If no price found in JSON, we might want to handle it
+        if total_price == 0:
+            # For now, let's use a fallback: raise an exception if no matching price found
+            raise ValueError(f"No price found for quantity {self.quantity} in product pricing.")
+
+        # Add service and delivery prices to the total
+        self.lineitem_total = total_price + self.service_price + self.delivery_price
         super().save(*args, **kwargs)
 
     def __str__(self):

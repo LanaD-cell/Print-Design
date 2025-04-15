@@ -13,12 +13,12 @@
       {% endblock %}
 
       {% block carousel %}
-      <div class="container">
+      <div class="carousel-container">
         <div class="row justify-content-center">
 
           <!-- Image Column -->
           <div class="col-4 col-md-4 col-lg-4 d-none d-md-block">
-            <img src="/static/images/welcome-robot.png" class="welcome-robot" alt="yellow robot">
+            <img src="/static/images/better-robot.png" class="welcome-robot" alt="yellow robot">
           </div>
           <!-- Carousel Section -->
           <div class="col-11 col-md-9 col-lg-8">
@@ -58,24 +58,20 @@
               </button>
             </div>
           </div>
-          <div class="homepage-text">
-          <p>We are your trusted partner for high-quality, environmentally
-            friendly printing solutions. Whether you're looking for custom prints,
-            promotional materials, or design services, we've got you covered.
-            Let us help bring your ideas to life with precision and care.
-            Explore our products and services today!</p>
-          </div>
-        </div>
+          <!-- Seals and Text Side-by-Side -->
+<div class="col-12 mt-4">
+  <div class="row align-items-center justify-content-center">
+      <!-- Paragraph Column -->
+      <div class="col-12 col-md-4">
+        <p class="homepage-text text-center">
+          We are your trusted partner for high-quality, environmentally friendly printing solutions.
+          Whether you're looking for custom prints, promotional materials, or design services,
+          we've got you covered. Let us help bring your ideas to life with precision and care.
+          Explore our products and services today!
+        </p>
       </div>
-      {% endblock %}
-    </div>
-  </div>
-
-  <!-- Seals Section (Now evenly spaced in one row) -->
-<div class="row justify-content-center my-4">
-  {% block seals %}
-  <div class="col-12">
-    <div class="d-flex justify-content-center align-items-center gap-4 flex-wrap">
+    <!-- Seals Column -->
+    <div class="col-12 col-md-8 d-flex justify-content-center gap-4 flex-wrap mb-3 mb-md-0">
       <a href="">
         <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal3_c49pnq.webp"
              alt="Seal Image 3"
@@ -102,9 +98,9 @@
       </a>
     </div>
   </div>
-  {% endblock %}
 </div>
-
+      </div>
+  {% endblock %}
 
   <div class="row">
     <div class="col-12">
