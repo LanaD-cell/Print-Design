@@ -73,7 +73,7 @@
 
                     <!-- Checkout Buttons -->
                     <div class="gap-2 d-md-block">
-                        <form method="POST" action="{% url 'checkout:create_cart_order' %}">
+                        <form method="GET" action="{% url 'checkout:order_summary' %}">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-secondary checkout-btn">
                                 <span class="icon"><i class="fas fa-credit-card"></i></span>

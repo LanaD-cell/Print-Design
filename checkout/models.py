@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from products.models import Product
 from django.db.models import Sum
 from django.conf import settings
+from decimal import Decimal
 
 def get_superuser():
     return User.object.get(is_superuser=True).id
@@ -22,7 +23,7 @@ class Order(models.Model):
 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     order_number = models.CharField(max_length=32, null=False, editable=False)
-    full_name = models.CharField(max_length=50, null=False, blank=False)
+    name = models.CharField(max_length=50, null=False, blank=False)
     email = models.EmailField(max_length=254, null=False, blank=False)
     phone_number = models.CharField(max_length=20, null=False, blank=False)
     country = models.CharField(max_length=40, null=False, blank=False)
@@ -38,8 +39,8 @@ class Order(models.Model):
 
     service_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     additional_services = models.JSONField(default=list)
-    service_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    service_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
 
     def _generate_order_number(self):
@@ -53,18 +54,24 @@ class Order(models.Model):
         Update grand total each time a line item is added,
         accounting for delivery costs.
         """
-        self.order_total = self.items.aggregate(Sum('lineitem_total'))['lineitem_total__sum']
+        print("Updating total for order:", self.order_number)  # Check if it's being called
+        self.order_total = self.items.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
 
-         # Calculate the service cost
+        # Calculate the service cost
         self.service_cost = sum(item['price'] for item in self.additional_services)
 
+        # Handle the condition where order_total might be 0
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
             self.delivery_cost = self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
         else:
             self.delivery_cost = 0
 
+        # Update the grand total
         self.grand_total = self.order_total + self.delivery_cost + self.service_cost
-        self.save()
+
+        print("Updated totals -> order_total:", self.order_total, "service_cost:", self.service_cost,
+            "delivery_cost:", self.delivery_cost, "grand_total:", self.grand_total)
+
 
     def save(self, *args, **kwargs):
         """
@@ -74,8 +81,14 @@ class Order(models.Model):
         if not self.order_number:
             self.order_number = self._generate_order_number()
 
+        super().save(*args, **kwargs)
+
+        # Update the total without causing recursion
         self.update_total()
 
+        print(f"Saving Order {self.order_number}, Total: {self.grand_total}")  # Check if save is triggered
+
+        # Now save the order instance
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -107,9 +120,8 @@ class OrderLineItem(models.Model):
     def save(self, *args, **kwargs):
         total_price = 0
 
-        if self.product.pricing_json:
-            quantities = self.product.pricing_json.get("quantities", [])
-
+        if self.product.quantities:
+            quantities = self.product.quantities or []
             # Look for the exact quantity in the JSON
             for qty in quantities:
                 if self.quantity == qty["quantity"]:
@@ -122,7 +134,7 @@ class OrderLineItem(models.Model):
             raise ValueError(f"No price found for quantity {self.quantity} in product pricing.")
 
         # Add service and delivery prices to the total
-        self.lineitem_total = total_price + self.service_price + self.delivery_price
+        self.lineitem_total = Decimal(total_price) + self.service_price + self.delivery_price
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -130,4 +142,4 @@ class OrderLineItem(models.Model):
 
     def total_price(self):
         # Calculate total price without multiplying by quantity
-        return self.price + self.service_price + self.delivery_price
+        return self.lineitem_total
