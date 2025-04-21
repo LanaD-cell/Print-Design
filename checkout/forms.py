@@ -2,8 +2,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Order
+from homepage.models import Profile
 
 class CustomSignupForm(UserCreationForm):
+    # User fields
     name = forms.CharField(max_length=100, label='Full Name')
     phone_number = forms.CharField(max_length=20, label='Phone Number')
     country = forms.CharField(max_length=100)
@@ -22,11 +24,20 @@ class CustomSignupForm(UserCreationForm):
     delivery_street_address1 = forms.CharField(max_length=255, required=False)
     delivery_street_address2 = forms.CharField(max_length=255, required=False)
 
-    def save(self, request):
-        user = super().save(request)
+    class Meta:
+        model = User
+        fields = ['username', 'name', 'email', 'password1', 'password2']
 
-        profile = user.profile
-        profile.name = self.cleaned_data['full_name']
+    def save(self, commit=True):
+        # Save the user first
+        user = super().save(commit=False)
+        user.first_name = self.cleaned_data['name']
+
+        if commit:
+            user.save()
+
+        # Create and save the profile data
+        profile = Profile.objects.create(user=user)
         profile.phone_number = self.cleaned_data['phone_number']
         profile.country = self.cleaned_data['country']
         profile.postcode = self.cleaned_data['postcode']
@@ -34,6 +45,7 @@ class CustomSignupForm(UserCreationForm):
         profile.street_address1 = self.cleaned_data['street_address1']
         profile.street_address2 = self.cleaned_data['street_address2']
 
+        # If a different delivery address is provided, save it
         if self.cleaned_data.get('use_different_delivery_address'):
             profile.delivery_country = self.cleaned_data['delivery_country']
             profile.delivery_postcode = self.cleaned_data['delivery_postcode']
@@ -41,9 +53,10 @@ class CustomSignupForm(UserCreationForm):
             profile.delivery_street_address1 = self.cleaned_data['delivery_street_address1']
             profile.delivery_street_address2 = self.cleaned_data['delivery_street_address2']
 
-        profile.save()
-        return user
+        if commit:
+            profile.save()
 
+        return user
 class Meta:
     model = User
     fields = ['username', 'name', 'email', 'password1', 'password2']

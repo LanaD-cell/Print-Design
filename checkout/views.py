@@ -6,6 +6,8 @@ from .forms import CustomSignupForm
 from decimal import Decimal
 from django.contrib.auth import login
 from .forms import OrderForm
+from django.conf import settings
+
 
 def create_order(request):
     if not request.user.is_authenticated:
@@ -115,15 +117,44 @@ def order_summary(request):
     return render(request, 'checkout/order_checkout.html')
 
 def checkout(request):
-    cart = request.session.get('cart', {})
-    if not cart:
-        messages.error(request, "There's nothing in your cart at the moment")
-        return redirect(reverse('products'))
+    # Retrieve the cart using the cart_id stored in the session
+    cart = Cart.objects.get(id=request.session.get('cart_id'))
 
+    # If no cart is found, redirect to products page
+    if not cart:
+        messages.error(request, "There's nothing in your cart at the moment.")
+        return redirect('products')
+
+    # Define the delivery prices
+    delivery_prices = {
+        'Standard Production': Decimal('15.00'),
+        '48h Express Production': Decimal('25.00'),
+        '24h Express Production': Decimal('35.00')
+    }
+
+    # Get the selected delivery option from the POST request, defaulting to "Standard Production"
+    delivery_option = request.POST.get('delivery_option', 'Standard Production')
+    delivery_fee = delivery_prices.get(delivery_option, Decimal('5.00'))
+
+    # Calculate the total price of the cart including the delivery fee
+    cart_total = cart.total_price
+
+    service_price = sum(item.service_price for item in cart.items.all())
+
+    grand_total = cart_total + service_price + delivery_fee
+
+    # Instantiate the order form and pass the required context to the template
     order_form = OrderForm()
+
     template = 'checkout/order_checkout.html'
     context = {
         'order_form': order_form,
+        'cart': cart,
+        'delivery_option': delivery_option,
+        'delivery': delivery_fee,
+        'service_price': service_price,
+        'cart_total': cart_total,
+        'grand_total': grand_total,
         'stripe_public_key': 'pk_test_51REARw07B3iAgZ7ifyoRqqH6yGr0rA2JrzjM4mgbnXVPXAezZDday4EXycdZzfHzwPOtjONqEyWlwJQpjab5RSHO00lcct7D8j',
         'client_secret': 'test client secret',
     }
