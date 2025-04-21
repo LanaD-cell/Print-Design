@@ -33,7 +33,6 @@ body {
 }
 .main-content {
     min-height: 90vh;
-    padding-bottom: 50px;
     padding-top: 100px;
     display: flex;
     flex-direction: column;
@@ -64,15 +63,16 @@ strong {
     margin-top: -80px;
     height: 500px;
     z-index: 9999;
-    margin-left: 30px;
+    margin-left: 240px;
 }
 
 .homepage-text {
     color: white;
     background-color: rgba(11, 82, 91, 0.8);
     font-weight: bold;
-    margin-left: 90px;
+    margin-left: 350px;
     border-radius: 10px;
+    padding: 3px;
 }
 /* Top Navigation Bar */
 #topnav {

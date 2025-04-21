@@ -53,8 +53,8 @@
                                         <p class="cart-card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
                                         <p class="cart-card-text"><strong>Price:</strong> €{{ item.price }}</p>
                                         <p class="cart-card-text"><strong>Services:</strong> €{{ item.service_price }}</p>
-                                        <p class="cart-card-text"><strong>Delivery:</strong> €{{ item.delivery_price }}</p>
                                         <p class="cart-card-text"><strong>Total:</strong> €{{ total_price }}</p>
+
                                         <form method="POST" action="{% url 'cart:remove_item' item.id %}">
                                             {% csrf_token %}
                                             <button type="submit" class="btn btn-danger btn-sm">

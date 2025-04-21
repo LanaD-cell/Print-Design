@@ -7,8 +7,10 @@ from django.db.models import Sum
 from django.conf import settings
 from decimal import Decimal
 
+
 def get_superuser():
-    return User.object.get(is_superuser=True).id
+    return User.objects.get(is_superuser=True).id
+
 
 class Order(models.Model):
     PENDING = 'pending'
@@ -21,27 +23,51 @@ class Order(models.Model):
         (DELIVERED, 'Delivered'),
     ]
 
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
-    order_number = models.CharField(max_length=32, null=False, editable=False)
-    name = models.CharField(max_length=50, null=False, blank=False)
-    email = models.EmailField(max_length=254, null=False, blank=False)
-    phone_number = models.CharField(max_length=20, null=False, blank=False)
-    country = models.CharField(max_length=40, null=False, blank=False)
-    postcode = models.CharField(max_length=20, null=True, blank=True)
-    town_or_city = models.CharField(max_length=40, null=False, blank=False)
-    street_address1 = models.CharField(max_length=80, null=False, blank=False)
-    street_address2 = models.CharField(max_length=80, null=True, blank=True)
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="orders")
+    order_number = models.CharField(
+        max_length=32, null=False, editable=False)
+    name = models.CharField(
+        max_length=50, null=False, blank=False)
+    email = models.EmailField(
+        max_length=254, null=False, blank=False)
+    phone_number = models.CharField(
+        max_length=20, null=False, blank=False)
+    country = models.CharField(
+        max_length=40, null=False, blank=False)
+    postcode = models.CharField(
+        max_length=20, null=True, blank=True)
+    town_or_city = models.CharField(
+        max_length=40, null=False, blank=False)
+    street_address1 = models.CharField(
+        max_length=80, null=False, blank=False)
+    street_address2 = models.CharField(
+        max_length=80, null=True, blank=True)
+    delivery_option = models.CharField(
+        max_length=100,
+        choices=[('standard production', 'Standard Production'), ('priority delivery', 'Priority Delivery'),
+                 ('48h express delivery', '48h Express Delivery'),('24h express delivery', '24h Express Delivery')],
+        default='standard')
+    save_info = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
-    delivery_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=0)
-    order_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
-    grand_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
+    items = models.ManyToManyField('cart.CartItem', related_name='orders_items')
+    delivery_cost = models.DecimalField(
+        max_digits=6, decimal_places=2, null=False, default=0)
+    order_total = models.DecimalField(
+        max_digits=10, decimal_places=2, null=False, default=0)
+    grand_total = models.DecimalField(
+        max_digits=10, decimal_places=2, null=False, default=0)
 
-    service_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    service_cost = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0.0)
     additional_services = models.JSONField(default=list)
-    service_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
-    delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
-    status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
+    service_price = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    delivery_price = models.DecimalField(
+        max_digits=10, decimal_places=2, default=Decimal('0.00'))
+    status = models.CharField(
+        max_length=10, choices=STATUS_CHOICES, default=PENDING)
 
     def _generate_order_number(self):
         """
@@ -54,11 +80,14 @@ class Order(models.Model):
         Update grand total each time a line item is added,
         accounting for delivery costs.
         """
-        print("Updating total for order:", self.order_number)  # Check if it's being called
-        self.order_total = self.items.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
+        print("Updating total for order:", self.order_number)
+
+        # pylint: disable=no-member
+        self.order_total = self.items.all().aggregate(
+            Sum('lineitem_total'))['lineitem_total__sum'] or 0
 
         # Calculate the service cost
-        self.service_cost = sum(item['price'] for item in self.additional_services)
+        self.additional_services = self.additional_services or []
 
         # Handle the condition where order_total might be 0
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
@@ -108,7 +137,7 @@ class Order(models.Model):
         return self.total_price() + self.service_price + self.delivery_price
 
 class OrderLineItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="line_items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_size = models.CharField(max_length=2, null=True, blank=True)
     quantity = models.PositiveIntegerField()
@@ -130,7 +159,6 @@ class OrderLineItem(models.Model):
 
         # If no price found in JSON, we might want to handle it
         if total_price == 0:
-            # For now, let's use a fallback: raise an exception if no matching price found
             raise ValueError(f"No price found for quantity {self.quantity} in product pricing.")
 
         # Add service and delivery prices to the total

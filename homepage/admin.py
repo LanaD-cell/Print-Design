@@ -2,6 +2,7 @@ from django.contrib import admin
 from django import forms
 from django_summernote.admin import SummernoteModelAdmin
 from .models import FAQ
+from .models import Profile
 
 # Custom form for FAQ to use in the admin interface
 class FAQForm(forms.ModelForm):
@@ -17,5 +18,31 @@ class FAQAdmin(SummernoteModelAdmin):
     summernote_fields = ('answer',)
     list_display = ('question',)
 
+
+class ProfileAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'phone_number',
+        'country',
+        'town_or_city',
+        'street_address1',
+        'postcode',
+        'delivery_country',
+        'delivery_town_or_city',
+        'get_email'
+    )
+
+    search_fields = ('user__username', 'user__email', 'phone_number', 'town_or_city', 'street_address1')
+
+    list_filter = ('country', 'delivery_country')
+
+    def get_email(self, obj):
+        return obj.user.email
+    get_email.short_description = 'Email'
+
+    ordering = ('user__username',)
+
+# Register the Profile model in the admin interface
+admin.site.register(Profile, ProfileAdmin)
 # Register FAQ with the modified admin configuration
 admin.site.register(FAQ, FAQAdmin)

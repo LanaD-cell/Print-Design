@@ -64,59 +64,27 @@
                     <div class="card-header">Additional Services</div>
                     <div class="card-body">
                         <div class="card-text delivery-container">
-                            <div id="own_print_block" class="col-12 option-box mb-1 border-green">
-                                <label for="own_print_data_option">
-                                    <input type="checkbox" id="service_own_print_data_upload" name="own_print_data_option" value="1">
+                            <div class="col-12 option-box mb-1 border-green">
+                                <label>
+                                    <input type="checkbox" name="services" value="Own Print Data Upload">
                                     <span class="service-title"><i class="fas fa-upload"></i> Own Print Data</span>
                                     <span class="service-price-title">- Free of charge</span>
                                 </label>
                             </div>
 
-                            <div id="online_designs_block" class="col-12 mb-1 option-box">
-                                <label for="online_designs">
-                                    <input type="checkbox" id="service_online_designer" name="online_designs" value="1">
+                            <div class="col-12 mb-1 option-box">
+                                <label>
+                                    <input type="checkbox" name="services" value="Online Designer">
                                     <span class="service-title"><i class="fas fa-pencil-alt"></i> Online Design</span>
                                     <span class="service-price-title">- Ready to print designs</span>
                                 </label>
                             </div>
 
-                            <div id="hover_slider_options_1" class="col-12 option-box">
-                                <label for="design_services">
-                                    <input type="checkbox" id="service_design_service" name="design_services" value="1">
+                            <div class="col-12 option-box">
+                                <label>
+                                    <input type="checkbox" name="services" value="Design Service">
                                     <span class="service-title"><i class="fas fa-paint-brush"></i> Design Service</span>
                                     <span class="service-price-title">- Let a qualified designer help</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <h3>Delivery Options:</h3>
-                <div class="card delivery-card delivery-options-section" id="delivery_service">
-                    <div class="card-header">Delivery Options</div>
-                    <div class="card-body">
-                        <div class="card-text delivery-container">
-                            <div id="standard_delivery_block" class="col-12 option-box mb-1">
-                                <label for="standard_delivery">
-                                    <input type="radio" name="delivery_options" value="Standard Production" checked id="standard_delivery">
-                                    <span class="service-title"><i class="fas fa-truck"></i> Standard Delivery</span>
-                                    <span class="service-price-title">(3-5 working days)</span>
-                                </label>
-                            </div>
-
-                            <div id="priority_delivery_block" class="col-12 mb-1 option-box">
-                                <label for="priority_delivery">
-                                    <input type="radio" name="delivery_options" value="48h Express Production" id="48h_express_delivery">
-                                    <span class="service-title"><i class="fas fa-exclamation-circle"></i> Priority Delivery</span>
-                                    <span class="service-price-title">(2-3 working days)</span>
-                                </label>
-                            </div>
-
-                            <div id="express_delivery_block" class="col-12 option-box">
-                                <label for="express_delivery">
-                                    <input type="radio" name="delivery_options" value="24h Express Production" id="24h_express_delivery">
-                                    <span class="service-title"><i class="fas fa-clock"></i> Express Delivery</span>
-                                    <span class="service-price-title">(Next day)</span>
                                 </label>
                             </div>
                         </div>
@@ -128,17 +96,14 @@
                     <p>Selected Size: <span id="summary_size">None</span></p>
                     <p>Selected Quantity: <span id="summary_quantity">None</span></p>
                     <p>Additional Services: <span id="summary_services">None</span></p>
-                    <p>Delivery Service: <span id="summary_delivery">None</span></p>
                     <p>Total Price: <span id="summary_price">€0.00</span></p>
                 </div>
-
 
                 <!-- Add to Cart Button -->
                 <button type="submit" class="btn rounded-1 text-uppercase mt-5" style="color: white;">
                     Add to Cart
                 </button>
             </div>
-
 
             <div class="col">
                 <a href="{% url 'products' %}" class="btn rounded-1 mt-5">
@@ -169,29 +134,18 @@
     const quantitySelect = document.getElementById('selected_quantity');
 
     // Corrected selector for "Design Service" checkboxes
-    const serviceCheckboxes = document.querySelectorAll('input[name="own_print_data_option"], input[name="online_designs"], input[name="design_services"]');
-
-    // Corrected selector for delivery radio buttons
-    const deliveryRadios = document.querySelectorAll('input[name="delivery_options"]');
+    const serviceCheckboxes = document.querySelectorAll('input[name="services"]');
 
     const summarySize = document.getElementById('summary_size');
     const summaryQuantity = document.getElementById('summary_quantity');
     const summaryServices = document.getElementById('summary_services');
-    const summaryDelivery = document.getElementById('summary_delivery');
     const summaryPrice = document.getElementById('summary_price');
 
     // Define the fixed prices for services
     const servicePrices = {
-        'own_print_data_option': 0,
-        'online_designs': 35.00,
-        'design_services': 40.00
-    };
-
-    // Delivery prices
-    const deliveryPrices = {
-        'Standard Production': 5.00,
-        '48h Express Production': 10.00,
-        '24h Express Production': 15.00
+        'Own Print Data Upload': 0,
+        'Online Designer': 35.00,
+        'Design Service': 40.00
     };
 
     // Function to update the summary
@@ -204,47 +158,30 @@
         // Get selected services
         let selectedServices = '';
         let additionalServicesPrice = 0;
+
         serviceCheckboxes.forEach(function(checkbox) {
             if (checkbox.checked) {
-                selectedServices += checkbox.nextElementSibling.textContent.trim() + ', ';
-                additionalServicesPrice += servicePrices[checkbox.name] || 0;
+                const label = checkbox.closest('label');
+                const titleSpan = label?.querySelector('.service-title');
+
+                if (titleSpan) {
+                    selectedServices += titleSpan.textContent.trim() + ', ';
+                    additionalServicesPrice += servicePrices[checkbox.value] || 0;
+                }
             }
         });
 
-        // Clean up extra commas in services
-        selectedServices = selectedServices.slice(0, -2);
-
-        // Get selected delivery option
-        let selectedDelivery = '';
-        let deliveryPrice = 0;
-        deliveryRadios.forEach(function(radio) {
-            if (radio.checked) {
-                selectedDelivery = radio.nextElementSibling.textContent.trim();
-                deliveryPrice = deliveryPrices[radio.value] || 0;
-            }
-        });
-
-        // If no delivery option is selected, set to "None"
-        if (!selectedDelivery) {
-            selectedDelivery = 'None';
-            deliveryPrice = 0;
-        }
+        // Clean up extra commas in services (if any services are selected)
+        selectedServices = selectedServices.replace(/,\s*$/, '');
 
         // Calculate total price
-        const totalPrice = parseFloat(selectedQuantityPrice) + additionalServicesPrice + deliveryPrice;
+        const totalPrice = parseFloat(selectedQuantityPrice) + additionalServicesPrice;
 
         // Update the summary section
         summarySize.textContent = selectedSize;
         summaryQuantity.textContent = `Quantity: ${selectedQuantity} - Price: €${selectedQuantityPrice}`;
         summaryServices.textContent = selectedServices || 'None';
-        summaryDelivery.textContent = selectedDelivery || 'None';
         summaryPrice.textContent = `€${totalPrice.toFixed(2)}`;
-
-        // Update hidden form fields for submission
-        hiddenSize.value = selectedSize;
-        hiddenQuantity.value = selectedQuantity;
-        hiddenServices.value = selectedServices || 'None';
-        hiddenDelivery.value = selectedDelivery || 'None';
     }
 
     // Event listeners for updating summary
@@ -253,17 +190,14 @@
     serviceCheckboxes.forEach(function(checkbox) {
         checkbox.addEventListener('change', updateSummary);
     });
-    deliveryRadios.forEach(function(radio) {
-        radio.addEventListener('change', updateSummary);
-    });
 
     const addToCartForm = document.querySelector('form[action$="/cart/add_to_cart/"]');
     if (addToCartForm) {
         addToCartForm.addEventListener('submit', updateSummary);
-}
+    }
+
     // Initialize the summary on page load
     updateSummary();
 });
-
 </script>
 {% endblock %}

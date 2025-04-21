@@ -17,7 +17,7 @@ class Cart(models.Model):
         Calculate the total price for all items in the cart.
         This uses the `total_price` method from the CartItem model.
         """
-        return sum(item.price + item.service_price + item.delivery_price for item in self.items.all())
+        return sum(item.price + item.service_price for item in self.items.all())
 
     def __str__(self):
         return f"Cart for {self.user.username}"
@@ -32,10 +32,12 @@ class CartItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=100, null=True, blank=True)
     quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)  # The price per unit of the product
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     service_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+
+    services = models.TextField()
 
     def __str__(self):
         return f"{self.product.name} - {self.size} - {self.quantity}"
@@ -46,5 +48,13 @@ class CartItem(models.Model):
         This includes the price of the product, any service price,
         delivery price, and the quantity.
         """
-        return (self.price + self.service_price + self.delivery_price) * self.quantity
+        return (
+            Decimal(self.price or 0)
+            + Decimal(self.service_price or 0)
+            + Decimal(self.delivery_price or 0)
+        )
+
+    def save(self, *args, **kwargs):
+        self.total_price = self.total_price()
+        super().save(*args, **kwargs)
 

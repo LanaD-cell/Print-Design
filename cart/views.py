@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Cart, CartItem
 from django.contrib import messages
 from decimal import Decimal
+import json
 
 
 def view_cart(request):
@@ -14,6 +15,12 @@ def view_cart(request):
 
     # Get the related CartItems
     cart_items = cart.items.all()
+
+    for item in cart_items:
+        try:
+            item.services = json.loads(item.services)
+        except (json.JSONDecodeError, TypeError):
+            item.services = []
 
     # Use the method from the Cart model to calculate the total price
     total_price = cart.total_price()
@@ -37,8 +44,8 @@ def add_to_cart(request):
         selected_size = request.POST.get('size')
         selected_quantity = int(request.POST.get('quantity_option'))
         selected_services = request.POST.getlist('services')
-        selected_delivery = request.POST.get('delivery_options')
 
+        # Handle the case where size or quantity might be in a list format
         if isinstance(selected_size, list):
             selected_size = selected_size[0]
 
@@ -54,30 +61,25 @@ def add_to_cart(request):
         if selected_price is None:
             return redirect('cart:cart')
 
-        # Define service and delivery prices
         servicePrices = {
-            'own_print_data_option': Decimal('0.00'),
-            'online_designs': Decimal('35.00'),
-            'design_services': Decimal('40.00')
+            'Own Print Data Upload': Decimal('0.00'),
+            'Online Designer': Decimal('35.00'),
+            'Design Service': Decimal('40.00'),
+            'Standard Production': Decimal('0.00'),
+            'Priority Production': Decimal('15.00'),
+            '48h Express Production': Decimal('25.00'),
+            '24h Express Production': Decimal('35.00'),
         }
 
-        deliveryPrices = {
-            'Standard Production': Decimal('5.00'),
-            '48h Express Production': Decimal('10.00'),
-            '24h Express Production': Decimal('15.00')
-        }
-
-        service_price = sum(servicePrices.get(
-            service, Decimal('0.00')) for service in selected_services)
-        delivery_price = deliveryPrices.get(selected_delivery, Decimal('0.00'))
+        print(request.POST)
+        # Map the selected services to their corresponding price values
+        service_price = sum(
+            servicePrices.get(service, Decimal('0.00')) for service in selected_services)
 
         # Get or create the cart for the user
         cart, _ = Cart.objects.get_or_create(user=request.user)
 
-        # Calculate the total item price
-        total_item_price = selected_price + service_price + delivery_price
-
-        # Create the CartItem without the total_price field
+        # Create the CartItem object
         cart_item = CartItem(
             cart=cart,
             product=product,
@@ -85,13 +87,19 @@ def add_to_cart(request):
             quantity=selected_quantity,
             price=selected_price,
             service_price=service_price,
-            delivery_price=delivery_price
+            services=json.dumps(selected_services),
         )
+
+        # Properly handle the services field here
+        try:
+            cart_item.services = json.loads(cart_item.services)  # Decode services if needed
+        except (json.JSONDecodeError, TypeError):
+            cart_item.services = []  # Default to an empty list if decoding fails
 
         cart_item.save()
 
-        # Update cart total price
-        cart.total_price = cart.total_price()  # Recalculate total price
+        # Update the cart's total price
+        cart.total_price = cart.total_price()
         cart.save()
 
         # Save cart data to session
@@ -99,8 +107,9 @@ def add_to_cart(request):
 
         # Debugging output
         print(
-            f"Added to cart: {product.name}, Size: {selected_size},"
-            f"Quantity: {selected_quantity}, Total Price: €{total_item_price}")
+            f"Added to cart: {product.name}, Size: {selected_size}, "
+            f"Quantity: {selected_quantity}, Price: €{selected_price}, "
+            f"Service Price: €{service_price}")
         print(f"Cart ID in session: {request.session.get('cart_id')}")
 
         messages.success(request, "Item added to your Cart!")
@@ -108,7 +117,6 @@ def add_to_cart(request):
         return redirect('cart:cart_details')
     else:
         return redirect('cart:cart_details')
-
 
 def remove_item(request, item_id):
     try:

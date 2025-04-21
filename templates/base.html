@@ -26,11 +26,20 @@
       <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% endblock %}
 
+    {% block extra_css %}
+      <link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+    {% endblock %}
+
     {% block corejs %}
+    <!-- Load jQuery first -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
     <!-- Stripe -->
-    <script src="https://js.stripe.com/v3/"></script>
-    <script src="https://crypto-js.stripe.com/crypto-onramp-outer.js"></script>
-    <script src="onramp.js" defer></script>
+      <script src="https://js.stripe.com/v3/"></script>
+      <script src="https://crypto-js.stripe.com/crypto-onramp-outer.js"></script>
+
+    <!-- Your stripe_elements.js file -->
+      <script src="{% static 'checkout/js/stripe_elements.js' %}" defer></script>
     {% endblock %}
 
     {% block google_fonts %}
@@ -365,18 +374,24 @@
   {% block scripts %}{% endblock %}
 
   {% block postloadjs %}
+  {{ block.super }}
+
   <script>
-  document.addEventListener("DOMContentLoaded", function () {
-  const toastEls = document.querySelectorAll(".toast");
-  toastEls.forEach((toastEl) => {
-    const toast = new bootstrap.Toast(toastEl, {
-      delay: 5000
+    document.addEventListener("DOMContentLoaded", function () {
+      const toastEls = document.querySelectorAll(".toast");
+      toastEls.forEach((toastEl) => {
+        const toast = new bootstrap.Toast(toastEl, {
+          delay: 5000
+        });
+        toast.show();
+      });
     });
-    toast.show();
-  });
-});
-</script>
-  {% endblock %}
+  </script>
+
+  {{ stripe_public_key|json_script:"id_stripe_public_key" }}
+  {{ client_secret|json_script:"id_client_secret" }}
+  <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
+{% endblock %}
 
   {% if messages %}
         <div class="message-container">
