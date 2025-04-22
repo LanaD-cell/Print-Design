@@ -2,6 +2,7 @@ from decimal import Decimal
 from django.conf import settings
 from .models import Cart
 
+
 def cart_contents(request):
     """ Create Cart contents for Cost and Delivery Calculations """
 
@@ -10,15 +11,17 @@ def cart_contents(request):
         # Get the user's cart, or create one if it doesn't exist
         cart = Cart.objects.get(user=request.user)
     else:
-        # If user is not authenticated, use a session-based cart (for guest users)
+
         cart = request.session.get('cart', {})
 
     # Calculate the total and items count
     cart_items = cart.items.all() if cart and hasattr(cart, 'items') else []
-    total = cart.total_price() if cart and hasattr(cart, 'total_price') else Decimal('0.00')
+    total = cart.total_price() if cart and hasattr(
+        cart, 'total_price') else Decimal('0.00')
 
     # Product count (number of unique items in the cart)
-    product_count = cart.items.count() if cart and hasattr(cart, 'items') else 0
+    product_count = cart.items.count() if cart and hasattr(
+        cart, 'items') else 0
 
     # Delivery logic
     if total < settings.FREE_DELIVERY_THRESHOLD:
@@ -39,6 +42,7 @@ def cart_contents(request):
         'free_delivery_delta': free_delivery_delta,
         'free_delivery_threshold': settings.FREE_DELIVERY_THRESHOLD,
         'grand_total': grand_total,
+        'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
     }
 
     return context
