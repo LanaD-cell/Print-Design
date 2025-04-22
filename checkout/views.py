@@ -1,12 +1,15 @@
 from decimal import Decimal
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import Http404
+from django.urls import reverse
 from django.contrib.auth import login
 from django.contrib import messages
 from django.conf import settings
 import stripe
 from cart.models import Cart
 from cart.contexts import cart_contents
+from .models import OrderLineItem
+from products.models import Product
 from .models import Order, OrderLineItem
 from .forms import CustomSignupForm
 from .forms import OrderForm
@@ -85,22 +88,22 @@ def create_order(request):
         product = item.product
         selected_quantity = item.quantity
 
-    # Find the price based on the selected quantity
-    quantity_info = next(
-        (q for q in product.quantities if q['quantity'] == selected_quantity),
-        None
-    )
-    item_price = quantity_info['price'] if quantity_info else 0
+        # Find the price based on the selected quantity
+        quantity_info = next(
+            (q for q in product.quantities if q['quantity'] == selected_quantity),
+            None
+        )
+        item_price = quantity_info['price'] if quantity_info else 0
 
-    # Create order line item
-    OrderLineItem.objects.create(
-        order=order,
-        product=item.product,
-        quantity=item.quantity,
-        lineitem_total=item_price,
-        service_price=item.service_price,
-        delivery_price=item.delivery_price
-    )
+        # Create order line item
+        OrderLineItem.objects.create(
+            order=order,
+            product=item.product,
+            quantity=item.quantity,
+            lineitem_total=item_price,
+            service_price=item.service_price,
+            delivery_price=item.delivery_price
+        )
 
     # Clear the cart items after creating the order
     cart.items.all().delete()
@@ -133,47 +136,96 @@ def order_summary(request):
 def checkout(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe_secret_key = settings.STRIPE_SECRET_KEY
-    # Retrieve the cart using the cart_id stored in the session
-    cart = Cart.objects.get(id=request.session.get('cart_id'))
 
-    # If no cart is found, redirect to products page
-    if not cart:
-        messages.error(request, "There's nothing in your cart at the moment.")
-        return redirect('products')
+    if request.method == 'POST':
+        cart = Cart.objects.get(id=request.session.get('cart_id'))
 
-    current_cart = cart_contents(request)
-    total = current_cart['grand_total']
-    stripe_total = round(total * 100)
-    stripe.api_key = stripe_secret_key
-    intent = stripe.PaymentIntent.create(
-        amount=stripe_total,
-        currency=settings.STRIPE_CURRENCY,
-    )
+        form_data = {
+        'name':request.POST['name'],
+        'email':request.POST['email'],
+        'phone_number':request.POST['phone_number'],
+        'street_address1':request.POST['street_address1'],
+        'town_or_city':request.POST['town_or_city'],
+        'postcode':request.POST['postcode'],
+        'country':request.POST['country'],
+        }
+        order_form = OrderForm(form_data)
+        if order_form.is_valid():
+            order = order_form.save()
+            for item_id, item_data in cart.items():
+                try:
+                    product = Product.objects.get(id=item_id)
+                    if isinstance(item_data, int):
+                        order_line_item = OrderLineItem(
+                            order=order,
+                            product=product,
+                            quantity=item_data,
+                        )
+                        order_line_item.save()
+                    else:
+                        for size, quantity in item_data['items_by_size'].items():
+                            order_line_item = OrderLineItem(
+                                order=order,
+                                product=product,
+                                quantity=quantity,
+                                product_size=size,
+                            )
+                            order_line_item.save()
+                except Product.DoesNotExist:
+                    messages.error(request, (
+                        "One of the products in your bag wasn't found in our database. "
+                        "Please call us for assistance!")
+                    )
+                    order.delete()
+                    return redirect(reverse('view_cart'))
 
-    print(intent)
+            request.session['save_info'] = 'save-info' in request.POST
+            return redirect(reverse('checkout_success', args=[order.order_number]))
+        else:
+            messages.error(request, 'There was an error with your form. \
+                Please double check your information.')
+    else:
+        # Retrieve the cart using the cart_id
+        cart = Cart.objects.get(id=request.session.get('cart_id'))
 
-    # Define the delivery prices
-    delivery_prices = {
-        'Standard Production': Decimal('15.00'),
-        '48h Express Production': Decimal('25.00'),
-        '24h Express Production': Decimal('35.00')
-    }
+        # If no cart is found, redirect to products page
+        if not cart or not cart.items.exists():
+            messages.error(request, "There's nothing in your cart at the moment.")
+            return redirect('products')
 
-    # Get the selected delivery option from the POST request
-    delivery_option = request.POST.get(
-        'delivery_option', 'Standard Production')
-    delivery_fee = delivery_prices.get(
-        delivery_option, Decimal('0.00'))
+        current_cart = cart_contents(request)
+        total = current_cart['grand_total']
+        stripe_total = round(total * 100)
+        stripe.api_key = stripe_secret_key
+        intent = stripe.PaymentIntent.create(
+            amount=stripe_total,
+            currency=settings.STRIPE_CURRENCY,
+        )
 
-    # Calculate the total price of the cart including the delivery fee
-    cart_total = cart.total_price()
+        print(intent)
 
-    service_price = sum(item.service_price for item in cart.items.all())
+        # Define the delivery prices
+        delivery_prices = {
+            'Standard Production': Decimal('15.00'),
+            '48h Express Production': Decimal('25.00'),
+            '24h Express Production': Decimal('35.00')
+        }
 
-    grand_total = cart_total + service_price + delivery_fee
+        # Get the selected delivery option from the POST request
+        delivery_option = request.POST.get(
+            'delivery_option', 'Standard Production')
+        delivery_fee = delivery_prices.get(
+            delivery_option, Decimal('0.00'))
 
-    # Instantiate the order form and pass the required context to the template
-    order_form = OrderForm()
+        # Calculate the total price of the cart including the delivery fee
+        cart_total = cart.total_price()
+
+        service_price = sum(item.service_price for item in cart.items.all())
+
+        grand_total = cart_total + service_price + delivery_fee
+
+        # Instantiate the order form and pass the required context to the template
+        order_form = OrderForm()
 
     if not stripe_public_key:
         messages.warning(request, 'Stripe public key is missing. \
@@ -192,4 +244,24 @@ def checkout(request):
         'client_secret': intent.client_secret,
     }
 
+    return render(request, template, context)
+
+
+def checkout_success(request, order_number):
+    """
+    Handle successful checkout
+    """
+    save_info = request.session.get('save_info')
+    order = get_object_or_404(Order, order_number=order_number)
+    messages.success(request, f'Order successfully processed! \
+        Your order number is {order_number}. A confirmation \
+        email will be sent to {order.email}.')
+
+    if 'cart' in request.session:
+        del request.session['cart']
+
+    template = 'checkout/checkout_success.html'
+    context = {
+        'order': order,
+    }
     return render(request, template, context)

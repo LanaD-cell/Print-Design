@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block corejs %}
+<!-- Your stripe_elements.js file -->
+<script src="{% static 'checkout/js/stripe_elements.js' %}" defer></script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+{% endblock %}
+
+{% block page_header %}
+<div class="container header-container">
+    <div class="row">
+        <div class="col"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="overlay"></div>
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <hr>
+            <h2 class="logo-font mb-4">Thank you</h2>
+            <hr>
+            <p>Your order information is below.
+                Aconfirmation email will be sent to <strong>{{ order.email }}</strong>.</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 col-lg-7"></div>
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{% url 'products' %}" class="btn btn-primary">Continue Shopping</a>
+            <span class="icon mr-2">
+                <i class="fa-solid fa-cart-plus"></i>
+            </span>
+            <span class="text-uppercase">Have a look at some of our awesome products!</span>
+    </div>
+</div>
+{% endblock %}
+
+
