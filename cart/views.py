@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Product, Cart, CartItem
+from homepage.models import PrintData
 from django.contrib import messages
 from decimal import Decimal
 import json
@@ -75,6 +76,23 @@ def add_to_cart(request):
         # Map the selected services to their corresponding price values
         service_price = sum(
             servicePrices.get(service, Decimal('0.00')) for service in selected_services)
+
+        # Handle the 'Own Print Data Upload' service, if selected
+        if 'Own Print Data Upload' in selected_services and 'print_data_file' in request.FILES:
+            file = request.FILES['print_data_file']
+
+            # Create a PrintData object and link it to the user
+            print_data = PrintData.objects.create(
+                user=request.user,
+                product=product,
+                uploaded_file=file,
+                service_type='Own Print Data Upload'
+            )
+            # You can link it to the user's profile if needed
+            request.user.profile.print_data_files.add(print_data)
+            request.user.profile.save()
+
+            print(f"Print data uploaded: {file.name} for product {product.name}")
 
         # Get or create the cart for the user
         cart, _ = Cart.objects.get_or_create(user=request.user)

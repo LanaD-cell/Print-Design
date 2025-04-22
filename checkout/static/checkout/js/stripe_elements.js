@@ -35,5 +35,20 @@ document.addEventListener("DOMContentLoaded", function () {
         card.mount('#card-element');
     } else {
         console.error('The card element is not found in the DOM!');
-    }
+    };
+
+    card.addEventListener('change', function (event) {
+        var errorDiv = document.getElementById('card-errors');
+        if (event.error) {
+            var html = `
+                <span class="icon" role="alert">
+                    <i class=""></i>
+                </span>
+                <span>${event.error.message}</span>
+            `;
+            errorDiv.innerHTML = html;
+        } else {
+            errorDiv.textContent = '';
+        }
+    })
 });

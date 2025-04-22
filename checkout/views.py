@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from cart.models import Cart
+from cart.contexts import cart_contents
 from django.http import Http404
 from .models import Order, OrderLineItem
 from .forms import CustomSignupForm
@@ -7,7 +8,7 @@ from decimal import Decimal
 from django.contrib.auth import login
 from .forms import OrderForm
 from django.conf import settings
-
+import stripe
 
 def create_order(request):
     if not request.user.is_authenticated:
@@ -124,6 +125,10 @@ def checkout(request):
     if not cart:
         messages.error(request, "There's nothing in your cart at the moment.")
         return redirect('products')
+
+    current_cart = cart_contents(request)
+    total = current_cart['grand_total']
+    stripe_total = round(total * 100)
 
     # Define the delivery prices
     delivery_prices = {
