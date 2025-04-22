@@ -10,7 +10,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('summernote/', include('django_summernote.urls')),
     path('registration/signup/', views.signup_view, name='account_signup'),
-    path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='custom_login'),
+    path('registration/login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='custom_login'),
     path('account/', include('allauth.urls')),
     path('', include('homepage.urls')),
     path('products/', include('products.urls')),
