@@ -7,10 +7,10 @@
 */
 
 document.addEventListener("DOMContentLoaded", function () {
-    var stripe_public_key = document.getElementById('id_stripe_public_key').textContent.trim();
-    var client_secret = document.getElementById('id_client_secret').textContent.trim();
+    var stripePublicKey = document.getElementById('id_stripe_public_key').textContent.trim();
+    var clientSecret = document.getElementById('id_client_secret').textContent.trim();
 
-    var stripe = Stripe(stripe_public_key);
+    var stripe = Stripe(stripePublicKey);
     var elements = stripe.elements();
 
     var style = {
@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (event.error) {
             var html = `
                 <span class="icon" role="alert">
-                    <i class=""></i>
+                    <i class="fa-solid fa-circle-xmark"></i>
                 </span>
                 <span>${event.error.message}</span>
             `;
@@ -50,5 +50,35 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             errorDiv.textContent = '';
         }
-    })
+    });
+
+    // Handle form submition
+    var form = document.getElementById('payment-form');
+
+    form.addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        card.update({ 'disabled': true});
+        $('#submit-button').attr('disabled', true);
+        stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: card,
+            }
+        }).then(function(result) {
+            if (result.error) {
+                var errorDiv = document.getElementById('card-errors');
+                var html = `
+                    <span class="icon" role="alert">
+                    <i class="fa-solid fa-circle-xmark"></i>
+                    </span>
+                    <span>${result.error.message}</span>`;
+                $(errorDiv).html(html);
+                card.update({ 'disabled': false});
+                $('#submit-button').attr('disabled', false);
+            } else {
+                if (result.paymentIntent.status === 'succeeded') {
+                    form.submit();
+                }
+            }
+        });
+    });
 });

@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Order
 from homepage.models import Profile
+from .models import Order
+
 
 class CustomSignupForm(UserCreationForm):
     # User fields
@@ -12,7 +13,8 @@ class CustomSignupForm(UserCreationForm):
     postcode = forms.CharField(max_length=20, required=False)
     town_or_city = forms.CharField(max_length=100)
     street_address1 = forms.CharField(max_length=255, label='Address Line 1')
-    street_address2 = forms.CharField(max_length=255, label='Address Line 2', required=False)
+    street_address2 = forms.CharField(
+        max_length=255, label='Address Line 2', required=False)
 
     # Optional delivery address
     use_different_delivery_address = forms.BooleanField(
@@ -49,17 +51,23 @@ class CustomSignupForm(UserCreationForm):
         if self.cleaned_data.get('use_different_delivery_address'):
             profile.delivery_country = self.cleaned_data['delivery_country']
             profile.delivery_postcode = self.cleaned_data['delivery_postcode']
-            profile.delivery_town_or_city = self.cleaned_data['delivery_town_or_city']
-            profile.delivery_street_address1 = self.cleaned_data['delivery_street_address1']
-            profile.delivery_street_address2 = self.cleaned_data['delivery_street_address2']
+            profile.delivery_town_or_city = self.cleaned_data[
+                'delivery_town_or_city']
+            profile.delivery_street_address1 = self.cleaned_data[
+                'delivery_street_address1']
+            profile.delivery_street_address2 = self.cleaned_data[
+                'delivery_street_address2']
 
         if commit:
             profile.save()
 
         return user
+
+
 class Meta:
     model = User
     fields = ['username', 'name', 'email', 'password1', 'password2']
+
 
 class OrderForm(forms.ModelForm):
 
@@ -67,8 +75,7 @@ class OrderForm(forms.ModelForm):
         model = Order
         fields = ('name', 'email', 'phone_number', 'print_data_file',
                   'street_address1', 'street_address2',
-                  'town_or_city', 'postcode', 'country',
-        )
+                  'town_or_city', 'postcode', 'country')
 
     def __init__(self, *args, **kwargs):
         """
@@ -76,6 +83,15 @@ class OrderForm(forms.ModelForm):
         labels and set autofocus on first field
         """
         super().__init__(*args, **kwargs)
+
+        self.fields['name'].required = True
+        self.fields['email'].required = True
+        self.fields['phone_number'].required = True
+        self.fields['country'].required = True
+        self.fields['postcode'].required = True
+        self.fields['town_or_city'].required = True
+        self.fields['street_address1'].required = True
+
         placeholders = {
             'name': 'Full Name',
             'email': 'Email Address',
@@ -89,10 +105,17 @@ class OrderForm(forms.ModelForm):
 
         self.fields['name'].widget.attrs['autofocus'] = True
         for field in self.fields:
-            if self.fields[field].required:
-                placeholder = f'{placeholders[field]} *'
-            else:
-                placeholder = placeholders[field]
-            self.fields[field].widget.attrs['placeholder'] = placeholder
-            self.fields[field].widget.attrs['class'] = 'stripe-style-input'
-            self.fields[field].label = False
+            if field != 'print_data_file':
+                placeholder = placeholders.get(field, '')
+                if self.fields[field].required:
+                    placeholder = f'{placeholder} *'
+                self.fields[field].widget.attrs['placeholder'] = placeholder
+                self.fields[field].widget.attrs['class'] = 'stripe-style-input'
+                self.fields[field].label = False
+
+        if self.instance.print_data_file:
+            # Display the uploaded file name in the placeholder
+            self.fields['print_data_file'].widget.attrs[
+                'placeholder'] = f"File uploaded: {
+                    self.instance.print_data_file.name}"
+            self.fields['print_data_file'].widget.attrs['readonly'] = True

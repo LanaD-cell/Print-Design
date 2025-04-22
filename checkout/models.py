@@ -1,11 +1,10 @@
 import uuid
-
+from decimal import Decimal
 from django.db import models
 from django.contrib.auth.models import User
-from products.models import Product
 from django.db.models import Sum
 from django.conf import settings
-from decimal import Decimal
+from products.models import Product
 
 
 def get_superuser():
@@ -45,14 +44,19 @@ class Order(models.Model):
         max_length=80, null=True, blank=True)
     delivery_option = models.CharField(
         max_length=100,
-        choices=[('standard production', 'Standard Production'), ('priority delivery', 'Priority Delivery'),
-                 ('48h express delivery', '48h Express Delivery'),('24h express delivery', '24h Express Delivery')],
+        choices=[('standard production', 'Standard Production'),
+                 ('priority delivery', 'Priority Delivery'),
+                 ('48h express delivery', '48h Express Delivery'),
+                 ('24h express delivery', '24h Express Delivery')],
         default='standard')
-    print_data_file = models.FileField(upload_to='print_uploads/', null=True, blank=True)
+    print_data_file = models.FileField(
+        upload_to='print_uploads/', null=True, blank=True)
     save_info = models.BooleanField(default=False)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    items = models.ManyToManyField('cart.CartItem', related_name='orders_items')
+    created_at = models.DateTimeField(
+        auto_now_add=True)
+    items = models.ManyToManyField(
+        'cart.CartItem', related_name='orders_items')
     delivery_cost = models.DecimalField(
         max_digits=6, decimal_places=2, null=False, default=0)
     order_total = models.DecimalField(
@@ -90,18 +94,24 @@ class Order(models.Model):
         # Calculate the service cost
         self.additional_services = self.additional_services or []
 
-        # Handle the condition where order_total might be 0
+        # If the total = 0
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
-            self.delivery_cost = self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
+            self.delivery_cost = (
+                self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
+            )
         else:
             self.delivery_cost = 0
 
-        # Update the grand total
-        self.grand_total = self.order_total + self.delivery_cost + self.service_cost
+        self.grand_total = (
+            self.order_total + self.delivery_cost + self.service_cost
+        )
 
-        print("Updated totals -> order_total:", self.order_total, "service_cost:", self.service_cost,
-            "delivery_cost:", self.delivery_cost, "grand_total:", self.grand_total)
-
+        print(
+            "Updated totals -> order_total:", self.order_total,
+            "service_cost:", self.service_cost,
+            "delivery_cost:", self.delivery_cost,
+            "grand_total:", self.grand_total
+        )
 
     def save(self, *args, **kwargs):
         """
@@ -116,40 +126,46 @@ class Order(models.Model):
         # Update the total without causing recursion
         self.update_total()
 
-        print(f"Saving Order {self.order_number}, Total: {self.grand_total}")  # Check if save is triggered
+        print(f"Saving Order {self.order_number}, Total: {self.grand_total}")
 
         # Now save the order instance
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.order_number
-
-    def __str__(self):
-        return f"Order #{self.id} - {self.user.username}"
+        # pylint: disable=no-member
+        return f"Order #{self.order_number} - {self.user.username}"
 
     def total_price(self):
         """
         Calculate the total price for the order.
-        This includes the price of all OrderItems, along with service and delivery costs.
+        This includes the price of all OrderItems,
+        along with service and delivery costs.
         """
+        # pylint: disable=no-member
         return sum(item.total_price() for item in self.items.all())
 
     def get_grand_total(self):
         return self.total_price() + self.service_price + self.delivery_price
 
+
 class OrderLineItem(models.Model):
-    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="line_items")
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name="line_items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     product_size = models.CharField(max_length=2, null=True, blank=True)
     quantity = models.PositiveIntegerField()
-    lineitem_total = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, editable=False)
-    service_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
+    lineitem_total = models.DecimalField(
+        max_digits=6, decimal_places=2,
+        null=False, blank=False, editable=False)
+    service_price = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0.0)
+    delivery_price = models.DecimalField(
+        max_digits=10, decimal_places=2, default=0.0)
     additional_services = models.JSONField(default=list)
 
     def save(self, *args, **kwargs):
         total_price = 0
-
+        # pylint: disable=no-member
         if self.product.quantities:
             quantities = self.product.quantities or []
             # Look for the exact quantity in the JSON
@@ -160,14 +176,23 @@ class OrderLineItem(models.Model):
 
         # If no price found in JSON, we might want to handle it
         if total_price == 0:
-            raise ValueError(f"No price found for quantity {self.quantity} in product pricing.")
+            raise ValueError(
+                f"No price found for quantity {self.quantity} in "
+                "product pricing."
+            )
 
         # Add service and delivery prices to the total
-        self.lineitem_total = Decimal(total_price) + self.service_price + self.delivery_price
+        self.lineitem_total = (
+            Decimal(total_price) + self.service_price + self.delivery_price
+        )
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'Product ID {self.product.id} on order {self.order.order_number}'
+        # pylint: disable=no-member
+        return (
+            f"Product ID {self.product.id} on order "
+            f"{self.order.order_number}"
+        )
 
     def total_price(self):
         # Calculate total price without multiplying by quantity

@@ -17,7 +17,7 @@ class Cart(models.Model):
         Calculate the total price for all items in the cart.
         This uses the `total_price` method from the CartItem model.
         """
-        return sum(item.price + item.service_price for item in self.items.all())
+        return sum(item.total_price() for item in self.items.all())
 
     def __str__(self):
         return f"Cart for {self.user.username}"
@@ -55,6 +55,5 @@ class CartItem(models.Model):
         )
 
     def save(self, *args, **kwargs):
-        self.total_price = self.total_price()
         super().save(*args, **kwargs)
 
