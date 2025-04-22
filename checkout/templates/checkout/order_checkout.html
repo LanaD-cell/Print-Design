@@ -319,6 +319,12 @@
                 vatAmountEl.innerText = `€${vatAmount.toFixed(2)}`;
                 grandTotalEl.innerText = `€${grandTotal.toFixed(2)}`;
                 cardChargeEl.innerText = `€${grandTotal.toFixed(2)}`;
+
+                // Update the navbar cart total
+                const navbarCartTotalEl = document.getElementById('navbar-cart-total');
+                if (navbarCartTotalEl) {
+                    navbarCartTotalEl.innerText = grandTotal.toFixed(2);
+                }
             });
         });
 

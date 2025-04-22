@@ -48,6 +48,7 @@ class Order(models.Model):
         choices=[('standard production', 'Standard Production'), ('priority delivery', 'Priority Delivery'),
                  ('48h express delivery', '48h Express Delivery'),('24h express delivery', '24h Express Delivery')],
         default='standard')
+    print_data_file = models.FileField(upload_to='print_uploads/', null=True, blank=True)
     save_info = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)

@@ -29,7 +29,8 @@
             </div>
         </div>
 
-        <form method="POST" id="orderform" class="col-12 col-md-6 col-lg-4" action="{% url 'cart:add_to_cart' %}">
+        <form method="POST" id="orderform" class="col-12 col-md-6 col-lg-4" action="{% url 'cart:add_to_cart' %}"
+                    enctype="multipart/form-data">
             {% csrf_token %}
             <input type="hidden" name="product_id" value="{{ product.id }}">
             <div class="product-details-container mb-5 mt-md-5">
@@ -66,10 +67,14 @@
                         <div class="card-text delivery-container">
                             <div class="col-12 option-box mb-1 border-green">
                                 <label>
-                                    <input type="checkbox" name="services" value="Own Print Data Upload">
+                                    <input type="checkbox" name="services" value="Own Print Data Upload" id="own-print-checkbox">
                                     <span class="service-title"><i class="fas fa-upload"></i> Own Print Data</span>
                                     <span class="service-price-title">- Free of charge</span>
                                 </label>
+                                <div id="upload-file-box" style="display: none; margin-top: 10px;">
+                                    <input type="file" name="print_data_file" accept=".pdf,.jpg,.jpeg,.png,.zip">
+                                    <small class="text-muted">Accepted formats: PDF, JPG, PNG, ZIP</small>
+                                </div>
                             </div>
 
                             <div class="col-12 mb-1 option-box">
@@ -148,6 +153,17 @@
         'Design Service': 40.00
     };
 
+    const ownPrintCheckbox = document.getElementById('own-print-checkbox');
+    const fileUploadBox = document.getElementById('upload-file-box');
+
+    if (ownPrintCheckbox && fileUploadBox) {
+        ownPrintCheckbox.addEventListener('change', function () {
+            const isChecked = this.checked;
+            fileUploadBox.style.display = isChecked ? 'block' : 'none';
+            fileUploadBox.querySelector('input[type="file"]').required = isChecked;
+        });
+    }
+
     // Function to update the summary
     function updateSummary() {
         // Get selected size and quantity
@@ -170,6 +186,7 @@
                 }
             }
         });
+
 
         // Clean up extra commas in services (if any services are selected)
         selectedServices = selectedServices.replace(/,\s*$/, '');
