@@ -70,6 +70,14 @@ class Meta:
 
 
 class OrderForm(forms.ModelForm):
+    name = forms.CharField(required=True)
+    email = forms.EmailField(required=True)
+    phone_number = forms.CharField(required=True)
+    street_address1 = forms.CharField(required=True)
+    street_address2 = forms.CharField(required=False)
+    town_or_city = forms.CharField(required=True)
+    postcode = forms.CharField(required=True)
+    country = forms.CharField(required=True)
 
     class Meta:
         model = Order
@@ -84,13 +92,7 @@ class OrderForm(forms.ModelForm):
         """
         super().__init__(*args, **kwargs)
 
-        self.fields['name'].required = True
-        self.fields['email'].required = True
-        self.fields['phone_number'].required = True
-        self.fields['country'].required = True
-        self.fields['postcode'].required = True
-        self.fields['town_or_city'].required = True
-        self.fields['street_address1'].required = True
+
 
         placeholders = {
             'name': 'Full Name',

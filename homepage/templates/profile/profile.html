@@ -1,60 +1,63 @@
-{% extends "base.html" %}
-{% load static %}
-
-{% block content %}
-<div class="overlay"></div>
 <div class="container mt-4">
-    <h2 class="mb-4">
+  <div class="row">
+    <!-- Main Content -->
+    <div class="col-md-8">
+      <h2 class="mb-4">
         Welcome,
         {% if request.user.first_name %}
           {{ request.user.first_name }}
         {% else %}
           {{ request.user.username }}
         {% endif %}
-    </h2>
+      </h2>
 
-  <h4>🕒 Current Orders</h4>
-  {% if current_orders %}
-    <ul class="list-group mb-4">
-      {% for order in current_orders %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <!-- Make order clickable -->
-          <a href="{% url 'order_detail' order.id %}">
-            Order #{{ order.id }} – {{ order.created_at|date:"M d, Y" }}
-          </a>
-          <span class="badge
-            {% if order.status == 'Pending' %} bg-warning
-            {% elif order.status == 'Processing' %} bg-primary
-            {% endif %}">
-            {{ order.status }}
-          </span>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted">No current orders.</p>
-  {% endif %}
+      <h4>🕒 Current Orders</h4>
+      {% if current_orders %}
+        <ul class="list-group mb-4">
+          {% for order in current_orders %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <a href="{% url 'checkout_success' %}">
+                Order #{{ order.id }} – {{ order.created_at|date:"M d, Y" }}
+              </a>
+              <span class="badge
+                {% if order.status == 'Pending' %} bg-warning
+                {% elif order.status == 'Processing' %} bg-primary
+                {% endif %}">
+                {{ order.status }}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No current orders.</p>
+      {% endif %}
 
-  <h4>📦 Previous Orders</h4>
-  {% if previous_orders %}
-    <ul class="list-group">
-      {% for order in previous_orders %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          <!-- Make order clickable -->
-          <a href="{% url 'order_detail' order.id %}">
-            Order #{{ order.id }} – {{ order.created_at|date:"M d, Y" }}
-          </a>
-          <span class="badge
-            {% if order.status == 'Delivered' %} bg-success
-            {% elif order.status == 'Cancelled' %} bg-danger
-            {% endif %}">
-            {{ order.status }}
-          </span>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p class="text-muted">No previous orders yet.</p>
-  {% endif %}
+      <h4>📦 Previous Orders</h4>
+      {% if previous_orders %}
+        <ul class="list-group">
+          {% for order in previous_orders %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <a href="{% url 'checkout_success' %}">
+                Order #{{ order.id }} – {{ order.created_at|date:"M d, Y" }}
+              </a>
+              <span class="badge
+                {% if order.status == 'Delivered' %} bg-success
+                {% elif order.status == 'Cancelled' %} bg-danger
+                {% endif %}">
+                {{ order.status }}
+              </span>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No previous orders yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- Mascot -->
+    <div class="col-md-4 d-flex justify-content-center align-items-start">
+      <img src="/static/images/welcome-home-robot.webp" alt="Mascot"
+           class="img-fluid" style="max-height: 300px;">
+    </div>
+  </div>
 </div>
-{% endblock %}
