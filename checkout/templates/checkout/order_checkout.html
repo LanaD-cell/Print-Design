@@ -91,34 +91,40 @@
                 <fieldset class="rounded px-3 mb-5">
                     <legend class="fieldset-label small text-black px-2 w-auto">Details</legend>
 
+                    <!-- Full Name -->
                     <div class="form-group required">
-                        <label for="{{ order_form.name.id_for_label }}">
+                        <label for="{{ checkout_form.full_name.id_for_label }}">
                             Full Name
-                            {% if order_form.name.field.required %}
+                            {% if checkout_form.full_name.field.required %}
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.name.id_for_label }}" name="{{ order_form.name.name }}" value="{{ order_form.name.value|default:'' }}" class="form-control" placeholder="Full Name">
-                        {% if order_form.name.errors %}
+                        <input type="text" id="{{ checkout_form.full_name.id_for_label }}"
+                            name="{{ checkout_form.full_name.name }}" value="{{ checkout_form.full_name.value|default:'' }}"
+                            class="form-control" placeholder="Full Name">
+                        {% if checkout_form.full_name.errors %}
                             <ul class="errorlist text-danger">
-                                {% for error in order_form.name.errors %}
+                                {% for error in checkout_form.full_name.errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
                     </div>
 
+                    <!-- Email Address -->
                     <div class="form-group required">
-                        <label for="{{ order_form.email.id_for_label }}">
+                        <label for="{{ checkout_form.email.id_for_label }}">
                             Email Address
-                            {% if order_form.email.field.required %}
+                            {% if checkout_form.email.field.required %}
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="email" id="{{ order_form.email.id_for_label }}" name="{{ order_form.email.name }}" value="{{ order_form.email.value|default:'' }}" class="form-control" placeholder="Email Address">
-                        {% if order_form.email.errors %}
+                        <input type="email" id="{{ checkout_form.email.id_for_label }}"
+                            name="{{ checkout_form.email.name }}" value="{{ checkout_form.email.value|default:'' }}"
+                            class="form-control" placeholder="Email Address">
+                        {% if checkout_form.email.errors %}
                             <ul class="errorlist text-danger">
-                                {% for error in order_form.email.errors %}
+                                {% for error in checkout_form.email.errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
                             </ul>
@@ -130,189 +136,227 @@
                 <fieldset class="rounded px-3 mb-5">
                     <legend class="fieldset-label small text-black px-2 w-auto">Delivery</legend>
 
+                    <!-- Phone Number -->
                     <div class="form-group required">
-                        <label for="{{ order_form.phone_number.id_for_label }}">
+                        <label for="{{ checkout_form.phone_number.id_for_label }}">
                             Phone Number
-                            {% if order_form.phone_number.field.required %}
+                            {% if checkout_form.phone_number.field.required %}
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.phone_number.id_for_label }}" name="{{ order_form.phone_number.name }}" value="{{ order_form.phone_number.value|default:'' }}" class="form-control" placeholder="Phone Number">
-                        {% if order_form.phone_number.errors %}
+                        <input type="text" id="{{ checkout_form.phone_number.id_for_label }}"
+                            name="{{ checkout_form.phone_number.name }}" value="{{ checkout_form.phone_number.value|default:'' }}"
+                            class="form-control" placeholder="Phone Number">
+                        {% if checkout_form.phone_number.errors %}
                             <ul class="errorlist text-danger">
-                                {% for error in order_form.phone_number.errors %}
+                                {% for error in checkout_form.phone_number.errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
                     </div>
 
+                    <!-- Street Address 1 -->
                     <div class="form-group required">
-                        <label for="{{ order_form.country.id_for_label }}">
-                            Country
-                            {% if order_form.country.field.required %}
-                                <span class="text-danger">*</span>
-                            {% endif %}
-                        </label>
-                        <input type="text" id="{{ order_form.country.id_for_label }}" name="{{ order_form.country.name }}" value="{{ order_form.country.value|default:'' }}" class="form-control" placeholder="Country">
-                        {% if order_form.country.errors %}
-                            <ul class="errorlist text-danger">
-                                {% for error in order_form.country.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group required">
-                        <label for="{{ order_form.postcode.id_for_label }}">
-                            Postcode
-                            {% if order_form.postcode.field.required %}
-                                <span class="text-danger">*</span>
-                            {% endif %}
-                        </label>
-                        <input type="text" id="{{ order_form.postcode.id_for_label }}" name="{{ order_form.postcode.name }}" value="{{ order_form.postcode.value|default:'' }}" class="form-control" placeholder="Postcode">
-                        {% if order_form.postcode.errors %}
-                            <ul class="errorlist text-danger">
-                                {% for error in order_form.postcode.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group required">
-                        <label for="{{ order_form.town_or_city.id_for_label }}">
-                            Town or City
-                            {% if order_form.town_or_city.field.required %}
-                                <span class="text-danger">*</span>
-                            {% endif %}
-                        </label>
-                        <input type="text" id="{{ order_form.town_or_city.id_for_label }}" name="{{ order_form.town_or_city.name }}" value="{{ order_form.town_or_city.value|default:'' }}" class="form-control" placeholder="Town or City">
-                        {% if order_form.town_or_city.errors %}
-                            <ul class="errorlist text-danger">
-                                {% for error in order_form.town_or_city.errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </div>
-
-                    <div class="form-group required">
-                        <label for="{{ order_form.street_address1.id_for_label }}">
+                        <label for="{{ checkout_form.address_line_1.id_for_label }}">
                             Street Address 1
-                            {% if order_form.street_address1.field.required %}
+                            {% if checkout_form.address_line_1.field.required %}
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.street_address1.id_for_label }}" name="{{ order_form.street_address1.name }}" value="{{ order_form.street_address1.value|default:'' }}" class="form-control" placeholder="Street Address 1">
-                        {% if order_form.street_address1.errors %}
+                        <input type="text" id="{{ checkout_form.address_line_1.id_for_label }}"
+                            name="{{ checkout_form.address_line_1.name }}" value="{{ checkout_form.address_line_1.value|default:'' }}"
+                            class="form-control" placeholder="Street Address 1">
+                        {% if checkout_form.address_line_1.errors %}
                             <ul class="errorlist text-danger">
-                                {% for error in order_form.street_address1.errors %}
+                                {% for error in checkout_form.address_line_1.errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
                     </div>
 
-                    <div class="form-group required">
-                        <label for="{{ order_form.street_address2.id_for_label }}">
+                    <!-- Street Address 2 -->
+                    <div class="form-group">
+                        <label for="{{ checkout_form.address_line_2.id_for_label }}">
                             Street Address 2
-                            {% if order_form.street_address2.field.required %}
-                                <span class="text-danger">*</span>
-                            {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.street_address2.id_for_label }}" name="{{ order_form.street_address2.name }}" value="{{ order_form.street_address2.value|default:'' }}" class="form-control" placeholder="Street Address 2">
-                        {% if order_form.street_address2.errors %}
+                        <input type="text" id="{{ checkout_form.address_line_2.id_for_label }}"
+                            name="{{ checkout_form.address_line_2.name }}" value="{{ checkout_form.address_line_2.value|default:'' }}"
+                            class="form-control" placeholder="Street Address 2">
+                        {% if checkout_form.address_line_2.errors %}
                             <ul class="errorlist text-danger">
-                                {% for error in order_form.street_address2.errors %}
+                                {% for error in checkout_form.address_line_2.errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
                             </ul>
                         {% endif %}
                     </div>
-                </fieldset>
 
-                    <div class="form-check form-check-inline float-right mr-0">
-                        {% if user.is_authenticated %}
-                            <label class="form-check-label" for="id-save-info">Save this delivery information to my profile</label>
-                            <input class="form-check-input ml-2 mr-0" type="checkbox" id="id-save-info" name="save-info" checked>
-                        {% else %}
-                            <label class="form-check-label" for="id-save-info">
-                                <a class="text-info" href="{% url 'account_signup' %}">Create an account</a> or
-                                <a class="text-info" href="{% url 'account_login' %}">login</a> to save this information
-                            </label>
+                    <!-- Town or City -->
+                    <div class="form-group required">
+                        <label for="{{ checkout_form.town_or_city.id_for_label }}">
+                            Town or City
+                            {% if checkout_form.town_or_city.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+                        <input type="text" id="{{ checkout_form.town_or_city.id_for_label }}"
+                            name="{{ checkout_form.town_or_city.name }}" value="{{ checkout_form.town_or_city.value|default:'' }}"
+                            class="form-control" placeholder="Town or City">
+                        {% if checkout_form.town_or_city.errors %}
+                            <ul class="errorlist text-danger">
+                                {% for error in checkout_form.town_or_city.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
                         {% endif %}
                     </div>
+
+                    <!-- Postcode -->
+                    <div class="form-group required">
+                        <label for="{{ checkout_form.postcode.id_for_label }}">
+                            Postcode
+                            {% if checkout_form.postcode.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+                        <input type="text" id="{{ checkout_form.postcode.id_for_label }}"
+                            name="{{ checkout_form.postcode.name }}" value="{{ checkout_form.postcode.value|default:'' }}"
+                            class="form-control" placeholder="Postcode">
+                        {% if checkout_form.postcode.errors %}
+                            <ul class="errorlist text-danger">
+                                {% for error in checkout_form.postcode.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <!-- Country -->
+                    <div class="form-group required">
+                        <label for="{{ checkout_form.country.id_for_label }}">
+                            Country
+                            {% if checkout_form.country.field.required %}
+                                <span class="text-danger">*</span>
+                            {% endif %}
+                        </label>
+                        <input type="text" id="{{ checkout_form.country.id_for_label }}"
+                            name="{{ checkout_form.country.name }}" value="{{ checkout_form.country.value|default:'' }}"
+                            class="form-control" placeholder="Country">
+                        {% if checkout_form.country.errors %}
+                            <ul class="errorlist text-danger">
+                                {% for error in checkout_form.country.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+
+                    <!-- Use different delivery address checkbox -->
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="different-address-checkbox" name="use_different_delivery_address"
+                            value="1">
+                        <label class="form-check-label" for="different-address-checkbox">
+                            Send to a different address?
+                        </label>
+                    </div>
+
+                    <!-- Additional Delivery Address Fields -->
+                    <div id="different-address-fields" style="display:none;">
+                        <div class="form-group">
+                            <label for="{{ checkout_form.delivery_street_address_1.id_for_label }}">
+                                Delivery Street Address 1
+                            </label>
+                            <input type="text" id="{{ checkout_form.delivery_street_address_1.id_for_label }}"
+                                name="{{ checkout_form.delivery_street_address_1.name }}" value="{{ checkout_form.delivery_street_address_1.value|default:'' }}"
+                                class="form-control" placeholder="Delivery Street Address 1">
+                            {% if checkout_form.delivery_street_address_1.errors %}
+                                <ul class="errorlist text-danger">
+                                    {% for error in checkout_form.delivery_street_address_1.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ checkout_form.delivery_street_address_2.id_for_label }}">
+                                Delivery Street Address 2
+                            </label>
+                            <input type="text" id="{{ checkout_form.delivery_street_address_2.id_for_label }}"
+                                name="{{ checkout_form.delivery_street_address_2.name }}" value="{{ checkout_form.delivery_street_address_2.value|default:'' }}"
+                                class="form-control" placeholder="Delivery Street Address 2">
+                            {% if checkout_form.delivery_street_address_2.errors %}
+                                <ul class="errorlist text-danger">
+                                    {% for error in checkout_form.delivery_street_address_2.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ checkout_form.delivery_town_or_city.id_for_label }}">
+                                Delivery Town or City
+                            </label>
+                            <input type="text" id="{{ checkout_form.delivery_town_or_city.id_for_label }}"
+                                name="{{ checkout_form.delivery_town_or_city.name }}" value="{{ checkout_form.delivery_town_or_city.value|default:'' }}"
+                                class="form-control" placeholder="Delivery Town or City">
+                            {% if checkout_form.delivery_town_or_city.errors %}
+                                <ul class="errorlist text-danger">
+                                    {% for error in checkout_form.delivery_town_or_city.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ checkout_form.delivery_postcode.id_for_label }}">
+                                Delivery Postcode
+                            </label>
+                            <input type="text" id="{{ checkout_form.delivery_postcode.id_for_label }}"
+                                name="{{ checkout_form.delivery_postcode.name }}" value="{{ checkout_form.delivery_postcode.value|default:'' }}"
+                                class="form-control" placeholder="Delivery Postcode">
+                            {% if checkout_form.delivery_postcode.errors %}
+                                <ul class="errorlist text-danger">
+                                    {% for error in checkout_form.delivery_postcode.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+
+                        <div class="form-group">
+                            <label for="{{ checkout_form.delivery_country.id_for_label }}">
+                                Delivery Country
+                            </label>
+                            <input type="text" id="{{ checkout_form.delivery_country.id_for_label }}"
+                                name="{{ checkout_form.delivery_country.name }}" value="{{ checkout_form.delivery_country.value|default:'' }}"
+                                class="form-control" placeholder="Delivery Country">
+                            {% if checkout_form.delivery_country.errors %}
+                                <ul class="errorlist text-danger">
+                                    {% for error in checkout_form.delivery_country.errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    </div>
                 </fieldset>
 
-                <!-- Delivery Options Section -->
-                <fieldset class="rounded px-3 mb-5">
-                    <legend class="fieldset-label small text-black px-2 w-auto">Delivery</legend>
-                    <div class="form-check">
-                        <label class="form-check-label" for="standard_delivery">
-                            <input class="form-check-input delivery-option" type="radio" name="delivery_option" id="standard_delivery" value="Standard Production" data-price="0.00" checked>
-                            Standard Production (€0.00)
-                            <i class="fa-solid fa-turtle"></i>
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label" for="priority_delivery">
-                            <input class="form-check-input delivery-option" type="radio"
-                                    name="delivery_option" id="priority_delivery" value="48h Express Production" data-price="15.00">
-                            Priority Delivery (€15.00)
-                            <i class="fa-solid fa-truck"></i>
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label" for="48h_express_delivery">
-                            <input class="form-check-input delivery-option" type="radio"
-                                    name="delivery_option" id="express_delivery" value="24h Express Production" data-price="25.00">
-                                    48h Express Delivery (€25.00)
-                            <i class="fa-solid fa-truck-fast"></i>
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <label class="form-check-label" for="24_express_delivery">
-                            <input class="form-check-input delivery-option" type="radio"
-                                    name="delivery_option" id="express_delivery" value="24h Express Production" data-price="35.00">
-                            24h Express Delivery (€35.00)
-                            <i class="fa-solid fa-truck-fast"></i>
-                        </label>
-                    </div>
-                </fieldset>
+                <!-- Card Charge Notification -->
+                <p class="small text-danger my-0">
+                    <span class="icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </span>
+                    <span>Your card will be charged <strong id="card-charge">€{{ grand_total|floatformat:2 }}</strong></span>
+                </p>
 
-                <!-- Payment Information Section -->
-                <fieldset class="px-3">
-                    <legend class="fieldset-label small text-black px-2 w-auto">Payment</legend>
-                    <!-- A Stripe card element will go here -->
-                    <div class="mb-3" id="card-element"></div>
-                    <!-- Used to display form errors -->
-                    <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
-                </fieldset>
-
-                <!-- Submit Button Section -->
-                <div class="submit-button text-right mt-5 mb-2">
-                    <span id="id_stripe_public_key" style="display:none;">{{ stripe_public_key }}</span>
-                    <span id="id_client_secret" style="display:none;">{{ client_secret }}</span>
-                    <a href="{% url 'cart:add_to_cart' %}" class="btn btn-outline-black rounded-0">
-                        <span class="icon">
-                            <i class="fa-solid fa-circle-chevron-left"></i>
-                        </span>
-                        <span class="font-weight-bold">Adjust Cart</span>
-                    </a>
-                    <button id="submit-button" class="btn btn-black rounded-0">
-                        <span class="font-weight-bold">Complete Order</span>
-                        <span class="icon">
-                            <i class="fa-solid fa-lock"></i>
-                        </span>
-                    </button>
-                    <p class="small text-danger my-0">
-                        <span class="icon">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </span>
-                        <span>Your card will be charged <strong id="card-charge">€{{ grand_total|floatformat:2 }}</strong></span>
-                    </p>
+                <!-- Submit Button -->
+                <div class="form-group text-center">
+                    <button type="submit" class="btn btn-primary">Complete Order</button>
                 </div>
             </form>
         </div>
@@ -327,9 +371,6 @@
 {% block postloadjs %}
 {{ block.super }}
 
-<!-- Stripe JS library -->
-<script src="https://js.stripe.com/v3/"></script>
-
 <!-- Pass data to JavaScript -->
 {{ stripe_public_key|json_script:"id_stripe_public_key" }}
 {{ client_secret|json_script:"id_client_secret" }}
@@ -338,7 +379,6 @@
     document.addEventListener('DOMContentLoaded', function () {
         const stripe = Stripe('{{ stripe_public_key }}');
         const elements = stripe.elements();
-
         const cardElement = document.getElementById('card-element');
         let card;  // Declare card outside the block
 
@@ -397,6 +437,26 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
+        // Toggle the delivery address fields if user selects "different address"
+        const differentAddressCheckbox = document.getElementById('different-address-checkbox');
+        const differentAddressFields = document.getElementById('different-address-fields');
+
+        differentAddressCheckbox.addEventListener('change', function() {
+            differentAddressFields.style.display = this.checked ? 'block' : 'none';
+        });
+
+        // If the user is logged in, pre-fill their details
+        {% if user.is_authenticated %}
+            document.getElementById('id_name').value = '{{ user.first_name }}';
+            document.getElementById('id_email').value = '{{ user.email }}';
+            document.getElementById('id_phone_number').value = '{{ user.profile.phone_number }}';
+            document.getElementById('id_country').value = '{{ user.profile.country }}';
+        {% endif %}
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
         const deliveryOptions = document.querySelectorAll('.delivery-option');
         const orderTotalEl = document.getElementById('order-total');
         const deliveryAmountEl = document.getElementById('delivery-amount');
@@ -404,6 +464,7 @@
         const grandTotalEl = document.getElementById('grand-total');
         const cardChargeEl = document.getElementById('card-charge');
 
+        // Helper function to parse Euro formatted values
         function parseEuro(value) {
             return parseFloat(value.replace('€', '').replace(',', '.')) || 0;
         }
@@ -411,6 +472,7 @@
         const orderTotal = parseEuro(orderTotalEl.innerText);
         const VAT_RATE = 0.19;
 
+        // Update values when delivery option is changed
         deliveryOptions.forEach(option => {
             option.addEventListener('change', () => {
                 const deliveryPrice = parseFloat(option.dataset.price) || 0;
@@ -418,6 +480,7 @@
                 const vatAmount = orderTotal * VAT_RATE;
                 const grandTotal = orderTotal + vatAmount + deliveryPrice;
 
+                // Update the relevant elements with the new prices
                 deliveryAmountEl.innerText = `€${deliveryPrice.toFixed(2)}`;
                 vatAmountEl.innerText = `€${vatAmount.toFixed(2)}`;
                 grandTotalEl.innerText = `€${grandTotal.toFixed(2)}`;
@@ -431,6 +494,7 @@
             });
         });
 
+        // Simulate the change event for the default delivery option (if selected)
         document.querySelector('.delivery-option:checked')?.dispatchEvent(new Event('change'));
     });
 </script>

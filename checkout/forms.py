@@ -7,14 +7,14 @@ from .models import Order
 
 class CustomSignupForm(UserCreationForm):
     # User fields
-    name = forms.CharField(max_length=100, label='Full Name')
-    phone_number = forms.CharField(max_length=20, label='Phone Number')
-    country = forms.CharField(max_length=100)
-    postcode = forms.CharField(max_length=20, required=False)
-    town_or_city = forms.CharField(max_length=100)
-    street_address1 = forms.CharField(max_length=255, label='Address Line 1')
+    name = forms.CharField(max_length=100, label='Full Name', required=True)
+    phone_number = forms.CharField(max_length=20, label='Phone Number', required=True)
+    street_address1 = forms.CharField(max_length=255, label='Address Line 1', required=True)
     street_address2 = forms.CharField(
         max_length=255, label='Address Line 2', required=False)
+    postcode = forms.CharField(max_length=20, required=True)
+    town_or_city = forms.CharField(max_length=100, required=True)
+    country = forms.CharField(max_length=100, required=True)
 
     # Optional delivery address
     use_different_delivery_address = forms.BooleanField(
@@ -121,3 +121,20 @@ class OrderForm(forms.ModelForm):
                 'placeholder'] = f"File uploaded: {
                     self.instance.print_data_file.name}"
             self.fields['print_data_file'].widget.attrs['readonly'] = True
+
+
+class CheckoutForm(forms.Form):
+    full_name = forms.CharField(max_length=255, required=True)
+    email = forms.EmailField()
+    phone_number = forms.CharField(max_length=15)
+    address_line_1 = forms.CharField(max_length=255, required=True)
+    address_line_2 = forms.CharField(max_length=255, required=False)
+    town_or_city = forms.CharField(max_length=100, required=True)
+    postcode = forms.CharField(max_length=10, required=True)
+    country = forms.CharField(max_length=100, required=True)
+    use_different_delivery_address = forms.BooleanField(required=False)
+    delivery_street_address_1 = forms.CharField(max_length=255, required=False)
+    delivery_street_address_2 = forms.CharField(max_length=255, required=False)
+    delivery_town_or_city = forms.CharField(max_length=100, required=False)
+    delivery_postcode = forms.CharField(max_length=10, required=False)
+    delivery_country = forms.CharField(max_length=100, required=False)

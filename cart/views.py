@@ -72,7 +72,9 @@ def add_to_cart(request):
             '24h Express Production': Decimal('35.00'),
         }
 
+        # Debugging purpose
         print(request.POST)
+
         # Map the selected services to their corresponding price values
         service_price = sum(
             servicePrices.get(service, Decimal('0.00')) for service in selected_services)
@@ -81,6 +83,15 @@ def add_to_cart(request):
         if 'Own Print Data Upload' in selected_services and 'print_data_file' in request.FILES:
             file = request.FILES['print_data_file']
 
+
+        # Check if user is authenticated
+        if not request.user.is_authenticated:
+            # Show an error message
+            messages.error(request, "Please sign up or log in to upload print data.")
+
+            # Redirect to the login page
+            return redirect('login')
+
             # Create a PrintData object and link it to the user
             print_data = PrintData.objects.create(
                 user=request.user,
@@ -88,14 +99,22 @@ def add_to_cart(request):
                 uploaded_file=file,
                 service_type='Own Print Data Upload'
             )
-            # You can link it to the user's profile if needed
+
             request.user.profile.print_data_files.add(print_data)
             request.user.profile.save()
 
-            print(f"Print data uploaded: {file.name} for product {product.name}")
+            messages.success(request, f"Print data uploaded: {file.name} for product {product.name}")
 
-        # Get or create the cart for the user
-        cart, _ = Cart.objects.get_or_create(user=request.user)
+        if request.user.is_authenticated:
+            cart, _ = Cart.objects.get_or_create(user=request.user)
+        else:
+            # Handle guest users (non-authenticated)
+            cart_id = request.session.get('cart_id')
+            if not cart_id:
+                cart = Cart.objects.create()
+                request.session['cart_id'] = cart.id
+            else:
+                cart = Cart.objects.get(id=cart_id)
 
         # Create the CartItem object
         cart_item = CartItem(
@@ -110,9 +129,9 @@ def add_to_cart(request):
 
         # Properly handle the services field here
         try:
-            cart_item.services = json.loads(cart_item.services)  # Decode services if needed
+            cart_item.services = json.loads(cart_item.services)
         except (json.JSONDecodeError, TypeError):
-            cart_item.services = []  # Default to an empty list if decoding fails
+            cart_item.services = []
 
         cart_item.save()
 

@@ -11,13 +11,21 @@ def homepage(request):
 
 @login_required
 def profile_view(request):
-    user = request.user
-    user_orders = Order.objects.filter(user=request.user).order_by('-created_at')
+    if request.user.is_authenticated:
+        user = request.user
+        user_orders = Order.objects.filter(user=user).order_by('-created_at')
 
-    current_orders = user_orders.exclude(status__in=['Delivered', 'Cancelled'])
-    previous_orders = user_orders.filter(status__in=['Delivered', 'Cancelled'])
+        current_orders = user_orders.exclude(status__in=['Delivered', 'Cancelled'])
+        previous_orders = user_orders.filter(status__in=['Delivered', 'Cancelled'])
 
-    return render(request, 'profile/profile.html', {
-        'current_orders': current_orders,
-        'previous_orders': previous_orders,
-    })
+        return render(request, 'profile/profile.html', {
+            'current_orders': current_orders,
+            'previous_orders': previous_orders,
+        })
+
+
+def custom_404_view(request, exception):
+    return render(request, '404.html', status=404)
+
+def custom_500_view(request):
+    return render(request, '500.html', status=500)

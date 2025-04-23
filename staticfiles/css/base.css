@@ -33,7 +33,6 @@ body {
 }
 .main-content {
     min-height: 90vh;
-    padding-bottom: 50px;
     padding-top: 100px;
     display: flex;
     flex-direction: column;
@@ -61,6 +60,7 @@ strong {
     max-width: 100%;
 }
 .welcome-robot {
+    position: relative;
     margin-top: -80px;
     height: 500px;
     z-index: 9999;
@@ -453,7 +453,6 @@ p.card-text {
 /* ---- Carousel ---- */
 #carousel-hp {
     max-width: 80%;
-    margin: 0 auto;
     height: 400px;
     padding-top: 30px;
 }
