@@ -88,7 +88,7 @@ class Order(models.Model):
         print("Updating total for order:", self.order_number)
 
         # pylint: disable=no-member
-        self.order_total = self.items.all().aggregate(
+        self.order_total = self.line_items.aggregate(
             Sum('lineitem_total'))['lineitem_total__sum'] or 0
 
         # Calculate the service cost
@@ -103,8 +103,8 @@ class Order(models.Model):
             self.delivery_cost = 0
 
         self.grand_total = (
-            self.order_total + self.delivery_cost + self.service_cost
-        )
+            self.order_total + Decimal(self.delivery_cost) + Decimal(self.service_cost)
+)
 
         print(
             "Updated totals -> order_total:", self.order_total,
@@ -197,3 +197,12 @@ class OrderLineItem(models.Model):
     def total_price(self):
         # Calculate total price without multiplying by quantity
         return self.lineitem_total
+
+    class PrintData(models.Model):
+        user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+        product = models.ForeignKey(Product, on_delete=models.CASCADE)
+        uploaded_file = models.FileField(upload_to='print_data/')
+        service_type = models.CharField(max_length=100)
+
+        def __str__(self):
+            return self.uploaded_file.name

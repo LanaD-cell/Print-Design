@@ -34,7 +34,7 @@ class ProfileAdmin(admin.ModelAdmin):
 
     search_fields = ('user__username', 'user__email', 'phone_number')
 
-    list_filter = ('country', 'delivery_country')
+    list_filter = ('user', 'country')
 
     def get_email(self, obj):
         return obj.user.email

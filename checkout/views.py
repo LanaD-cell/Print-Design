@@ -141,13 +141,13 @@ def checkout(request):
         cart = Cart.objects.get(id=request.session.get('cart_id'))
 
         form_data = {
-            'name':request.POST['name'],
-            'email':request.POST['email'],
-            'phone_number':request.POST['phone_number'],
-            'street_address1':request.POST['street_address1'],
-            'town_or_city':request.POST['town_or_city'],
-            'postcode':request.POST['postcode'],
-            'country':request.POST['country'],
+            'name': request.POST['name'],
+            'email': request.POST['email'],
+            'phone_number': request.POST['phone_number'],
+            'street_address1': request.POST['street_address1'],
+            'town_or_city': request.POST['town_or_city'],
+            'postcode': request.POST['postcode'],
+            'country': request.POST['country'],
         }
 
         order_form = OrderForm(form_data)
@@ -207,7 +207,7 @@ def checkout(request):
             currency=settings.STRIPE_CURRENCY,
         )
 
-        print(intent)
+        FREE_DELIVERY_THRESHOLD = Decimal(settings.FREE_DELIVERY_THRESHOLD)
 
         # Define the delivery prices
         delivery_prices = {
@@ -217,20 +217,43 @@ def checkout(request):
         }
 
         # Get the selected delivery option from the POST request
-        delivery_option = request.POST.get(
-            'delivery_option', 'Standard Production')
-        delivery_fee = delivery_prices.get(
-            delivery_option, Decimal('0.00'))
+        delivery_option = request.POST.get('delivery_option', 'Standard Production')
 
         # Calculate the total price of the cart including the delivery fee
         cart_total = cart.total_price()
-
         service_price = sum(item.service_price for item in cart.items.all())
+
+        delivery_fee = delivery_prices.get(delivery_option, Decimal('0.00'))
+
+        if delivery_option == 'Standard Production':
+            if cart_total >= FREE_DELIVERY_THRESHOLD:
+                delivery_fee = Decimal('0.00')
+            else:
+                delivery_fee = Decimal('15.00')
+        elif delivery_option == '48h Express Production':
+            delivery_fee = Decimal('25.00')
+        elif delivery_option == '24h Express Production':
+            delivery_fee = Decimal('35.00')
+        else:
+            delivery_fee = Decimal('0.00')
 
         grand_total = cart_total + service_price + delivery_fee
 
-        # Instantiate the order form and pass the required context to the template
-        order_form = OrderForm()
+        # Flag to check if the cart qualifies for free delivery
+        free_delivery_qualified = cart_total >= FREE_DELIVERY_THRESHOLD
+
+        user = request.user
+        user_details = {
+            'name': user.get_full_name(),
+            'email': user.email,
+            'phone_number': user.profile.phone_number if hasattr(user, 'profile') else '',
+            'street_address1': user.profile.street_address1 if hasattr(user, 'profile') else '',
+            'town_or_city': user.profile.town_or_city if hasattr(user, 'profile') else '',
+            'postcode': user.profile.postcode if hasattr(user, 'profile') else '',
+            'country': user.profile.country if hasattr(user, 'profile') else ''
+        }
+
+        order_form = OrderForm(initial=user_details)
 
     if not stripe_public_key:
         messages.warning(request, 'Stripe public key is missing. \
@@ -247,10 +270,10 @@ def checkout(request):
         'grand_total': grand_total,
         'stripe_public_key': stripe_public_key,
         'client_secret': intent.client_secret,
+        'free_delivery_qualified': free_delivery_qualified,
     }
 
     return render(request, template, context)
-
 
 def checkout_success(request, order_number):
     """
@@ -258,6 +281,7 @@ def checkout_success(request, order_number):
     """
     save_info = request.session.get('save_info')
     order = get_object_or_404(Order, order_number=order_number)
+
     messages.success(request, f'Order successfully processed! \
         Your order number is {order_number}. A confirmation \
         email will be sent to {order.email}.')

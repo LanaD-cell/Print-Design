@@ -51,7 +51,7 @@ def add_to_cart(request):
             selected_size = selected_size[0]
 
         if isinstance(selected_quantity, list):
-            selected_quantity = selected_quantity[0]
+            selected_quantity = int(selected_quantity[0])
 
         selected_price = None
         for quantity in product.quantities:
@@ -77,33 +77,35 @@ def add_to_cart(request):
 
         # Map the selected services to their corresponding price values
         service_price = sum(
-            servicePrices.get(service, Decimal('0.00')) for service in selected_services)
+            servicePrices.get(
+                service, Decimal('0.00')) for service in selected_services)
 
         # Handle the 'Own Print Data Upload' service, if selected
-        if 'Own Print Data Upload' in selected_services and 'print_data_file' in request.FILES:
+        if 'Own Print Data Upload' in selected_services and \
+                'print_data_file' in request.FILES:
             file = request.FILES['print_data_file']
-
 
         # Check if user is authenticated
         if not request.user.is_authenticated:
             # Show an error message
-            messages.error(request, "Please sign up or log in to upload print data.")
+            messages.error(
+                request, "Please sign up or log in to upload print data.")
 
             # Redirect to the login page
             return redirect('login')
 
-            # Create a PrintData object and link it to the user
-            print_data = PrintData.objects.create(
-                user=request.user,
-                product=product,
-                uploaded_file=file,
-                service_type='Own Print Data Upload'
-            )
+        # Create a PrintData object and link it to the user
+        print_data = PrintData.objects.create(
+            user=request.user,
+            product=product,
+            uploaded_file=file,
+            service_type='Own Print Data Upload'
+        )
 
-            request.user.profile.print_data_files.add(print_data)
-            request.user.profile.save()
+        request.user.profile.print_data_files.add(print_data)
+        request.user.profile.save()
 
-            messages.success(request, f"Print data uploaded: {file.name} for product {product.name}")
+        messages.success(request, f"Print data uploaded: {file.name} for product {product.name}")
 
         if request.user.is_authenticated:
             cart, _ = Cart.objects.get_or_create(user=request.user)

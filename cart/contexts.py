@@ -23,9 +23,10 @@ def cart_contents(request):
     product_count = cart.items.count() if cart and hasattr(
         cart, 'items') else 0
 
+    delivery = Decimal('0.00')
+
     # Delivery logic
     if total < settings.FREE_DELIVERY_THRESHOLD:
-        delivery = total * Decimal(settings.STANDARD_DELIVERY_PERCENTAGE / 100)
         free_delivery_delta = settings.FREE_DELIVERY_THRESHOLD - total
     else:
         delivery = Decimal('0.00')
