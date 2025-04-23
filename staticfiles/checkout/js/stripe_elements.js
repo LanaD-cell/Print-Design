@@ -1,34 +1,90 @@
-/*
-    Core logic/payment flow for this comes from here:
-    https://stripe.com/docs/payments/accept-a-payment
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('payment-form');
+    const submitButton = document.getElementById('submit-button');
 
-    CSS from here:
-    https://stripe.com/docs/stripe-js
-*/
+    // Ensure the form and submit button exist
+    if (!form || !submitButton) {
+        console.error('Form or submit button not found!');
+        return;
+    }
 
-document.addEventListener("DOMContentLoaded", function () {
-    var stripe_public_key = document.getElementById('id_stripe_public_key').textContent.trim();
-    var client_secret = document.getElementById('id_client_secret').textContent.trim();
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();  // Prevent the default form submission
 
-    var stripe = Stripe(stripe_public_key);
-    var elements = stripe.elements();
+        // Get the Stripe public key and client secret from the DOM
+        const stripePublicKey = document.getElementById('id_stripe_public_key').textContent.trim();
+        const clientSecret = document.getElementById('id_client_secret').textContent.trim();
 
-    var style = {
-        base: {
-            color: '#212f45',
-            fontFamily: '"Figtree", sans-serif',
-            fontSmoothing: 'antialiased',
-            fontSize: '16px',
-            '::placeholder': {
-                color: '#065a60'
-            }
-        },
-        invalid: {
-            color: 'red',
-            iconColor: '#272640'
+        // Initialize Stripe and Elements
+        const stripe = Stripe(stripePublicKey);
+        const elements = stripe.elements();
+
+        // Create the card element and mount it to the DOM
+        const card = elements.create('card');
+        const cardElement = document.getElementById('card-element');
+
+        if (cardElement) {
+            card.mount('#card-element');
+        } else {
+            console.error('The card element was not found in the DOM.');
+            return;
         }
-    };
 
-    var card = elements.create('card', { style: style });
-    card.mount('#card-element');
+        // Disable the submit button to prevent multiple submissions
+        submitButton.setAttribute('disabled', 'true');
+
+        // Handle payment submission
+        stripe.createPaymentMethod({
+            type: 'card',
+            card: card,
+            billing_details: {
+                name: document.getElementById('id_full_name').value,
+                email: document.getElementById('id_email').value,
+            },
+        }).then(function (result) {
+            if (result.error) {
+                // If there's an error, display it in the 'card-errors' div
+                const errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+
+                // Re-enable the submit button
+                submitButton.removeAttribute('disabled');
+            } else {
+                const paymentMethodId = result.paymentMethod.id;
+
+                // Send the payment method ID and client secret to the server to complete the payment
+                fetch('/your-server-endpoint', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        payment_method: paymentMethodId,
+                        client_secret: clientSecret,
+                    }),
+                }).then(function (response) {
+                    return response.json();
+                }).then(function (data) {
+                    if (data.success) {
+                        // If payment is successful, redirect to checkout success page
+                        window.location.href = '/checkout_success';
+                    } else {
+                        // Display any errors from the server
+                        const errorElement = document.getElementById('card-errors');
+                        errorElement.textContent = data.error || 'Something went wrong!';
+
+                        // Re-enable the submit button
+                        submitButton.removeAttribute('disabled');
+                    }
+                }).catch(function (err) {
+                    // Handle network errors or unexpected issues
+                    const errorElement = document.getElementById('card-errors');
+                    errorElement.textContent = 'Network error: ' + err.message;
+
+                    // Re-enable the submit button
+                    submitButton.removeAttribute('disabled');
+                });
+            }
+        });
+    });
 });

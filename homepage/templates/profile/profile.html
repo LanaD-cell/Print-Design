@@ -11,7 +11,7 @@
         {% endif %}
       </h2>
 
-      <h4>🕒 Current Orders</h4>
+      <h4>Current Orders</h4>
       {% if current_orders %}
         <ul class="list-group mb-4">
           {% for order in current_orders %}
@@ -32,7 +32,7 @@
         <p class="text-muted">No current orders.</p>
       {% endif %}
 
-      <h4>📦 Previous Orders</h4>
+      <h4>Previous Orders</h4>
       {% if previous_orders %}
         <ul class="list-group">
           {% for order in previous_orders %}

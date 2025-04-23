@@ -1,7 +1,7 @@
 {% extends "base.html" %}
-
-{% load i18n %}
 {% load static %}
+{% load i18n %}
+{% load account socialaccount %}
 
 {% block head_title %}Signup{% endblock %}
 
@@ -23,7 +23,7 @@
 
                 <p class="text-center mt-3">
                     Already have an account?
-                    <a href="{% url 'account_login' %}">Login here</a>
+                    <a href="{% url 'login' %}">Login here</a>
                 </p>
             </div>
         </div>

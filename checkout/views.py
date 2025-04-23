@@ -141,15 +141,17 @@ def checkout(request):
         cart = Cart.objects.get(id=request.session.get('cart_id'))
 
         form_data = {
-        'name':request.POST['name'],
-        'email':request.POST['email'],
-        'phone_number':request.POST['phone_number'],
-        'street_address1':request.POST['street_address1'],
-        'town_or_city':request.POST['town_or_city'],
-        'postcode':request.POST['postcode'],
-        'country':request.POST['country'],
+            'name':request.POST['name'],
+            'email':request.POST['email'],
+            'phone_number':request.POST['phone_number'],
+            'street_address1':request.POST['street_address1'],
+            'town_or_city':request.POST['town_or_city'],
+            'postcode':request.POST['postcode'],
+            'country':request.POST['country'],
         }
+
         order_form = OrderForm(form_data)
+
         if order_form.is_valid():
             order = order_form.save()
             for item_id, item_data in cart.items():
@@ -186,12 +188,15 @@ def checkout(request):
                 Please double check your information.')
     else:
         # Retrieve the cart using the cart_id
-        cart = Cart.objects.get(id=request.session.get('cart_id'))
+        cart = Cart.objects.filter(id=request.session.get('cart_id')).first()
+
+        if not cart:
+            cart = Cart.objects.filter(user=request.user).first()
 
         # If no cart is found, redirect to products page
         if not cart or not cart.items.exists():
             messages.error(request, "There's nothing in your cart at the moment.")
-            return redirect('products')
+            return redirect('homepage')
 
         current_cart = cart_contents(request)
         total = current_cart['grand_total']
