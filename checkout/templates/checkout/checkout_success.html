@@ -38,12 +38,43 @@
 
     <div class="text-center mt-4">
         <a href="{% url 'products' %}" class="btn btn-primary">Continue Shopping</a>
-            <span class="icon mr-2">
-                <i class="fa-solid fa-cart-plus"></i>
-            </span>
-            <span class="text-uppercase">Have a look at some of our awesome products!</span>
+        <span class="icon mr-2">
+            <i class="fa-solid fa-cart-plus"></i>
+        </span>
+        <span class="text-uppercase">Have a look at some of our awesome products!</span>
     </div>
+
+    {% if free_delivery_qualified %}
+    <!-- Confetti effect when user qualifies for free delivery -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.0/dist/confetti.browser.min.js"></script>
+    <script>
+        // Function to trigger the confetti
+        function launchConfetti() {
+            var duration = 3 * 1000;
+            var end = Date.now() + duration;
+            var colors = ['#ff0', '#0f0', '#f00', '#00f', '#f0f'];
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: Math.random() * 360,
+                    spread: Math.random() * 60 + 10,
+                    origin: {
+                        x: Math.random(),
+                        y: Math.random()
+                    },
+                    colors: colors
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            })();
+        }
+
+        launchConfetti();
+    </script>
+    {% endif %}
+
 </div>
 {% endblock %}
-
-
