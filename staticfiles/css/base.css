@@ -75,6 +75,14 @@ strong {
     border-radius: 10px;
     padding: 3px;
 }
+
+/* copied from Bootstrap css*/
+.dropdown-header {
+    font-size: 1rem;
+    color: #006466;
+    white-space: nowrap;
+  }
+
 /* Top Navigation Bar */
 #topnav {
     position: fixed;
@@ -287,7 +295,7 @@ footer .social-icons a:hover {
     max-width: 400px;
     margin: auto;
     padding: 20px;
-    background: #fff;
+    background: white;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: left;
@@ -431,23 +439,23 @@ p.card-text {
 }
 
 .btn-primary {
-    background: #6c7ae0;
+    background: #3e1f47;
     color: white;
     border: none;
 }
 
 .btn-primary:hover {
-    background: #5a68c0;
+    background: #4d194d;
 }
 
 .btn-secondary {
-    background: #555;
+    background: #1b3a4b;
     color: white;
     border: none;
 }
 
 .btn-secondary:hover {
-    background: #444;
+    background: #0b525b;
 }
 
 /* ---- Carousel ---- */

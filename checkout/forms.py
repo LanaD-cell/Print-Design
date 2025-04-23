@@ -8,6 +8,7 @@ from .models import Order
 class CustomSignupForm(UserCreationForm):
     # User fields
     name = forms.CharField(max_length=100, label='Full Name', required=True)
+    email = forms.EmailField(max_length=100, label='Email Address', required=True)
     phone_number = forms.CharField(max_length=20, label='Phone Number', required=True)
     street_address1 = forms.CharField(max_length=255, label='Address Line 1', required=True)
     street_address2 = forms.CharField(
