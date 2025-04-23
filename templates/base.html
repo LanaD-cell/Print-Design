@@ -109,10 +109,10 @@
                                             <li><a href="#" class="dropdown-item">Product Management</a></li>
                                         {% endif %}
                                         <li><a href="{% url 'profile' %}" class="dropdown-item">My Profile</a></li>
-                                        <li><a href="{% url 'account_logout' %}" class="dropdown-item">Logout</a></li>
+                                        <li><a href="{% url 'custom_logout' %}" class="dropdown-item">Logout</a></li>
                                     {% else %}
-                                        <li><a href="/registration/signup/" class="dropdown-item">Register</a></li>
-                                        <li><a href="/login/" class="dropdown-item">Login</a></li>
+                                        <li><a href="signup/" class="dropdown-item">Register</a></li>
+                                        <li><a href="login/" class="dropdown-item">Login</a></li>
                                     {% endif %}
                                 </ul>
                             </li>
@@ -406,5 +406,6 @@
               {% endfor %}
           </div>
       {% endif %}
+
   </body>
 </html>

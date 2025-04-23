@@ -126,7 +126,7 @@ def signup_view(request):
     else:
         signup_form = CustomSignupForm()
 
-    return render(request, 'registration/signup.html', {'form': signup_form})
+    return render(request, 'account/signup.html', {'form': signup_form})
 
 
 def order_summary(request):

@@ -584,10 +584,11 @@
 
         // If the user is logged in, pre-fill their details
         {% if user.is_authenticated %}
-            document.getElementById('id_name').value = '{{ user.first_name }}';
-            document.getElementById('id_email').value = '{{ user.email }}';
-            document.getElementById('id_phone_number').value = '{{ user.profile.phone_number }}';
-            document.getElementById('id_country').value = '{{ user.profile.country }}';
+            // Use escapejs to protect against issues with quotes in JavaScript
+            document.getElementById('id_name').value = "{{ user.first_name|escapejs }}";
+            document.getElementById('id_email').value = "{{ user.email|escapejs }}";
+            document.getElementById('id_phone_number').value = "{{ user.profile.phone_number|escapejs }}";
+            document.getElementById('id_country').value = "{{ user.profile.country|escapejs }}";
         {% endif %}
     });
 </script>

@@ -98,12 +98,15 @@ SITE_ID = 1
 ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_FORMS = {
+    'signup': 'checkout.forms.CustomSignupForm',
+    }
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 ACCOUNT_USERNAME_MIN_LENGTH = 4
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGIN_TEMPLATE = 'registration/login.html'
+ACCOUNT_LOGIN_TEMPLATE = 'login.html'
 
 WSGI_APPLICATION = 'print_design.wsgi.application'
 
