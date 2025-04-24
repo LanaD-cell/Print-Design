@@ -1,10 +1,10 @@
 from .models import FAQ
+from allauth.account.models import EmailConfirmation
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from checkout.models import Order
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
-
 
 
 def homepage(request):

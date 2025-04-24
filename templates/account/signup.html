@@ -94,6 +94,14 @@
                                 <i class="bi bi-eye" id="toggleIcon2"></i>
                             </span>
                         </div>
+                         <!-- Check for Success Message -->
+                        {% if confirm_password_success %}
+                        <div class="text-success small mt-1">
+                            {{ confirm_password_success }}
+                        </div>
+                        {% endif %}
+
+                        <!-- Check for Errors -->
                         {% if form.password2.errors %}
                             <div class="signup-invalid-feedback">
                                 {% for error in form.password2.errors %}
@@ -210,19 +218,3 @@
     </div>
 </div>
 {% endblock %}
-
-<script>
-    function togglePassword(elem, inputId) {
-        const input = document.getElementById(inputId);
-        const icon = elem.querySelector('i');
-        if (input.type === "password") {
-            input.type = "text";
-            icon.classList.remove("bi bi-eye");
-            icon.classList.add("bi bi-eye-slash-fill");
-        } else {
-            input.type = "password";
-            icon.classList.remove("bi bi-eye-slash-fill");
-            icon.classList.add("fa-eye");
-        }
-    }
-</script>

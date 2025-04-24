@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% load i18n %}
+
+{% block head_title %}{% trans "Verify Your E-mail Address" %}{% endblock %}
+
+{% block content %}
+<div class="email_veri-page">
+    <div class="email_veri-card">
+      <div class="email_veri-card-body">
+        <h1>{% trans "Verify Your E-mail Address" %}</h1>
+
+        <p>{% blocktrans %}We have sent an e-mail to you for verification.
+            <br>
+            Follow the link provided to finalize the signup process.
+            If you do not see the verification e-mail in your main inbox,
+            check your spam folder.
+            <br>
+            Please contact us if you do not receive
+            the verification e-mail within a few minutes.{% endblocktrans %}</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    setTimeout(function() {
+        window.location.href = "{% url 'homepage' %}";
+    }, 3000);
+</script>
+
+{% endblock %}
+
