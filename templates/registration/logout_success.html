@@ -1,0 +1,41 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+{% block content %}
+<div class="modal show d-block" tabindex="-1" role="dialog" id="logoutSuccessModal">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% trans "Logout Successful" %}</h5>
+      </div>
+      <div class="modal-body">
+        <p>{% trans "You have logged out successfully. You will be redirected to the homepage shortly. Hope to see you soon." %}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Wait for the DOM to fully load
+  document.addEventListener("DOMContentLoaded", function () {
+    var myModal = new bootstrap.Modal(document.getElementById('logoutSuccessModal'),{
+      backdrop: 'false',
+      keyboard: false
+    });
+    myModal.show();
+
+    // Redirect after 3 seconds
+    setTimeout(function() {
+      window.location.href = "/";
+    }, 3000);
+  });
+</script>
+
+<script>
+  setTimeout(function() {
+    window.location.href = "/";
+  }, 3000);  // Redirects after 3 seconds
+</script>
+{% endblock %}

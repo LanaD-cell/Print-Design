@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'homepage',
     'products',
     'cart',
-    'checkout',
+    'checkout.apps.CheckoutConfig',
     'crispy_forms',
 
 ]
@@ -107,6 +107,7 @@ ACCOUNT_USERNAME_MIN_LENGTH = 4
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGIN_TEMPLATE = 'login.html'
+LOGOUT_REDIRECT_URL = '/'
 
 WSGI_APPLICATION = 'print_design.wsgi.application'
 

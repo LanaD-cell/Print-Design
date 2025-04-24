@@ -16,6 +16,25 @@ class CustomSignupForm(UserCreationForm):
     postcode = forms.CharField(max_length=20, required=True)
     town_or_city = forms.CharField(max_length=100, required=True)
     country = forms.CharField(max_length=100, required=True)
+    password1 = forms.CharField(
+        label="Password",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    password2 = forms.CharField(
+        label="Confirm Password",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+        required=True
+    )
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password != confirm_password:
+            raise forms.ValidationError("The two password fields must match.")
+
+        return cleaned_data
 
     # Optional delivery address
     use_different_delivery_address = forms.BooleanField(

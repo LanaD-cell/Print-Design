@@ -39,6 +39,11 @@ body {
     z-index: 500;
 }
 
+.modal {
+    z-index: 2000 !important;
+    padding-top: 500px;
+  }
+
 em {
     font-family: 'Tangerine', cursive;
 }
@@ -56,6 +61,8 @@ strong {
 }
 
 /* ---- Homepage ---- */
+
+
 .carousel-container {
     max-width: 100%;
 }
@@ -291,34 +298,42 @@ footer .social-icons a:hover {
 }
 
 /* ---- Login, Sign-up, Logout ---- */
-.signup-card, .login-card {
+
+/* Signup form-specific classes */
+.signup-card {
+    position: relative;
     max-width: 400px;
     margin: auto;
     padding: 20px;
     background: white;
-    border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: left;
 }
 
-.signup-card h1, .login-card h1 {
+.signup-card h1 {
+    color: white;
+    background-color: #006466;
     font-size: 24px;
     margin-bottom: 15px;
     text-align: center;
 }
 
-.signup form, .login form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+.signup-p {
+    font-size: 1.5rem;
+    text-align: center;
 }
 
-.signup label, .login label {
+.signup-form-group {
+    margin-bottom: 15px;
+}
+
+.signup-label {
     font-weight: bold;
+    margin-bottom: 5px;
     display: block;
 }
 
-.signup input, .login input {
+.signup input {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
@@ -326,7 +341,11 @@ footer .social-icons a:hover {
     box-sizing: border-box;
 }
 
-.signup button, .login button {
+.signup input:focus {
+    border-color: #006466;
+}
+
+.signup-btn {
     width: 100%;
     padding: 10px;
     background: #006466;
@@ -336,7 +355,65 @@ footer .social-icons a:hover {
     cursor: pointer;
 }
 
-.signup button:hover, .login button:hover {
+.signup-btn:hover {
+    background: #005f5f;
+}
+
+.signup-btn:focus {
+    outline: none;
+}
+
+.signup-invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875em;
+}
+
+.login-card {
+    max-width: 800px;
+    margin: auto;
+    padding: 5px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: left;
+}
+
+.login-card h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.login form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.login label {
+    font-weight: bold;
+    display: block;
+}
+
+.login input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+.login button {
+    width: 100%;
+    padding: 10px;
+    background: #006466;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login button:hover {
     background: #0056b3;
 }
 

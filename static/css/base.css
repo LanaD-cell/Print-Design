@@ -39,6 +39,11 @@ body {
     z-index: 500;
 }
 
+.modal {
+    z-index: 2000 !important;
+    padding-top: 500px;
+  }
+
 em {
     font-family: 'Tangerine', cursive;
 }
@@ -56,6 +61,8 @@ strong {
 }
 
 /* ---- Homepage ---- */
+
+
 .carousel-container {
     max-width: 100%;
 }
@@ -294,19 +301,25 @@ footer .social-icons a:hover {
 
 /* Signup form-specific classes */
 .signup-card {
+    position: relative;
     max-width: 400px;
     margin: auto;
     padding: 20px;
     background: white;
-    border-color: #4d194d;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     text-align: left;
 }
 
 .signup-card h1 {
-    color: #4d194d;
+    color: white;
+    background-color: #006466;
     font-size: 24px;
     margin-bottom: 15px;
+    text-align: center;
+}
+
+.signup-p {
+    font-size: 1.5rem;
     text-align: center;
 }
 
@@ -358,6 +371,7 @@ footer .social-icons a:hover {
 .login-card {
     max-width: 800px;
     margin: auto;
+    padding: 5px;
     background: white;
     border-radius: 10px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
