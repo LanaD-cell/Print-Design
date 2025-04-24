@@ -10,7 +10,7 @@
       <h5 class="logout-card-title text-center">{% trans "Sign Out" %}</h5>
       <p class="logout-card-text text-center">{% trans 'Are you sure you want to sign out?' %}</p>
 
-      <form method="post" action="{% url 'account_logout' %}" class="logout-form">
+      <form method="POST" action="{% url 'logout' %}" class="logout-form">
         {% csrf_token %}
         {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>

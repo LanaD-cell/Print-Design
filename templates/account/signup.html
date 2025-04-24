@@ -6,17 +6,30 @@
 {% block head_title %}Signup{% endblock %}
 
 {% block content %}
-<div class="over"></div>
+
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-5">
-            <div class="signup-card shadow p-4 rounded-4">
-                <h1 class="text-center mb-4">Sign Up</h1>
+        <div class="col-md-8 col-lg-9">
+            <div class="signup-card shadow-lg rounded-4">
+                <img src="/static/images/about-time-bot.webp" class="card-img-top" alt="">
+                <div class="card-header text-center text-white">
+                    <h1 class="mb-0">Sign Up</h1>
+                </div>
 
-                <form method="POST" action="{% url 'account_signup' %}">
-                    {% csrf_token %}
+                <div class="card-body">
+                    <p class="card-text mb-4 text-muted text-center">
+                        Welcome! We're thrilled to have you join our community.
+                        By signing up, you're taking the first step toward accessing
+                        exclusive content, personalized experiences, and a supportive
+                        network that’s here to help you thrive. Let’s get started —
+                        we’re excited to see what you’ll create with us!
+                    </p>
 
-                    <div class="signup-form-group">
+                    <form method="POST" action="{% url 'account_signup' %}">
+                        {% csrf_token %}
+
+                    <!-- Full Name Field -->
+                    <div class="signup-form-group mb-4">
                         <label for="{{ form.name.id_for_label }}" class="signup-label">Full Name</label>
                         {{ form.name }}
                         {% if form.name.errors %}
@@ -28,7 +41,8 @@
                         {% endif %}
                     </div>
 
-                    <div class="signup-form-group">
+                    <!-- Email Field -->
+                    <div class="signup-form-group mb-4">
                         <label for="{{ form.email.id_for_label }}" class="signup-label">Email Address</label>
                         {{ form.email }}
                         {% if form.email.errors %}
@@ -40,7 +54,57 @@
                         {% endif %}
                     </div>
 
-                    <div class="signup-form-group">
+                    <!-- Username -->
+                    <div class="signup-form-group mb-4">
+                        <label for="{{ form.username.id_for_label }}" class="signup-label">Username</label>
+                        {{ form.username }}
+                        {% if form.username.errors %}
+                            <div class="signup-invalid-feedback">
+                                {% for error in form.username.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password -->
+                    <div class="signup-form-group mb-4 position-relative">
+                        <label for="{{ form.password1.id_for_label }}" class="signup-label">Password</label>
+                        <div class="input-group">
+                            {{ form.password1 }}
+                            <span class="input-group-text toggle-password" onclick="togglePassword(this, 'id_password1')">
+                                <i class="bi bi-eye" id="toggleIcon2"></i>
+                            </span>
+                        </div>
+                        {% if form.password1.errors %}
+                            <div class="signup-invalid-feedback">
+                                {% for error in form.password1.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="signup-form-group mb-4 position-relative">
+                        <label for="{{ form.password2.id_for_label }}" class="signup-label">Confirm Password</label>
+                        <div class="input-group">
+                            {{ form.password2 }}
+                            <span class="input-group-text toggle-password" onclick="togglePassword(this, 'id_password2')">
+                                <i class="bi bi-eye" id="toggleIcon2"></i>
+                            </span>
+                        </div>
+                        {% if form.password2.errors %}
+                            <div class="signup-invalid-feedback">
+                                {% for error in form.password2.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Phone Number Field -->
+                    <div class="signup-form-group mb-4">
                         <label for="{{ form.phone_number.id_for_label }}" class="signup-label">Phone Number</label>
                         {{ form.phone_number }}
                         {% if form.phone_number.errors %}
@@ -52,7 +116,8 @@
                         {% endif %}
                     </div>
 
-                    <div class="signup-form-group">
+                    <!-- Address Line 1 -->
+                    <div class="signup-form-group mb-4">
                         <label for="{{ form.street_address1.id_for_label }}" class="signup-label">Address Line 1</label>
                         {{ form.street_address1 }}
                         {% if form.street_address1.errors %}
@@ -64,7 +129,8 @@
                         {% endif %}
                     </div>
 
-                    <div class="signup-form-group">
+                    <!-- Address Line 2 -->
+                    <div class="signup-form-group mb-4">
                         <label for="{{ form.street_address2.id_for_label }}" class="signup-label">Address Line 2</label>
                         {{ form.street_address2 }}
                         {% if form.street_address2.errors %}
@@ -76,7 +142,8 @@
                         {% endif %}
                     </div>
 
-                    <div class="signup-form-group">
+                    <!-- Postcode -->
+                    <div class="signup-form-group mb-4">
                         <label for="{{ form.postcode.id_for_label }}" class="signup-label">Postcode</label>
                         {{ form.postcode }}
                         {% if form.postcode.errors %}
@@ -88,7 +155,8 @@
                         {% endif %}
                     </div>
 
-                    <div class="signup-form-group">
+                    <!-- Town or City -->
+                    <div class="signup-form-group mb-4">
                         <label for="{{ form.town_or_city.id_for_label }}" class="signup-label">Town or City</label>
                         {{ form.town_or_city }}
                         {% if form.town_or_city.errors %}
@@ -100,7 +168,8 @@
                         {% endif %}
                     </div>
 
-                    <div class="signup-form-group">
+                    <!-- Country -->
+                    <div class="signup-form-group mb-4">
                         <label for="{{ form.country.id_for_label }}" class="signup-label">Country</label>
                         {{ form.country }}
                         {% if form.country.errors %}
@@ -112,7 +181,7 @@
                         {% endif %}
                     </div>
 
-                    <button type="submit" class="signup-btn w-100 mt-3">
+                    <button type="submit" class="signup-btn w-100 mt-3 btn btn-primary">
                         Sign Up
                     </button>
                 </form>
@@ -141,3 +210,19 @@
     </div>
 </div>
 {% endblock %}
+
+<script>
+    function togglePassword(elem, inputId) {
+        const input = document.getElementById(inputId);
+        const icon = elem.querySelector('i');
+        if (input.type === "password") {
+            input.type = "text";
+            icon.classList.remove("bi bi-eye");
+            icon.classList.add("bi bi-eye-slash-fill");
+        } else {
+            input.type = "password";
+            icon.classList.remove("bi bi-eye-slash-fill");
+            icon.classList.add("fa-eye");
+        }
+    }
+</script>
