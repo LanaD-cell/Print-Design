@@ -11,6 +11,7 @@ from cart.contexts import cart_contents
 from .models import OrderLineItem
 from products.models import Product
 from .models import Order, OrderLineItem
+from homepage.models import Profile
 from .forms import CustomSignupForm
 from .forms import OrderForm
 
@@ -31,7 +32,7 @@ def create_order(request):
 
         # Render the signup form
         return render(
-            request, 'registration/signup.html', {'signup_form': signup_form})
+            request, 'account/signup.html', {'signup_form': signup_form})
 
     try:
         cart = Cart.objects.get(user=request.user)
@@ -116,18 +117,40 @@ def create_order(request):
 
 
 def signup_view(request):
+    confirm_password_success = None
+
     if request.method == 'POST':
         signup_form = CustomSignupForm(request.POST)
         if signup_form.is_valid():
+            password1 = signup_form.cleaned_data.get('password1')
+            password2 = signup_form.cleaned_data.get('password2')
+
+            if password1 == password2:
+                confirm_password_success = "Passwords match!"
+
             # Save the user and log them in
             user = signup_form.save()
             login(request, user)
+
+            # Create the user's profile after signup
+            Profile.objects.create(
+                user=user,
+                phone_number='',
+                country='',
+                postcode='',
+                town_or_city='',
+                street_address1='',
+                street_address2='',
+            )
+
             return redirect('create_cart_order')
     else:
         signup_form = CustomSignupForm()
 
-    return render(request, 'account/signup.html', {'form': signup_form})
-
+    return render(request, 'account/signup.html', {
+        'form': signup_form,
+        'confirm_password_success': confirm_password_success
+    })
 
 def order_summary(request):
     return render(request, 'checkout/order_checkout.html')

@@ -81,6 +81,7 @@ def add_to_cart(request):
                 service, Decimal('0.00')) for service in selected_services)
 
         # Handle the 'Own Print Data Upload' service, if selected
+        file = None
         if 'Own Print Data Upload' in selected_services and \
                 'print_data_file' in request.FILES:
             file = request.FILES['print_data_file']
@@ -94,19 +95,21 @@ def add_to_cart(request):
             # Redirect to the login page
             return redirect('login')
 
-        # Create a PrintData object and link it to the user
-        print_data = PrintData.objects.create(
-            user=request.user,
-            product=product,
-            uploaded_file=file,
-            service_type='Own Print Data Upload'
-        )
+        # Create a PrintData object and link it to the user, only if a file was uploaded
+        if file:
+            print_data = PrintData.objects.create(
+                user=request.user,
+                product=product,
+                uploaded_file=file,
+                service_type='Own Print Data Upload'
+            )
 
-        request.user.profile.print_data_files.add(print_data)
-        request.user.profile.save()
+            request.user.profile.print_data_files.add(print_data)
+            request.user.profile.save()
 
-        messages.success(request, f"Print data uploaded: {file.name} for product {product.name}")
+            messages.success(request, f"Print data uploaded: {file.name} for product {product.name}")
 
+        # Check if the user is authenticated and get the cart
         if request.user.is_authenticated:
             cart, _ = Cart.objects.get_or_create(user=request.user)
         else:
@@ -156,6 +159,7 @@ def add_to_cart(request):
         return redirect('cart:cart_details')
     else:
         return redirect('cart:cart_details')
+
 
 def remove_item(request, item_id):
     try:

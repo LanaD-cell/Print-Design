@@ -26,13 +26,17 @@ class CustomSignupForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         required=True
     )
+
     def clean(self):
         cleaned_data = super().clean()
-        password = cleaned_data.get("password")
-        confirm_password = cleaned_data.get("confirm_password")
+        password1 = cleaned_data.get("password1")
+        password2 = cleaned_data.get("password2")
 
-        if password != confirm_password:
-            raise forms.ValidationError("The two password fields must match.")
+        if password1 and password2:
+            if password1 != password2:
+                self.add_error("password2", "The two password fields must match.")
+            else:
+                self.confirm_password_success = "✔ Passwords match."
 
         return cleaned_data
 

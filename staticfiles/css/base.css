@@ -417,7 +417,7 @@ footer .social-icons a:hover {
     background: #0056b3;
 }
 
-.logout-page {
+.logout-page, .email_veri-page {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -433,7 +433,17 @@ footer .social-icons a:hover {
     max-width: 320px;
   }
 
-  .logout-card-body {
+  .email_veri-card {
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    background-color: white;
+    width: 100%;
+    max-width: 600px;
+  }
+
+  .logout-card-body, .email_veri-body {
     padding: 2rem;
     text-align: center;
   }
@@ -466,8 +476,83 @@ footer .social-icons a:hover {
     background-color: red;
   }
 
-/* ---- About ---- */
+/* Profile Page Styles */
+.profile-container {
+    margin-top: 30px;
+}
 
+.profile-header h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+
+.profile-header h4 {
+    font-size: 1.5rem;
+    margin-top: 20px;
+    color: #555;
+}
+
+.profile-orders .list-group-item {
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.profile-orders .list-group-item a {
+    text-decoration: none;
+    color: #007bff;
+}
+
+.profile-orders .list-group-item a:hover {
+    text-decoration: underline;
+}
+
+.profile-orders .list-group-item .badge {
+    font-size: 1rem;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+
+.profile-orders .list-group-item .badge.bg-warning {
+    background-color: #ffc107;
+}
+
+.profile-orders .list-group-item .badge.bg-primary {
+    background-color: #007bff;
+}
+
+.profile-orders .list-group-item .badge.bg-success {
+    background-color: #28a745;
+}
+
+.profile-orders .list-group-item .badge.bg-danger {
+    background-color: #dc3545;
+}
+
+.profile-orders .no-orders-text {
+    color: #777;
+    font-size: 1.1rem;
+    margin-top: 10px;
+}
+
+.profile-mascot {
+    text-align: center;
+    padding-top: 20px;
+}
+
+.profile-mascot img {
+    max-height: 300px;
+    width: auto;
+    transition: transform 0.3s ease-in-out;
+}
+
+.profile-mascot img:hover {
+    transform: scale(1.1);
+}
+
+/* ---- About ---- */
 .container.about-section {
     max-width: 1200px;
     margin: 50px auto;
