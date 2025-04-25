@@ -1,11 +1,14 @@
 from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 from django.http import Http404
+from django.http import JsonResponse
 from django.urls import reverse
 from django.contrib.auth import login
 from django.contrib import messages
 from django.conf import settings
 import stripe
+import json
 from cart.models import Cart
 from cart.contexts import cart_contents
 from .models import OrderLineItem
@@ -14,6 +17,8 @@ from .models import Order, OrderLineItem
 from homepage.models import Profile
 from .forms import CustomSignupForm
 from .forms import OrderForm
+import logging
+import re
 
 
 def create_order(request):
@@ -327,3 +332,45 @@ def checkout_success(request, order_number):
         'order': order,
     }
     return render(request, template, context)
+
+stripe.api_key = 'sk_test_51REARh02Dugwb6PemRTNItLsLEGDc9QamEaA9xEIv2ibvnmHjfEqU1i7ZxO5dDYOTmkQPNSJKrbPCaa5PnqJDcXY00BbDdeeL1'
+
+logger = logging.getLogger(__name__)
+
+@csrf_exempt
+def payment_confirm(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+            payment_method = data.get('payment_method')
+            client_secret = data.get('client_secret')
+
+            # Log the data to ensure client_secret is passed correctly
+            logger.debug(f"Received payment_method: {payment_method}, client_secret: {client_secret}")
+
+            # Extract the PaymentIntent ID from the client_secret
+            match = re.match(r'^(pi_[^_]+)', client_secret or '')
+            if not match:
+                return JsonResponse({'success': False, 'error': 'Invalid client secret'})
+
+            payment_intent_id = match.group(1)
+
+            intent = stripe.PaymentIntent.confirm(
+                payment_intent_id,
+                payment_method=payment_method
+            )
+
+            if intent.status == 'succeeded':
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Payment failed'})
+
+        except stripe.error.StripeError as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': 'An error occurred: ' + str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+

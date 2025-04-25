@@ -35,10 +35,17 @@ document.addEventListener('DOMContentLoaded', function () {
         // Disable the submit button to prevent multiple submissions
         submitButton.setAttribute('disabled', 'true');
 
+        const cardElement = elements.getElement('card');
+        if (!cardElement) {
+            console.error('Card Element not found!');
+            submitButton.removeAttribute('disabled');
+            return;
+        }
+
         // Handle payment submission
         stripe.createPaymentMethod({
             type: 'card',
-            card: card,
+            card: cardElement,
             billing_details: {
                 name: document.getElementById('id_full_name').value,
                 email: document.getElementById('id_email').value,
@@ -55,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const paymentMethodId = result.paymentMethod.id;
 
                 // Send the payment method ID and client secret to the server to complete the payment
-                fetch('/payment/confirm', {
+                fetch('/checkout/payment/confirm', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
