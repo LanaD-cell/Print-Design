@@ -152,6 +152,7 @@ def signup_view(request):
         'confirm_password_success': confirm_password_success
     })
 
+
 def order_summary(request):
     return render(request, 'checkout/order_checkout.html')
 
@@ -161,21 +162,11 @@ def checkout(request):
     stripe_secret_key = settings.STRIPE_SECRET_KEY
 
     if request.method == 'POST':
-        cart = Cart.objects.get(id=request.session.get('cart_id'))
-
-        form_data = {
-            'name': request.POST['name'],
-            'email': request.POST['email'],
-            'phone_number': request.POST['phone_number'],
-            'street_address1': request.POST['street_address1'],
-            'town_or_city': request.POST['town_or_city'],
-            'postcode': request.POST['postcode'],
-            'country': request.POST['country'],
-        }
-
-        order_form = OrderForm(form_data)
+        order_form = OrderForm(request.POST)
 
         if order_form.is_valid():
+            cart = Cart.objects.get(id=request.session.get('cart_id'))
+
             order = order_form.save()
             for item_id, item_data in cart.items():
                 try:
@@ -266,21 +257,24 @@ def checkout(request):
         free_delivery_qualified = cart_total >= FREE_DELIVERY_THRESHOLD
 
         user = request.user
+        user_profile = getattr(user, 'profile', None)  # Safely get the profile
+
+        # Set default values in case the profile fields are missing
         user_details = {
             'name': user.get_full_name(),
             'email': user.email,
-            'phone_number': user.profile.phone_number if hasattr(user, 'profile') else '',
-            'street_address1': user.profile.street_address1 if hasattr(user, 'profile') else '',
-            'town_or_city': user.profile.town_or_city if hasattr(user, 'profile') else '',
-            'postcode': user.profile.postcode if hasattr(user, 'profile') else '',
-            'country': user.profile.country if hasattr(user, 'profile') else ''
+            'phone_number': getattr(user_profile, 'phone_number', ''),
+            'street_address1': getattr(user_profile, 'street_address1', ''),
+            'town_or_city': getattr(user_profile, 'town_or_city', ''),
+            'postcode': getattr(user_profile, 'postcode', ''),
+            'country': getattr(user_profile, 'country', '')
         }
 
         order_form = OrderForm(initial=user_details)
 
     if not stripe_public_key:
         messages.warning(request, 'Stripe public key is missing. \
-                         Did you forget to add it to your enviroment?')
+                         Did you forget to add it to your environment?')
 
     template = 'checkout/order_checkout.html'
     context = {
@@ -294,9 +288,25 @@ def checkout(request):
         'stripe_public_key': stripe_public_key,
         'client_secret': intent.client_secret,
         'free_delivery_qualified': free_delivery_qualified,
+
+        # Pass user details to be used in the hidden fields
+        'hidden_name': user.get_full_name(),
+        'hidden_email': user.email,
+        'hidden_phone_number': getattr(user.profile, 'phone_number', ''),
+        'hidden_country': getattr(user.profile, 'country', ''),
+        'hidden_postcode': getattr(user.profile, 'postcode', ''),
+        'hidden_town_or_city': getattr(user.profile, 'town_or_city', ''),
+        'hidden_street_address1': getattr(user.profile, 'street_address1', ''),
+        'hidden_street_address2': getattr(user.profile, 'street_address2', ''),
+        'hidden_delivery_country': getattr(user.profile, 'delivery_country', ''),
+        'hidden_delivery_postcode': getattr(user.profile, 'delivery_postcode', ''),
+        'hidden_delivery_town_or_city': getattr(user.profile, 'delivery_town_or_city', ''),
+        'hidden_delivery_street_address1': getattr(user.profile, 'delivery_street_address1', ''),
+        'hidden_delivery_street_address2': getattr(user.profile, 'delivery_street_address2', ''),
     }
 
     return render(request, template, context)
+
 
 def checkout_success(request, order_number):
     """
