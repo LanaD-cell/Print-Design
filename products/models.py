@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class Category(models.Model):
     """
     Create Category for search functionality in Admin and site
@@ -57,11 +58,15 @@ class Product(models.Model):
     rating = models.DecimalField(
         max_digits=6, decimal_places=2, null=True, blank=True)
     image_url = models.URLField(max_length=1024, null=True, blank=True)
-    fallback_url = models.CharField(max_length=1024, null=True, blank=True)
-    image = models.ImageField(upload_to='products/', null=True, blank=True)
+    fallback_url = models.CharField(
+        max_length=1024, null=True, blank=True)
+    image = models.ImageField(
+        upload_to='products/', null=True, blank=True)
     sizes = models.JSONField(max_length=1024, default=list, blank=True)
-    quantities = models.JSONField(max_length=1024, default=list, blank=True)
-    additional_services = models.JSONField(max_length=1024, default=list, blank=True)
+    quantities = models.JSONField(
+        max_length=1024, default=list, blank=True)
+    additional_services = models.JSONField(
+        max_length=1024, default=list, blank=True)
 
     def __str__(self):
         return str(self.name)
@@ -79,5 +84,6 @@ class Product(models.Model):
         return self.sizes if self.sizes else []
 
     def get_quantities(self):
-        """Returns a list of quantities and their corresponding prices from the JSON field."""
+        """Returns a list of quantities and their
+        corresponding prices from the JSON field."""
         return self.quantities if self.quantities else []
