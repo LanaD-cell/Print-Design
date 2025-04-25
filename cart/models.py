@@ -31,13 +31,12 @@ class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     size = models.CharField(max_length=100, null=True, blank=True)
-    quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-
+    quantity = models.PositiveIntegerField(default=1)
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     service_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
-    services = models.TextField()
+    is_service = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.product.name} - {self.size} - {self.quantity}"
@@ -48,6 +47,9 @@ class CartItem(models.Model):
         This includes the price of the product, any service price,
         delivery price, and the quantity.
         """
+        if self.is_service:
+            return Decimal(self.service_price) + Decimal(self.delivery_price)
+
         return (
             Decimal(self.price or 0)
             + Decimal(self.service_price or 0)
@@ -55,5 +57,7 @@ class CartItem(models.Model):
         )
 
     def save(self, *args, **kwargs):
+        if self.is_service and self.service_price <= 0:
+            raise ValueError("Service price must be greater than zero for services.")
         super().save(*args, **kwargs)
 

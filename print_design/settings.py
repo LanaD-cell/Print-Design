@@ -49,7 +49,7 @@ INSTALLED_APPS = [
     'homepage',
     'products',
     'cart',
-    'checkout.apps.CheckoutConfig',
+    'checkout',
     'crispy_forms',
 
 ]
