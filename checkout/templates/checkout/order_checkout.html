@@ -104,19 +104,19 @@
                     <legend class="fieldset-label small text-black px-2 w-auto">Details</legend>
 
                     <!-- Full Name -->
-                    <div class="form-group required">
-                        <label for="{{ order_form.full_name.id_for_label }}">
+                    <div class="form-group required" id="id_full_name">
+                        <label for="{{ order_form.name.id_for_label }}">
                             Full Name
-                            {% if order_form.full_name.field.required %}
+                            {% if order_form.name.field.required %}
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.full_name.id_for_label }}"
-                            name="{{ order_form.full_name.name }}" value="{{ order_form.full_name.value|default:'' }}"
+                        <input type="text" id="id_name"
+                            name="{{ order_form.name.name }}" value="{{ order_form.name.value|default:'' }}"
                             class="form-control" placeholder="Full Name">
-                        {% if order_form.full_name.errors %}
+                        {% if order_form.name.errors %}
                             <ul class="errorlist text-danger">
-                                {% for error in order_form.full_name.errors %}
+                                {% for error in order_form.name.errors %}
                                     <li>{{ error }}</li>
                                 {% endfor %}
                             </ul>
@@ -124,14 +124,14 @@
                     </div>
 
                     <!-- Email Address -->
-                    <div class="form-group required">
+                    <div class="form-group required" id="id_email">
                         <label for="{{ order_form.email.id_for_label }}">
                             Email Address
                             {% if order_form.email.field.required %}
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="email" id="{{ order_form.email.id_for_label }}"
+                        <input type="email" id="email"
                             name="{{ order_form.email.name }}" value="{{ order_form.email.value|default:'' }}"
                             class="form-control" placeholder="Email Address">
                         {% if order_form.email.errors %}
@@ -154,7 +154,7 @@
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.phone_number.id_for_label }}"
+                        <input type="text" id="phone_number"
                             name="{{ order_form.phone_number.name }}" value="{{ order_form.phone_number.value|default:'' }}"
                             class="form-control" placeholder="Phone Number">
                         {% if order_form.phone_number.errors %}
@@ -174,7 +174,7 @@
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.address_line_1.id_for_label }}"
+                        <input type="text" id="address_line_1"
                             name="{{ order_form.address_line_1.name }}" value="{{ order_form.address_line_1.value|default:'' }}"
                             class="form-control" placeholder="Street Address 1">
                         {% if order_form.address_line_1.errors %}
@@ -191,7 +191,7 @@
                         <label for="{{ order_form.address_line_2.id_for_label }}">
                             Street Address 2
                         </label>
-                        <input type="text" id="{{ order_form.address_line_2.id_for_label }}"
+                        <input type="text" id="address_line_2"
                             name="{{ order_form.address_line_2.name }}" value="{{ order_form.address_line_2.value|default:'' }}"
                             class="form-control" placeholder="Street Address 2">
                         {% if order_form.address_line_2.errors %}
@@ -211,7 +211,7 @@
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.town_or_city.id_for_label }}"
+                        <input type="text" id="town_or_city"
                             name="{{ order_form.town_or_city.name }}" value="{{ order_form.town_or_city.value|default:'' }}"
                             class="form-control" placeholder="Town or City">
                         {% if order_form.town_or_city.errors %}
@@ -231,7 +231,7 @@
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.postcode.id_for_label }}"
+                        <input type="text" id="postcode"
                             name="{{ order_form.postcode.name }}" value="{{ order_form.postcode.value|default:'' }}"
                             class="form-control" placeholder="Postcode">
                         {% if order_form.postcode.errors %}
@@ -251,7 +251,7 @@
                                 <span class="text-danger">*</span>
                             {% endif %}
                         </label>
-                        <input type="text" id="{{ order_form.country.id_for_label }}"
+                        <input type="text" id="country"
                             name="{{ order_form.country.name }}" value="{{ order_form.country.value|default:'' }}"
                             class="form-control" placeholder="Country">
                         {% if order_form.country.errors %}
@@ -275,83 +275,51 @@
                     <!-- Additional Delivery Address Fields -->
                     <div id="different-address-fields" style="display:none;">
                         <div class="form-group">
-                            <label for="{{ order_form.delivery_street_address_1.id_for_label }}">
+                            <label>
+                                Recipient
+                            </label>
+                            <input type="text"
+                            class="form-control">
+                        </div>
+
+                        <div class="form-group">
+                            <label>
                                 Delivery Street Address 1
                             </label>
-                            <input type="text" id="{{ order_form.delivery_street_address_1.id_for_label }}"
-                                name="{{ order_form.delivery_street_address_1.name }}" value="{{ order_form.delivery_street_address_1.value|default:'' }}"
-                                class="form-control" placeholder="Delivery Street Address 1">
-                            {% if order_form.delivery_street_address_1.errors %}
-                                <ul class="errorlist text-danger">
-                                    {% for error in order_form.delivery_street_address_1.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                            <input type="text"
+                            class="form-control">
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ order_form.delivery_street_address_2.id_for_label }}">
+                            <label>
                                 Delivery Street Address 2
                             </label>
-                            <input type="text" id="{{ order_form.delivery_street_address_2.id_for_label }}"
-                                name="{{ order_form.delivery_street_address_2.name }}" value="{{ order_form.delivery_street_address_2.value|default:'' }}"
-                                class="form-control" placeholder="Delivery Street Address 2">
-                            {% if order_form.delivery_street_address_2.errors %}
-                                <ul class="errorlist text-danger">
-                                    {% for error in order_form.delivery_street_address_2.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                            <input type="text"
+                            class="form-control">
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ order_form.delivery_town_or_city.id_for_label }}">
+                            <label>
                                 Delivery Town or City
                             </label>
-                            <input type="text" id="{{ order_form.delivery_town_or_city.id_for_label }}"
-                                name="{{ order_form.delivery_town_or_city.name }}" value="{{ order_form.delivery_town_or_city.value|default:'' }}"
-                                class="form-control" placeholder="Delivery Town or City">
-                            {% if order_form.delivery_town_or_city.errors %}
-                                <ul class="errorlist text-danger">
-                                    {% for error in order_form.delivery_town_or_city.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                            <input type="text"
+                            class="form-control">
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ order_form.delivery_postcode.id_for_label }}">
+                            <label>
                                 Delivery Postcode
                             </label>
-                            <input type="text" id="{{ order_form.delivery_postcode.id_for_label }}"
-                                name="{{ order_form.delivery_postcode.name }}" value="{{ order_form.delivery_postcode.value|default:'' }}"
-                                class="form-control" placeholder="Delivery Postcode">
-                            {% if order_form.delivery_postcode.errors %}
-                                <ul class="errorlist text-danger">
-                                    {% for error in order_form.delivery_postcode.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                            <input type="text"
+                            class="form-control">
                         </div>
 
                         <div class="form-group">
-                            <label for="{{ order_form.delivery_country.id_for_label }}">
+                            <label>
                                 Delivery Country
                             </label>
-                            <input type="text" id="{{ order_form.delivery_country.id_for_label }}"
-                                name="{{ order_form.delivery_country.name }}" value="{{ order_form.delivery_country.value|default:'' }}"
-                                class="form-control" placeholder="Delivery Country">
-                            {% if order_form.delivery_country.errors %}
-                                <ul class="errorlist text-danger">
-                                    {% for error in order_form.delivery_country.errors %}
-                                        <li>{{ error }}</li>
-                                    {% endfor %}
-                                </ul>
-                            {% endif %}
+                            <input type="text"
+                            class="form-control">
                         </div>
                     </div>
                 </fieldset>
@@ -473,6 +441,13 @@
         </div>
           </form>
         </div>
+    </div>
+    <div id="loading-overlay">
+        <h1 class="text-light logo-font loading-spinner">
+            <span class="icon">
+                <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+            </span>
+        </h1>
     </div>
 
 {% endblock %}
