@@ -333,8 +333,6 @@ def checkout_success(request, order_number):
     }
     return render(request, template, context)
 
-
-
 logger = logging.getLogger(__name__)
 
 @csrf_exempt
