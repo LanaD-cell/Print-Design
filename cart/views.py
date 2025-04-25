@@ -43,15 +43,23 @@ def add_to_cart(request):
         product = get_object_or_404(Product, id=product_id)
 
         selected_size = request.POST.get('size')
-        selected_quantity = int(request.POST.get('quantity_option'))
         selected_services = request.POST.getlist('services')
 
         # Handle the case where size or quantity might be in a list format
         if isinstance(selected_size, list):
             selected_size = selected_size[0]
 
-        if isinstance(selected_quantity, list):
-            selected_quantity = int(selected_quantity[0])
+        selected_quantity_str = request.POST.get('quantity_option', '')
+
+        # Validate that the quantity is a valid integer
+        try:
+            if selected_quantity_str:
+                selected_quantity = int(selected_quantity_str)
+            else:
+                selected_quantity = 1
+        except ValueError:
+            messages.error(request, "Invalid quantity selected.")
+            return redirect('cart:cart')
 
         selected_price = None
         for quantity in product.quantities:

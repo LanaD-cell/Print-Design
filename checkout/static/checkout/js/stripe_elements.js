@@ -8,27 +8,29 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
+    // Get the Stripe public key and client secret from the DOM
+    const stripePublicKey = document.getElementById('id_stripe_public_key').textContent.trim();
+    const clientSecret = document.getElementById('id_client_secret').textContent.trim();
+
+    // Initialize Stripe and Elements
+    const stripe = Stripe(stripePublicKey);
+    const elements = stripe.elements();
+
+    // Ensure #card-element is empty before mounting the card element
+    const cardElementContainer = document.getElementById('card-element');
+    if (cardElementContainer) {
+        cardElementContainer.innerHTML = ''; // Clear any existing child nodes inside #card-element
+    } else {
+        console.error('Card element container not found in the DOM.');
+        return;
+    }
+
+    // Create the card element and mount it to the DOM
+    const card = elements.create('card');
+    card.mount('#card-element'); // Mount card element to the cleared container
+
     form.addEventListener('submit', function (e) {
         e.preventDefault();  // Prevent the default form submission
-
-        // Get the Stripe public key and client secret from the DOM
-        const stripePublicKey = document.getElementById('id_stripe_public_key').textContent.trim();
-        const clientSecret = document.getElementById('id_client_secret').textContent.trim();
-
-        // Initialize Stripe and Elements
-        const stripe = Stripe(stripePublicKey);
-        const elements = stripe.elements();
-
-        // Create the card element and mount it to the DOM
-        const card = elements.create('card');
-        const cardElement = document.getElementById('card-element');
-
-        if (cardElement) {
-            card.mount('#card-element');
-        } else {
-            console.error('The card element was not found in the DOM.');
-            return;
-        }
 
         // Disable the submit button to prevent multiple submissions
         submitButton.setAttribute('disabled', 'true');
@@ -53,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const paymentMethodId = result.paymentMethod.id;
 
                 // Send the payment method ID and client secret to the server to complete the payment
-                fetch('/your-server-endpoint', {
+                fetch('/payment/confirm', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -72,12 +74,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Display any errors from the server
                         const errorElement = document.getElementById('card-errors');
                         errorElement.textContent = data.error || 'Something went wrong!';
-
-                        // Re-enable the submit button
-                        submitButton.removeAttribute('disabled');
                     }
+
+                    // Re-enable the submit button
+                    submitButton.removeAttribute('disabled');
                 }).catch(function (err) {
-                    // Handle network errors or unexpected issues
                     const errorElement = document.getElementById('card-errors');
                     errorElement.textContent = 'Network error: ' + err.message;
 

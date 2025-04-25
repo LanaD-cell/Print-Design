@@ -6,26 +6,35 @@ from .models import Cart
 def cart_contents(request):
     """ Create Cart contents for Cost and Delivery Calculations """
 
-    # Make sure user is authenticated to access cart
+    cart = None  # Default to None
+
+    # If the user is authenticated, fetch or create the user's cart
     if request.user.is_authenticated:
-        # Get the user's cart, or create one if it doesn't exist
-        cart = Cart.objects.get(user=request.user)
+        try:
+            cart = Cart.objects.get(user=request.user)
+        except Cart.DoesNotExist:
+            cart = Cart(user=request.user)
+            cart.save()
+
     else:
+        # For unauthenticated users, use the session to get the cart
+        cart = request.session.get('cart', None)
 
-        cart = request.session.get('cart', {})
+        # If no cart exists in session, create an empty cart (or redirect to a login page if needed)
+        if not cart:
+            cart = {}  # Empty cart for unauthenticated users
 
-    # Calculate the total and items count
+    # If cart is valid, process the cart contents
     cart_items = cart.items.all() if cart and hasattr(cart, 'items') else []
-    total = cart.total_price() if cart and hasattr(
-        cart, 'total_price') else Decimal('0.00')
+    total = cart.total_price() if cart and hasattr(cart, 'total_price') else Decimal('0.00')
 
     # Product count (number of unique items in the cart)
-    product_count = cart.items.count() if cart and hasattr(
-        cart, 'items') else 0
+    product_count = cart.items.count() if cart and hasattr(cart, 'items') else 0
 
+    # Initialize delivery cost logic
     delivery = Decimal('0.00')
 
-    # Delivery logic
+    # Delivery logic (if the cart total is below the free delivery threshold)
     if total < settings.FREE_DELIVERY_THRESHOLD:
         free_delivery_delta = settings.FREE_DELIVERY_THRESHOLD - total
     else:
