@@ -333,7 +333,7 @@ def checkout_success(request, order_number):
     }
     return render(request, template, context)
 
-stripe.api_key = 'sk_test_51REARh02Dugwb6PemRTNItLsLEGDc9QamEaA9xEIv2ibvnmHjfEqU1i7ZxO5dDYOTmkQPNSJKrbPCaa5PnqJDcXY00BbDdeeL1'
+
 
 logger = logging.getLogger(__name__)
 
