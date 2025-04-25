@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // Ensure #card-element is empty before mounting the card element
     const cardElementContainer = document.getElementById('card-element');
     if (cardElementContainer) {
-        cardElementContainer.innerHTML = ''; // Clear any existing child nodes inside #card-element
+        cardElementContainer.innerHTML = '';
     } else {
         console.error('Card element container not found in the DOM.');
         return;
@@ -27,10 +27,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Create the card element and mount it to the DOM
     const card = elements.create('card');
-    card.mount('#card-element'); // Mount card element to the cleared container
+    card.mount('#card-element');
 
     form.addEventListener('submit', function (e) {
-        e.preventDefault();  // Prevent the default form submission
+        e.preventDefault();
 
         // Disable the submit button to prevent multiple submissions
         submitButton.setAttribute('disabled', 'true');
