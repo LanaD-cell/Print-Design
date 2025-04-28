@@ -1113,10 +1113,6 @@ p.card-text {
     overflow-y: auto;
 }
 
-.checkout-overlay {
-
-}
-
 /* ---- Media Queries ---- */
 /* For screens up to 1024px */
 @media (max-width: 1024px) {
