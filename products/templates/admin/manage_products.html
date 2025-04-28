@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+<h1>Manage Products</h1>
+<a href="{% url 'create_product' %}">Add New Product</a>
+<ul>
+    {% for product in products %}
+        <li>
+            {{ product.name }} - {{ product.price }}
+            <a href="{% url 'update_product' product.pk %}">Edit</a>
+            <a href="{% url 'delete_product' product.pk %}">Delete</a>
+        </li>
+    {% endfor %}
+</ul>
+product_form.html:
+
+<h1>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Product</h1>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+<a href="{% url 'manage_products' %}">Back to Product List</a>
+confirm_delete.html:
+
+<h1>Delete Product</h1>
+<p>Are you sure you want to delete "{{ product.name }}"?</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+    <a href="{% url 'manage_products' %}">Cancel</a>
+</form>

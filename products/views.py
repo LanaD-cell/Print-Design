@@ -1,10 +1,12 @@
 from django.shortcuts import render, get_object_or_404
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from .models import (Product,
                     Category,
                     ProductSize,
                     QuantityOption
                     )
+from .forms import ProductForm
 import json
 from django.conf import settings
 
@@ -155,3 +157,40 @@ def calculate_price(request, product_id):
 
 def main_nav(request):
     return render(request, 'main-nav.html')
+
+
+@user_passes_test(lambda u: u.is_superuser)
+def manage_products(request):
+    products = Product.objects.all()
+    return render(request, 'products/admin/manage_products.html', {'products': products})
+
+@user_passes_test(lambda u: u.is_superuser)
+def create_product(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_products')
+    else:
+        form = ProductForm()
+    return render(request, 'admin/product_form.html', {'form': form})
+
+@user_passes_test(lambda u: u.is_superuser)
+def update_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES, instance=product)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_products')
+    else:
+        form = ProductForm(instance=product)
+    return render(request, 'admin/product_form.html', {'form': form})
+
+@user_passes_test(lambda u: u.is_superuser)
+def delete_product(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == 'POST':
+        product.delete()
+        return redirect('manage_products')
+    return render(request, 'products/admin/confirm_delete.html', {'product': product})

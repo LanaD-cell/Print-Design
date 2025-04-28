@@ -87,3 +87,4 @@ class Product(models.Model):
         """Returns a list of quantities and their
         corresponding prices from the JSON field."""
         return self.quantities if self.quantities else []
+
