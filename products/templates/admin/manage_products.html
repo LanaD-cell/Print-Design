@@ -1,33 +1,26 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block content %}
+<div class="container my-5">
+    <h1 class="mb-4">Manage Products</h1>
 
-<h1>Manage Products</h1>
-<a href="{% url 'create_product' %}">Add New Product</a>
-<ul>
-    {% for product in products %}
-        <li>
-            {{ product.name }} - {{ product.price }}
-            <a href="{% url 'update_product' product.pk %}">Edit</a>
-            <a href="{% url 'delete_product' product.pk %}">Delete</a>
-        </li>
-    {% endfor %}
-</ul>
-product_form.html:
+    <a href="{% url 'create_product' %}" class="btn btn-primary mb-3">Add New Product</a>
 
-<h1>{% if form.instance.pk %}Edit{% else %}Create{% endif %} Product</h1>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Save</button>
-</form>
-<a href="{% url 'manage_products' %}">Back to Product List</a>
-confirm_delete.html:
-
-<h1>Delete Product</h1>
-<p>Are you sure you want to delete "{{ product.name }}"?</p>
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Yes, Delete</button>
-    <a href="{% url 'manage_products' %}">Cancel</a>
-</form>
+    <ul class="list-group">
+        {% for product in products %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <strong>{{ product.name }}</strong> — €{{ product.price }}
+                </div>
+                <div>
+                    <a href="{% url 'update_product' product.pk %}" class="btn btn-sm btn-warning me-2">Edit</a>
+                    <a href="{% url 'delete_product' product.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                </div>
+            </li>
+        {% empty %}
+            <li class="list-group-item">No products available.</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

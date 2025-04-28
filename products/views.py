@@ -162,7 +162,7 @@ def main_nav(request):
 @user_passes_test(lambda u: u.is_superuser)
 def manage_products(request):
     products = Product.objects.all()
-    return render(request, 'products/admin/manage_products.html', {'products': products})
+    return render(request, 'admin/manage_products.html', {'products': products})
 
 @user_passes_test(lambda u: u.is_superuser)
 def create_product(request):

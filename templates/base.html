@@ -107,7 +107,7 @@
                                 <ul class="dropdown-menu border-0" aria-labelledby="user-options">
                                     {% if request.user.is_authenticated %}
                                         {% if request.user.is_superuser %}
-                                            <li><a href="manage_products" class="dropdown-item">Product Management</a></li>
+                                            <li><a href="{% url 'manage_products' %}" class="dropdown-item">Product Management</a></li>
                                         {% endif %}
                                         <li><a href="{% url 'profile' %}" class="dropdown-item">My Profile</a></li>
                                         <li><a href="{% url 'logout' %}" class="dropdown-item">Logout</a></li>
