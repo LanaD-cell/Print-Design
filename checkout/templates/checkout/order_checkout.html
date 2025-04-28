@@ -38,14 +38,11 @@
                     <p class="mb-1 mt-0 small text-muted">Subtotal</p>
                 </div>
             </div>
-<<<<<<< HEAD
             {% if free_delivery_qualified %}
                 <p>Congratulations! You qualify for free delivery.</p>
             {% else %}
                 <p>Add more items to your cart to qualify for free delivery.</p>
             {% endif %}
-=======
->>>>>>> 5c2a148e7a8c1b52eb1848d2378ea5ae213f21a8
 
             {% for item in cart_items %}
             <div class="row">
@@ -425,36 +422,28 @@
 
         <!-- Payment Information Section -->
         <fieldset class="px-3">
-<<<<<<< HEAD
             <div id="card-element"></div>
             <legend class="fieldset-label small text-black px-2 w-auto">Payment</legend>
-=======
-            <legend class="fieldset-label small text-black px-2 w-auto">Payment</legend>
-            <div id="card-element"></div>
->>>>>>> 5c2a148e7a8c1b52eb1848d2378ea5ae213f21a8
             <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
         </fieldset>
 
         <!-- Submit Button Section -->
         <div class="submit-button text-right mt-5 mb-2">
             <span id="id_stripe_public_key" style="display:none;">{{ stripe_public_key }}</span>
-<<<<<<< HEAD
             <input type="hidden" id="id_client_secret" value="{{ client_secret }}"> <!-- Hidden input for client_secret -->
-=======
-            <span id="id_client_secret" style="display:none;">{{ client_secret }}</span>
->>>>>>> 5c2a148e7a8c1b52eb1848d2378ea5ae213f21a8
             <a href="{% url 'cart:add_to_cart' %}" class="btn btn-outline-black rounded-0">
-                <span class="icon">
-                    <i class="fa-solid fa-circle-chevron-left"></i>
-                </span>
-                <span class="font-weight-bold">Adjust Cart</span>
+                <button id="submit-button" class="btn btn-black rounded-0">
+                    <span class="font-weight-bold">Complete Order</span>
+                    <span class="icon">
+                        <i class="fa-solid fa-lock"></i>
+                    </span>
+                </button>
+            <span class="icon">
+                <i class="fa-solid fa-circle-chevron-left"></i>
+            </span>
+            <span class="font-weight-bold">Adjust Cart</span>
             </a>
-            <button id="submit-button" class="btn btn-black rounded-0">
-                <span class="font-weight-bold">Complete Order</span>
-                <span class="icon">
-                    <i class="fa-solid fa-lock"></i>
-                </span>
-            </button>
+
         </div>
           </form>
         </div>
@@ -466,7 +455,14 @@
             </span>
         </h1>
     </div>
-
+</div>
+<div id="loading-overlay">
+    <h1 class="text-light logo-font loading-spinner">
+        <span class="icon">
+            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+        </span>
+    </h1>
+</div>
 {% endblock %}
 
 {% block postloadjs %}
@@ -483,7 +479,7 @@
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         console.log("please work!")
-        const stripe = Stripe('pk_test_51REARh02Dugwb6PePp7mUznpqAvu2jV9XWpRfivdym6l8hir3tZ7Vvh4UX1SrgH3McbhO3w9yMEWclq88JVis5Dk00oHCNcLPB');
+        const stripe = Stripe('pk_test_51REARw07B3iAgZ7iWDLVkGICKIihYRy4Qwkgp2xmVPq8wulwd3E2mszbQkvII5BLzpDrhiEr2e24vr9vyjwNYVpx00moQgnZMh');
         const elements = stripe.elements();
         const csrf_token = "{{ csrf_token }}";
 
@@ -643,31 +639,10 @@
                 const vatAmount = orderTotal * VAT_RATE;
                 const grandTotal = orderTotal + vatAmount + deliveryPrice;
 
-<<<<<<< HEAD
-=======
-                const freeDeliveryMsg = document.getElementById('free-delivery-message');
-                const FREE_DELIVERY_THRESHOLD = 50;
-
-                if (orderTotal >= FREE_DELIVERY_THRESHOLD && deliveryPrice === 0) {
-                    freeDeliveryMsg.style.display = 'block';
-                } else {
-                    freeDeliveryMsg.style.display = 'none';
-                }
-
->>>>>>> 5c2a148e7a8c1b52eb1848d2378ea5ae213f21a8
                 deliveryAmountEl.innerText = `€${deliveryPrice.toFixed(2)}`;
                 vatAmountEl.innerText = `€${vatAmount.toFixed(2)}`;
                 grandTotalEl.innerText = `€${grandTotal.toFixed(2)}`;
                 cardChargeEl.innerText = `€${grandTotal.toFixed(2)}`;
-<<<<<<< HEAD
-=======
-
-                // Update the navbar cart total
-                const navbarCartTotalEl = document.getElementById('navbar-cart-total');
-                if (navbarCartTotalEl) {
-                    navbarCartTotalEl.innerText = grandTotal.toFixed(2);
-                }
->>>>>>> 5c2a148e7a8c1b52eb1848d2378ea5ae213f21a8
             });
         });
 
@@ -676,10 +651,6 @@
 </script>
 
 <!-- Your Stripe script -->
-<<<<<<< HEAD
 <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
-=======
-<script src="{% static 'checkout/js/stripe_elements.js' %}" defer></script>
->>>>>>> 5c2a148e7a8c1b52eb1848d2378ea5ae213f21a8
 
 {% endblock %}
