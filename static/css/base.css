@@ -181,6 +181,13 @@ strong {
     align-items: center;
 }
 
+.prod-management-card {
+    background-color: rgba(49, 34, 68, 0.7);
+    border: 2px solid #4d194d;
+    border-radius: 8px;
+
+}
+
 /* Centered Search Bar */
 .navbar-search {
     display: flex;
