@@ -1,0 +1,26 @@
+# Block all crawlers from the admin area (replace with actual directory names)
+User-agent: *
+Disallow: /admin/
+Disallow: /login/
+Disallow: /checkout/
+Disallow: /cart/
+Disallow: /profile/
+
+# Allow all crawlers to access other areas of the site
+User-agent: *
+Allow: /images/
+Allow: /css/
+Allow: /js/
+
+# Block access to duplicate content or unimportant pages (e.g., privacy policy, terms, etc.)
+User-agent: *
+Disallow: /privacy-policy/
+Disallow: /terms-and-conditions/
+
+# Allow Googlebot full access
+User-agent: Googlebot
+Allow: /
+
+# Allow Bingbot full access
+User-agent: Bingbot
+Allow: /

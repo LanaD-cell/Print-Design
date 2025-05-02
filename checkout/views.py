@@ -239,10 +239,9 @@ def checkout(request):
     if delivery_option == 'Standard Production' and cart_total >= Decimal(settings.FREE_DELIVERY_THRESHOLD):
         delivery_fee = Decimal('0.00')
 
-    order_amount = grand_total
-
     grand_total = cart_total + service_price + delivery_fee
     stripe_total = int(grand_total * 100)
+
     payment_intent = stripe.PaymentIntent.create(
         amount=stripe_total,
         currency='eur',
@@ -272,7 +271,6 @@ def checkout(request):
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
         'client_secret': payment_intent.client_secret,
         'free_delivery_qualified': cart_total >= Decimal(settings.FREE_DELIVERY_THRESHOLD),
-        'stripe_total': stripe_total,
     }
 
     if not stripe_public_key:
@@ -404,7 +402,7 @@ def payment_confirm(request):
 
 
 @login_required
-def payment_success(request, order_number=None):
+def payment_success(request, order_number):
     session_id = request.GET.get('session_id')
 
     # If no session_id is present, redirect to order summary page
@@ -417,7 +415,7 @@ def payment_success(request, order_number=None):
 
         # Extract necessary details from the Stripe session
         customer_email = session.customer_details.email
-        amount_total = session.amount_total / 100  # Amount is in cents, convert to euros
+        amount_total = session.amount_total / 100
 
         # Fetch the associated order
         order = get_object_or_404(Order, order_number=order_number)
@@ -428,7 +426,7 @@ def payment_success(request, order_number=None):
 
         # If payment was successful, update the order status
         if session.payment_status == 'paid':
-            order.status = 'Paid'  # Mark as paid (you can adjust status as per your logic)
+            order.status = 'Paid'
             order.save()
 
             # Optionally save some information to the user profile or any other place if needed
@@ -449,7 +447,8 @@ def payment_success(request, order_number=None):
     except stripe.error.StripeError as e:
         # Handle Stripe API errors
         logger.error(f"Stripe error: {e.user_message}")
-        return redirect('checkout:order_summary')
+
+        return redirect('checkout:checkout_success_page', order_number=order_number)
 
     except Exception as e:
         # Handle other exceptions

@@ -323,11 +323,41 @@
   <script src="{% static 'summernote/summernote-bs4.min.js' %}"></script>
 
   <!-- JavaScript to update cart total dynamically -->
-  <script type="text/javascript">
-  // Example: Updating cart total after an AJAX request or user action
-  function updateCartTotal(newTotal) {
-      document.getElementById("navbar-cart-total").innerText = newTotal.toFixed(2);
-  }
+  <script>
+    function updateCartTotals() {
+        // Send an AJAX request to get updated cart totals from the backend
+        fetch('/checkout/get_cart_total/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.grand_total) {
+                    // Update the displayed grand total
+                    document.getElementById("grand-total").innerText = "€" + data.grand_total.toFixed(2);
+                }
+
+                if (data.delivery_fee) {
+                    // Update the delivery fee
+                    document.getElementById("delivery-amount").innerText = "€" + data.delivery_fee.toFixed(2);
+                }
+
+                if (data.vat_amount) {
+                    // Update VAT amount if necessary
+                    document.getElementById("vat-amount").innerText = "€" + data.vat_amount.toFixed(2);
+                }
+
+                if (data.cart_total) {
+                    // Update the order total
+                    document.getElementById("order-total").innerText = "€" + data.cart_total.toFixed(2);
+                }
+            })
+            .catch(error => {
+                console.error('Error updating cart totals:', error);
+            });
+    }
+
+    // Call this function on page load, or after any cart updates
+    document.addEventListener('DOMContentLoaded', function() {
+        updateCartTotals(); // Initial update
+    });
   </script>
 
   <script>
