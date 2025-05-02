@@ -1,9 +1,10 @@
 import stripe
-from dotenv import load_dotenv
 import os
 from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from django.http import Http404
 from django.http import JsonResponse
 from django.urls import reverse
@@ -22,7 +23,9 @@ import logging
 import re
 
 
-load_dotenv()
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+logger = logging.getLogger(__name__)
 
 def get_or_create_cart(request):
     """Utility to get or create cart for authenticated or guest user."""
@@ -142,61 +145,6 @@ def order_summary(request):
     return render(request, 'checkout/order_checkout.html')
 
 
-def create_checkout_session(request):
-    try:
-        # Retrieve the current order from session
-        order_id = request.session.get('order_id')
-        if not order_id:
-            return JsonResponse({'error': 'No order found in session'}, status=400)
-
-        order = Order.objects.get(id=order_id)
-        cart = Cart.objects.get(id=request.session.get('cart_id'))  # Assuming cart is stored in session
-
-        # Convert to cents (Stripe expects amounts in cents)
-        stripe_total = int(order.grand_total * 100)
-
-        # Create an empty list for line items
-        line_items = []
-
-        # Iterate over cart items and add each product's info as a line item
-        for item in cart.items.all():
-            product = item.product
-            size = item.product_size
-            quantity = item.quantity
-            price = item.price
-
-            # Add size and quantity to the product name for Stripe
-            product_name = f"{product.name} ({size})" if size else product.name
-
-            # Calculate the price for the quantity selected
-            product_price = price * quantity
-
-            line_items.append({
-                'price_data': {
-                    'currency': settings.STRIPE_CURRENCY,
-                    'product_data': {
-                        'name': product_name,
-                    },
-                    'unit_amount': int(product_price * 100),
-                },
-                'quantity': quantity,
-            })
-
-        # Create a Stripe Checkout session with multiple line items
-        session = stripe.checkout.Session.create(
-            payment_method_types=['card'],
-            line_items=line_items,
-            mode='payment',  # One-time payment mode
-            success_url=request.build_absolute_uri('/checkout/success/'),  # URL for successful payment
-            cancel_url=request.build_absolute_uri('/checkout/cancel/'),  # URL for canceled payment
-        )
-
-        # Redirect the user to the Stripe Checkout page
-        return redirect(session.url, code=303)
-
-    except Exception as e:
-        return JsonResponse({'error': str(e)}, status=400)
-
 def add_to_cart(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
@@ -294,8 +242,9 @@ def checkout(request):
     order_amount = grand_total
 
     grand_total = cart_total + service_price + delivery_fee
+    stripe_total = int(grand_total * 100)
     payment_intent = stripe.PaymentIntent.create(
-        amount=order_amount,
+        amount=stripe_total,
         currency='eur',
     )
     user = request.user
@@ -323,7 +272,7 @@ def checkout(request):
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
         'client_secret': payment_intent.client_secret,
         'free_delivery_qualified': cart_total >= Decimal(settings.FREE_DELIVERY_THRESHOLD),
-
+        'stripe_total': stripe_total,
     }
 
     if not stripe_public_key:
@@ -331,6 +280,35 @@ def checkout(request):
 
     return render(request, 'checkout/order_checkout.html', context)
 
+
+@csrf_exempt
+def create_checkout_session(request):
+    if request.method == 'POST':
+        try:
+            # Get cart contents from session
+            cart = cart_contents(request)
+            grand_total = int(cart['grand_total'] * 100)
+
+            session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[{
+                    'price_data': {
+                        'currency': 'eur',
+                        'product_data': {
+                            'name': 'Order from YourSite',
+                        },
+                        'unit_amount': grand_total,
+                    },
+                    'quantity': 1,
+                }],
+                mode='payment',
+                success_url=request.build_absolute_uri('/checkout/checkout_success_page/{CHECKOUT_SESSION_ID}/'),
+                cancel_url=request.build_absolute_uri('/checkout/summary/'),
+            )
+            return JsonResponse({'sessionId': session.id})
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
 
 def checkout_success(request, order_number):
     """
@@ -346,7 +324,7 @@ def checkout_success(request, order_number):
     if 'cart' in request.session:
         del request.session['cart']
 
-    template = 'checkout/checkout_success.html'
+    template = 'checkout/success.html'
     context = {
         'order': order,
     }
@@ -356,30 +334,36 @@ logger = logging.getLogger(__name__)
 
 
 @csrf_exempt
+@require_POST
 def create_payment_intent(request):
-    if request.method == 'POST':
-        try:
-            # Parse the incoming JSON data
-            data = json.loads(request.body)
-            full_name = data.get('full_name')
+    try:
+        # Parse the JSON body of the request
+        data = json.loads(request.body)
 
-            # Create the payment intent with a test amount of $20 (2000 cents)
-            intent = stripe.PaymentIntent.create(
-                amount=2000,  # amount in cents
-                currency='eur',
-                description=f"Payment for {full_name}",
-            )
+        # Get the grand_total (in currency) and id_name from the received data
+        grand_total = data.get('grand_total')
+        id_name = data.get('id_name')
 
-            # Return the client secret
-            return JsonResponse({'clientSecret': intent.client_secret})
+        # Ensure that grand_total and id_name are provided
+        if not grand_total or not id_name:
+            return JsonResponse({'error': 'Missing grand_total or id_name'}, status=400)
 
-        except Exception as e:
-            # Return an error message in case of failure
-            return JsonResponse({'error': str(e)}, status=500)
+        # Convert grand_total to cents (Stripe expects amounts in cents)
+        amount_in_cents = int(grand_total * 100)
 
-    # If the method isn't POST, return an error
-    return JsonResponse({'error': 'Invalid request method'}, status=400)
+        # Create the PaymentIntent with the amount and metadata
+        payment_intent = stripe.PaymentIntent.create(
+            amount=amount_in_cents,
+            currency='eur',
+            metadata={'id_name': id_name}
+        )
 
+        # Return the client secret to the frontend
+        return JsonResponse({'clientSecret': payment_intent['client_secret']})
+
+    except Exception as e:
+        # Return an error if any exception occurs
+        return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
 def payment_confirm(request):
@@ -419,15 +403,55 @@ def payment_confirm(request):
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
 
-def payment_success(request):
-    order_number = request.GET.get('order_number')  # You may pass order_number in the URL params or session
-    if order_number:
-        try:
-            order = Order.objects.get(order_number=order_number)
-        except Order.DoesNotExist:
-            raise Http404("Order not found")
+@login_required
+def payment_success(request, order_number=None):
+    session_id = request.GET.get('session_id')
 
-        return render(request, 'checkout/success.html', {'order': order})
-    else:
-        # If no order_number is provided in the query params, handle the case (e.g., show a generic success message)
-        return render(request, 'checkout/success.html', {'message': 'Your payment was successful!'})
+    # If no session_id is present, redirect to order summary page
+    if not session_id:
+        return redirect('checkout:order_summary')
+
+    try:
+        # Retrieve the Stripe session using the session_id
+        session = stripe.checkout.Session.retrieve(session_id)
+
+        # Extract necessary details from the Stripe session
+        customer_email = session.customer_details.email
+        amount_total = session.amount_total / 100  # Amount is in cents, convert to euros
+
+        # Fetch the associated order
+        order = get_object_or_404(Order, order_number=order_number)
+
+        # Check if the session ID corresponds to the order number
+        if order.order_number != session.id:
+            raise Http404("Order not found for this session.")
+
+        # If payment was successful, update the order status
+        if session.payment_status == 'paid':
+            order.status = 'Paid'  # Mark as paid (you can adjust status as per your logic)
+            order.save()
+
+            # Optionally save some information to the user profile or any other place if needed
+            # Profile related actions, etc.
+
+            # Clear the cart from session after successful payment
+            if 'cart' in request.session:
+                del request.session['cart']
+                request.session.modified = True
+
+            # Display the success page with order details
+            return render(request, 'checkout/success.html', {'order': order})
+
+        else:
+            # If payment was not successful, handle accordingly
+            return render(request, 'checkout/payment_failed.html')
+
+    except stripe.error.StripeError as e:
+        # Handle Stripe API errors
+        logger.error(f"Stripe error: {e.user_message}")
+        return redirect('checkout:order_summary')
+
+    except Exception as e:
+        # Handle other exceptions
+        logger.error(f"Error during payment success processing: {str(e)}")
+        return redirect('checkout:order_summary')
