@@ -427,30 +427,25 @@
             <div class="mb-3 text-danger" id="card-errors" role="alert"></div>
         </fieldset>
 
-                <!-- Submit Button Section -->
-                <div class="submit-button text-right mt-5 mb-2">
-                    <!-- Hidden input for client_secret placed before the submit button -->
-                    <input type="hidden" id="id_client_secret" value="{{ client_secret }}">
+        <!-- Submit Button Section -->
+        <div class="submit-button text-right mt-5 mb-2">
+            <input type="hidden" id="id_client_secret" value="{{ client_secret }}">
+            <button type="submit" class="btn btn-success" id="submit-button">
+                <i class="fas fa-lock"></i> Confirm and Pay
+            </button>
 
-                    <!-- Submit Button -->
-                    <button id="submit-button" class="btn btn-black rounded-0">
-                        <span class="font-weight-bold">Complete Order</span>
-                        <span class="icon">
-                            <i class="fa-solid fa-lock"></i>
-                        </span>
-                    </button>
+            <div id="success-message" style="display:none;"></div>
 
-                    <!-- Link to adjust the cart, separate from the submit button -->
-                    <a href="{% url 'cart:add_to_cart' %}" class="btn btn-outline-black rounded-0">
-                        <span class="icon">
-                            <i class="fa-solid fa-circle-chevron-left"></i>
-                        </span>
-                        <span class="font-weight-bold">Adjust Cart</span>
-                    </a>
-                </div>
-          </form>
-        </div>
+            <!-- Link to adjust the cart, separate from the submit button -->
+            <a href="{% url 'cart:add_to_cart' %}" class="btn btn-outline-black rounded-0">
+                <span class="icon">
+                    <i class="fa-solid fa-circle-chevron-left"></i>
+                </span>
+                <span class="font-weight-bold">Adjust Cart</span>
+            </a>
+        </form>
     </div>
+</div>
     <div id="loading-overlay">
         <h1 class="text-light logo-font loading-spinner">
             <span class="icon">
@@ -459,13 +454,11 @@
         </h1>
     </div>
 </div>
-<div id="loading-overlay">
-    <h1 class="text-light logo-font loading-spinner">
-        <span class="icon">
-            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
-        </span>
-    </h1>
-</div>
+{% endblock %}
+
+{% block extra_js %}
+  {{ block.super }}
+  <script src="{% static 'checkout/js/stripe_elements.js' %}"></script>
 {% endblock %}
 
 {% block postloadjs %}
@@ -481,74 +474,68 @@
 <!-- Inline JavaScript for Stripe Integration -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        console.log("please work!")
-        const stripe = Stripe('pk_test_51REARw07B3iAgZ7iWDLVkGICKIihYRy4Qwkgp2xmVPq8wulwd3E2mszbQkvII5BLzpDrhiEr2e24vr9vyjwNYVpx00moQgnZMh');
-        const elements = stripe.elements();
-        const csrf_token = "{{ csrf_token }}";
 
-        // Retrieve the client secret from the DOM
-        const clientSecret = document.getElementById('id_client_secret').textContent;
+        // Get data from the script tags
+        const stripePublicKeyElement = document.getElementById('id_stripe_public_key');
+        const clientSecretElement = document.getElementById('id_client_secret');
 
-        // Log the client secret to the console to verify it's correct
-        console.log("Client Secret:", clientSecret);
+        if (stripePublicKeyElement && clientSecretElement) {
+            const stripePublicKey = stripePublicKeyElement.textContent.trim();
+            const clientSecret = clientSecretElement ? clientSecretElement.textContent.trim() : '';
 
-        // Create an instance of the card element
-        const cardElement = elements.create('card');
-        console.log("Mounting card element...");
-        cardElement.mount('#card-element');
-        console.log("Card element mounted.");
+            // Check if clientSecret is available
+            if (!clientSecret) {
+                console.error('Client secret is missing or empty.');
+                return;
+            }
 
-        // Handle form submission
-        const form = document.getElementById('payment-form');
-        form.addEventListener('submit', function(event) {
-            event.preventDefault();
+            const stripe = Stripe(stripePublicKey);
+            const elements = stripe.elements();
+            const cardElement = elements.create('card');
+            cardElement.mount('#card-element');
 
-            // Create payment method with Stripe
-            stripe.createPaymentMethod({
-                type: 'card',
-                card: cardElement,
-                billing_details: {
-                    name: document.getElementById('id_full_name').value,
-                    email: document.getElementById('id_email').value,
-                },
-            }).then(function(result) {
-                if (result.error) {
-                    // Display error if there's any
-                    const errorElement = document.getElementById('card-errors');
-                    errorElement.textContent = result.error.message;
-                } else {
-                    // Send the payment method ID to your backend for confirmation
-                    const paymentMethodId = result.paymentMethod.id;
-                    const clientSecret = document.getElementById('id_client_secret').textContent;
+            const form = document.getElementById('payment-form');
+            const submitButton = document.getElementById('submit-button');
 
-                    console.log("Payment Method ID: ", paymentMethodId);
-                    console.log("Client Secret: ", clientSecret);
+            form.addEventListener('submit', function(event) {
+                event.preventDefault();
 
-                    fetch('/checkout/payment/confirm/', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRFToken': csrf_token,
-                        },
-                        body: JSON.stringify({
-                            payment_method: paymentMethodId,
-                            client_secret: clientSecret,
-                        }),
-                    }).then(function(response) {
-                        return response.json();
-                    }).then(function(data) {
-                        if (data.success) {
-                            window.location.href = '/success';
-                        } else {
-                            const errorElement = document.getElementById('card-errors');
-                            errorElement.textContent = data.error;
+                submitButton.disabled = true;
+                $('#payment-form').fadeToggle(100);
+                $('#loading-overlay').fadeToggle(100);
+
+                const fullName = document.getElementById('id_name').value;
+
+                stripe.confirmCardPayment(clientSecret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: {
+                            name: fullName,
                         }
-                    }).catch(function(error) {
-                        console.error("Error confirming payment:", error);
-                    });
-                }
+                    }
+                })
+                .then(result => {
+                    if (result.error) {
+                        document.getElementById('card-errors').textContent = result.error.message;
+                        submitButton.disabled = false;
+                        $('#payment-form').fadeToggle(100);
+                        $('#loading-overlay').fadeToggle(100);
+                    } else if (result.paymentIntent.status === 'succeeded') {
+                        console.log('Payment succeeded!');
+                        // Submit the form or redirect
+                        form.submit();
+                    }
+                })
+                .catch(error => {
+                    console.error('Payment failed:', error);
+                    submitButton.disabled = false;
+                    $('#payment-form').fadeToggle(100);
+                    $('#loading-overlay').fadeToggle(100);
+                });
             });
-        });
+        } else {
+            console.error('Stripe public key or client secret element not found.');
+        }
     });
 </script>
 

@@ -1,3 +1,6 @@
+import stripe
+from dotenv import load_dotenv
+import os
 from decimal import Decimal
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
@@ -7,11 +10,9 @@ from django.urls import reverse
 from django.contrib.auth import login
 from django.contrib import messages
 from django.conf import settings
-import stripe
 import json
-from cart.models import Cart
+from cart.models import Cart, CartItem
 from cart.contexts import cart_contents
-from .models import OrderLineItem
 from products.models import Product
 from .models import Order, OrderLineItem
 from homepage.models import Profile
@@ -21,56 +22,50 @@ import logging
 import re
 
 
+load_dotenv()
+
+def get_or_create_cart(request):
+    """Utility to get or create cart for authenticated or guest user."""
+    if request.user.is_authenticated:
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+    else:
+        cart_id = request.session.get('cart_id')
+        if cart_id:
+            cart = Cart.objects.filter(id=cart_id).first()
+        else:
+            cart = Cart.objects.create()
+            request.session['cart_id'] = cart.id
+    return cart
+
+
 def create_order(request):
     if not request.user.is_authenticated:
-        # If the user is not logged in, show the signup form
         if request.method == 'POST':
             signup_form = CustomSignupForm(request.POST)
             if signup_form.is_valid():
                 user = signup_form.save()
-                # Login the user after signing up
                 login(request, user)
-                # Redirect to the create_order view to process the order
                 return redirect('create_cart_order')
         else:
             signup_form = CustomSignupForm()
+        return render(request, 'account/signup.html', {'signup_form': signup_form})
 
-        # Render the signup form
-        return render(
-            request, 'account/signup.html', {'signup_form': signup_form})
-
-    try:
-        cart = Cart.objects.get(user=request.user)
-    except Cart.DoesNotExist:
-        raise Http404("Cart does not exist for this user.")
+    cart = get_or_create_cart(request)
+    if not cart or not cart.items.exists():
+        raise Http404("Cart is empty or missing.")
 
     cart_total = Decimal(0)
-    total_service_price = Decimal(0)
-    total_delivery_price = Decimal(0)
+    service_total = Decimal(0)
+    delivery_total = Decimal(0)
 
-    # Loop through cart items
     for item in cart.items.all():
-        product = item.product
-        selected_quantity = item.quantity
-
-        quantity_info = next(
-            (
-                q for q in product.quantities
-                if q['quantity'] == selected_quantity
-            ),
-            None
-        )
-        if quantity_info:
-            item_price = Decimal(quantity_info['price'])
-        else:
-            item_price = Decimal(0)
-
+        quantity_info = next((q for q in item.product.quantities if q['quantity'] == item.quantity), None)
+        item_price = Decimal(quantity_info['price']) if quantity_info else Decimal(0)
         cart_total += item_price
-        total_service_price += Decimal(item.service_price)
-        total_delivery_price += Decimal(item.delivery_price)
+        service_total += Decimal(item.service_price)
+        delivery_total += Decimal(item.delivery_price)
 
-    # Now, create the order instance but don't save it yet
-    order = Order(
+    order = Order.objects.create(
         user=request.user,
         name=request.POST.get('name', ''),
         email=request.POST.get('email', ''),
@@ -81,27 +76,14 @@ def create_order(request):
         street_address1=request.POST.get('street_address1', ''),
         street_address2=request.POST.get('street_address2', ''),
         order_total=cart_total,
-        service_cost=total_service_price,
-        delivery_cost=total_delivery_price,
-        grand_total=cart_total + total_service_price + total_delivery_price
+        service_cost=service_total,
+        delivery_cost=delivery_total,
+        grand_total=cart_total + service_total + delivery_total
     )
 
-    # Save the order to generate a primary key before proceeding
-    order.save()
-
-    # Now we can create the order line items
     for item in cart.items.all():
-        product = item.product
-        selected_quantity = item.quantity
-
-        # Find the price based on the selected quantity
-        quantity_info = next(
-            (q for q in product.quantities if q['quantity'] == selected_quantity),
-            None
-        )
+        quantity_info = next((q for q in item.product.quantities if q['quantity'] == item.quantity), None)
         item_price = quantity_info['price'] if quantity_info else 0
-
-        # Create order line item
         OrderLineItem.objects.create(
             order=order,
             product=item.product,
@@ -111,14 +93,12 @@ def create_order(request):
             delivery_price=item.delivery_price
         )
 
-    # Clear the cart items after creating the order
     cart.items.all().delete()
-
     grand_total = order.get_grand_total()
 
-    return render(
-        request, 'order/order_summary.html', {
-            'order': order, 'grand_total': grand_total})
+    return render(request, 'order/order_summary.html', {
+        'order': order, 'grand_total': grand_total
+    })
 
 
 def signup_view(request):
@@ -162,126 +142,176 @@ def order_summary(request):
     return render(request, 'checkout/order_checkout.html')
 
 
-def checkout(request):
-    stripe_public_key = settings.STRIPE_PUBLIC_KEY
-    stripe_secret_key = settings.STRIPE_SECRET_KEY
+def create_checkout_session(request):
+    try:
+        # Retrieve the current order from session
+        order_id = request.session.get('order_id')
+        if not order_id:
+            return JsonResponse({'error': 'No order found in session'}, status=400)
 
-    if request.method == 'POST':
-        order_form = OrderForm(request.POST)
+        order = Order.objects.get(id=order_id)
+        cart = Cart.objects.get(id=request.session.get('cart_id'))  # Assuming cart is stored in session
 
-        if order_form.is_valid():
-            cart = Cart.objects.get(id=request.session.get('cart_id'))
+        # Convert to cents (Stripe expects amounts in cents)
+        stripe_total = int(order.grand_total * 100)
 
-            order = order_form.save()
-            for item_id, item_data in cart.items():
-                try:
-                    product = Product.objects.get(id=item_id)
-                    if isinstance(item_data, int):
-                        order_line_item = OrderLineItem(
-                            order=order,
-                            product=product,
-                            quantity=item_data,
-                        )
-                        order_line_item.save()
-                    else:
-                        for size, quantity in item_data['items_by_size'].items():
-                            order_line_item = OrderLineItem(
-                                order=order,
-                                product=product,
-                                quantity=quantity,
-                                product_size=size,
-                            )
-                            order_line_item.save()
-                except Product.DoesNotExist:
-                    messages.error(request, (
-                        "One of the products in your bag wasn't found in our database. "
-                        "Please call us for assistance!")
-                    )
-                    order.delete()
-                    return redirect(reverse('view_cart'))
+        # Create an empty list for line items
+        line_items = []
 
-            request.session['save_info'] = 'save-info' in request.POST
-            return redirect(reverse('checkout_success', args=[order.order_number]))
-        else:
-            messages.error(request, 'There was an error with your form. \
-                Please double check your information.')
-    else:
-        # Retrieve the cart using the cart_id
-        cart = Cart.objects.filter(id=request.session.get('cart_id')).first()
+        # Iterate over cart items and add each product's info as a line item
+        for item in cart.items.all():
+            product = item.product
+            size = item.product_size
+            quantity = item.quantity
+            price = item.price
 
-        if not cart:
-            cart = Cart.objects.filter(user=request.user).first()
+            # Add size and quantity to the product name for Stripe
+            product_name = f"{product.name} ({size})" if size else product.name
 
-        # If no cart is found, redirect to products page
-        if not cart or not cart.items.exists():
-            messages.error(request, "There's nothing in your cart at the moment.")
-            return redirect('homepage')
+            # Calculate the price for the quantity selected
+            product_price = price * quantity
 
-        current_cart = cart_contents(request)
-        total = current_cart['grand_total']
-        stripe_total = round(total * 100)
-        stripe.api_key = stripe_secret_key
-        intent = stripe.PaymentIntent.create(
-            amount=stripe_total,
-            currency=settings.STRIPE_CURRENCY,
+            line_items.append({
+                'price_data': {
+                    'currency': settings.STRIPE_CURRENCY,
+                    'product_data': {
+                        'name': product_name,
+                    },
+                    'unit_amount': int(product_price * 100),
+                },
+                'quantity': quantity,
+            })
+
+        # Create a Stripe Checkout session with multiple line items
+        session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=line_items,
+            mode='payment',  # One-time payment mode
+            success_url=request.build_absolute_uri('/checkout/success/'),  # URL for successful payment
+            cancel_url=request.build_absolute_uri('/checkout/cancel/'),  # URL for canceled payment
         )
 
-        FREE_DELIVERY_THRESHOLD = Decimal(settings.FREE_DELIVERY_THRESHOLD)
+        # Redirect the user to the Stripe Checkout page
+        return redirect(session.url, code=303)
 
-        # Define the delivery prices
-        delivery_prices = {
-            'Standard Production': Decimal('15.00'),
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+def add_to_cart(request):
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        product = get_object_or_404(Product, id=product_id)
+        selected_size = request.POST.get('size')
+        selected_services = request.POST.getlist('services')
+
+        selected_quantity = request.POST.get('quantity_option', '1')
+        try:
+            selected_quantity = int(selected_quantity)
+        except ValueError:
+            messages.error(request, "Invalid quantity.")
+            return redirect('cart:cart_details')
+
+        selected_price = next(
+            (Decimal(q['price']) for q in product.quantities if q['quantity'] == selected_quantity),
+            None
+        )
+        if selected_price is None:
+            messages.error(request, "Selected quantity not available.")
+            return redirect('cart:cart_details')
+
+        service_prices = {
+            'Own Print Data Upload': Decimal('0.00'),
+            'Online Designer': Decimal('35.00'),
+            'Design Service': Decimal('40.00'),
+            'Standard Production': Decimal('0.00'),
+            'Priority Production': Decimal('15.00'),
             '48h Express Production': Decimal('25.00'),
-            '24h Express Production': Decimal('35.00')
+            '24h Express Production': Decimal('35.00'),
         }
+        service_price = sum(service_prices.get(s, Decimal('0.00')) for s in selected_services)
 
-        # Get the selected delivery option from the POST request
-        delivery_option = request.POST.get('delivery_option', 'Standard Production')
+        file = request.FILES.get('print_data_file')
+        if 'Own Print Data Upload' in selected_services and file:
+            if not request.user.is_authenticated:
+                messages.error(request, "Please log in to upload files.")
+                return redirect('login')
 
-        # Calculate the total price of the cart including the delivery fee
-        cart_total = cart.total_price()
-        service_price = sum(item.service_price for item in cart.items.all())
+            print_data = PrintData.objects.create(
+                user=request.user,
+                product=product,
+                uploaded_file=file,
+                service_type='Own Print Data Upload'
+            )
+            request.user.profile.print_data_files.add(print_data)
+            request.user.profile.save()
 
-        delivery_fee = delivery_prices.get(delivery_option, Decimal('0.00'))
+        cart = get_or_create_cart(request)
 
-        if delivery_option == 'Standard Production':
-            if cart_total >= FREE_DELIVERY_THRESHOLD:
-                delivery_fee = Decimal('0.00')
-            else:
-                delivery_fee = Decimal('15.00')
-        elif delivery_option == '48h Express Production':
-            delivery_fee = Decimal('25.00')
-        elif delivery_option == '24h Express Production':
-            delivery_fee = Decimal('35.00')
-        else:
-            delivery_fee = Decimal('0.00')
+        CartItem.objects.create(
+            cart=cart,
+            product=product,
+            size=selected_size,
+            quantity=selected_quantity,
+            price=selected_price,
+            service_price=service_price,
+            services=json.dumps(selected_services),
+        )
 
-        grand_total = cart_total + service_price + delivery_fee
+        cart.total_price = cart.total_price()
+        cart.save()
+        request.session['cart_id'] = cart.id
 
-        # Flag to check if the cart qualifies for free delivery
-        free_delivery_qualified = cart_total >= FREE_DELIVERY_THRESHOLD
+        messages.success(request, "Item added to your Cart!")
+        return redirect('cart:cart_details')
 
-        user = request.user
-        user_profile = getattr(user, 'profile', None)  # Safely get the profile
+    return redirect('cart:cart_details')
 
-        # Set default values in case the profile fields are missing
-        user_details = {
-            'name': user.get_full_name(),
-            'email': user.email,
-            'phone_number': getattr(user_profile, 'phone_number', ''),
-            'street_address1': getattr(user_profile, 'street_address1', ''),
-            'town_or_city': getattr(user_profile, 'town_or_city', ''),
-            'postcode': getattr(user_profile, 'postcode', ''),
-            'country': getattr(user_profile, 'country', '')
-        }
 
-        order_form = OrderForm(initial=user_details)
+def checkout(request):
+    stripe_public_key = settings.STRIPE_PUBLIC_KEY
+    stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
 
-    if not stripe_public_key:
-        messages.warning(request, 'Stripe public key is missing. \
-                         Did you forget to add it to your environment?')
+    cart = get_or_create_cart(request)
+    if not cart.items.exists():
+        messages.error(request, "There's nothing in your cart.")
+        return redirect('homepage')
 
-    template = 'checkout/order_checkout.html'
+    current_cart = cart_contents(request)
+    cart_total = current_cart['cart_total']
+    service_price = current_cart['service_price']
+
+    delivery_option = request.POST.get('delivery_option', 'Standard Production')
+    delivery_prices = {
+        'Standard Production': Decimal('15.00'),
+        '48h Express Production': Decimal('25.00'),
+        '24h Express Production': Decimal('35.00'),
+    }
+
+    delivery_fee = delivery_prices.get(delivery_option, Decimal('0.00'))
+    if delivery_option == 'Standard Production' and cart_total >= Decimal(settings.FREE_DELIVERY_THRESHOLD):
+        delivery_fee = Decimal('0.00')
+
+    order_amount = grand_total
+
+    grand_total = cart_total + service_price + delivery_fee
+    payment_intent = stripe.PaymentIntent.create(
+        amount=order_amount,
+        currency='eur',
+    )
+    user = request.user
+    profile = getattr(user, 'profile', None)
+    initial_data = {
+        'name': user.get_name(),
+        'email': user.email,
+        'phone_number': getattr(profile, 'phone_number', ''),
+        'street_address1': getattr(profile, 'street_address1', ''),
+        'town_or_city': getattr(profile, 'town_or_city', ''),
+        'postcode': getattr(profile, 'postcode', ''),
+        'country': getattr(profile, 'country', '')
+    }
+
+    order_form = OrderForm(initial=initial_data)
+
     context = {
         'order_form': order_form,
         'cart': cart,
@@ -290,27 +320,16 @@ def checkout(request):
         'service_price': service_price,
         'cart_total': cart_total,
         'grand_total': grand_total,
-        'stripe_public_key': stripe_public_key,
-        'client_secret': intent.client_secret,
-        'free_delivery_qualified': free_delivery_qualified,
+        'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
+        'client_secret': payment_intent.client_secret,
+        'free_delivery_qualified': cart_total >= Decimal(settings.FREE_DELIVERY_THRESHOLD),
 
-        # Pass user details to be used in the hidden fields
-        'hidden_name': user.get_full_name(),
-        'hidden_email': user.email,
-        'hidden_phone_number': getattr(user.profile, 'phone_number', ''),
-        'hidden_country': getattr(user.profile, 'country', ''),
-        'hidden_postcode': getattr(user.profile, 'postcode', ''),
-        'hidden_town_or_city': getattr(user.profile, 'town_or_city', ''),
-        'hidden_street_address1': getattr(user.profile, 'street_address1', ''),
-        'hidden_street_address2': getattr(user.profile, 'street_address2', ''),
-        'hidden_delivery_country': getattr(user.profile, 'delivery_country', ''),
-        'hidden_delivery_postcode': getattr(user.profile, 'delivery_postcode', ''),
-        'hidden_delivery_town_or_city': getattr(user.profile, 'delivery_town_or_city', ''),
-        'hidden_delivery_street_address1': getattr(user.profile, 'delivery_street_address1', ''),
-        'hidden_delivery_street_address2': getattr(user.profile, 'delivery_street_address2', ''),
     }
 
-    return render(request, template, context)
+    if not stripe_public_key:
+        messages.warning(request, 'Stripe public key is missing.')
+
+    return render(request, 'checkout/order_checkout.html', context)
 
 
 def checkout_success(request, order_number):
@@ -334,6 +353,33 @@ def checkout_success(request, order_number):
     return render(request, template, context)
 
 logger = logging.getLogger(__name__)
+
+
+@csrf_exempt
+def create_payment_intent(request):
+    if request.method == 'POST':
+        try:
+            # Parse the incoming JSON data
+            data = json.loads(request.body)
+            full_name = data.get('full_name')
+
+            # Create the payment intent with a test amount of $20 (2000 cents)
+            intent = stripe.PaymentIntent.create(
+                amount=2000,  # amount in cents
+                currency='eur',
+                description=f"Payment for {full_name}",
+            )
+
+            # Return the client secret
+            return JsonResponse({'clientSecret': intent.client_secret})
+
+        except Exception as e:
+            # Return an error message in case of failure
+            return JsonResponse({'error': str(e)}, status=500)
+
+    # If the method isn't POST, return an error
+    return JsonResponse({'error': 'Invalid request method'}, status=400)
+
 
 @csrf_exempt
 def payment_confirm(request):
@@ -372,3 +418,16 @@ def payment_confirm(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
+
+def payment_success(request):
+    order_number = request.GET.get('order_number')  # You may pass order_number in the URL params or session
+    if order_number:
+        try:
+            order = Order.objects.get(order_number=order_number)
+        except Order.DoesNotExist:
+            raise Http404("Order not found")
+
+        return render(request, 'checkout/success.html', {'order': order})
+    else:
+        # If no order_number is provided in the query params, handle the case (e.g., show a generic success message)
+        return render(request, 'checkout/success.html', {'message': 'Your payment was successful!'})

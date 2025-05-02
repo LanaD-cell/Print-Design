@@ -177,9 +177,14 @@ JAZZMIN_SETTINGS = {
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 FREE_DELIVERY_THRESHOLD = 50
+
 STRIPE_CURRENCY = 'eur'
-STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY', '')
-STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY', '')
+if DEBUG:
+    STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY_TEST')
+    STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY_TEST')
+else:
+    STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
+    STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
 
 if 'DEVELOPMENT' in os.environ:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

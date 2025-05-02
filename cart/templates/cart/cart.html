@@ -71,16 +71,13 @@
                     <p style="color: white;">Your cart is empty.</p>
                     {% endif %}
 
-                    <!-- Checkout Buttons -->
-                    <div class="gap-2 d-md-block">
-                        <form method="GET" action="{% url 'checkout:order_summary' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-secondary checkout-btn">
-                                <span class="icon"><i class="fas fa-credit-card"></i></span>
-                                <span class="text-uppercase">Proceed to Checkout</span>
-                            </button>
-                        </form>
-                    </div>
+                    <!-- First Form for Checkout Session -->
+                    <form method="GET" action="{% url 'checkout:order_summary' %}">
+                        <button type="submit" class="btn btn-primary checkout-btn">
+                            <span class="icon"><i class="fas fa-credit-card"></i></span>
+                            <span class="text-uppercase">Proceed to Checkout</span>
+                        </button>
+                    </form>
 
                     <!-- Keep Shopping Button -->
                     <div class="gap-2 d-md-block" id="keepshopping">
