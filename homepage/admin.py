@@ -3,6 +3,9 @@ from django import forms
 from django_summernote.admin import SummernoteModelAdmin
 from .models import FAQ
 from .models import Profile, PrintData
+from django.contrib import admin
+from .models import Subscriber
+
 
 # Custom form for FAQ to use in the admin interface
 class FAQForm(forms.ModelForm):
@@ -55,3 +58,4 @@ admin.site.register(Profile, ProfileAdmin)
 admin.site.register(FAQ, FAQAdmin)
 # Register PrintData
 admin.site.register(PrintData)
+admin.site.register(Subscriber)

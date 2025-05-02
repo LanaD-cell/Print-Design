@@ -61,3 +61,11 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"Profile for {self.user.username}"
+
+
+class Subscriber(models.Model):
+    email = models.EmailField(unique=True)
+    subscribed_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.email

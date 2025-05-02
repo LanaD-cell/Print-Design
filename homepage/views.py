@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect
 from checkout.models import Order
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
+from django.core.mail import send_mail
+from .models import Subscriber
 
 
 def homepage(request):
@@ -56,3 +58,7 @@ def custom_404_view(request, exception):
 
 def custom_500_view(request):
     return render(request, '500.html', status=500)
+
+def send_newsletter(subject, message):
+    recipients = [s.email for s in Subscriber.objects.all()]
+    send_mail(subject, message, 'your-email@example.com', recipients)
