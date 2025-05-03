@@ -62,3 +62,7 @@ def custom_500_view(request):
 def send_newsletter(subject, message):
     recipients = [s.email for s in Subscriber.objects.all()]
     send_mail(subject, message, 'your-email@example.com', recipients)
+
+
+def facebook_mockup(request):
+    return render(request, 'mockups/facebook_mockup.html')

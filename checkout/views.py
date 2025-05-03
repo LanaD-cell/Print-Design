@@ -279,14 +279,20 @@ def checkout(request):
     return render(request, 'checkout/order_checkout.html', context)
 
 
+from django.http import JsonResponse
+import stripe
+
+stripe.api_key = 'your-secret-key'  # Make sure your API key is set
+
 @csrf_exempt
 def create_checkout_session(request):
     if request.method == 'POST':
         try:
-            # Get cart contents from session
+            # Get cart contents from session (you can replace this with your own cart logic)
             cart = cart_contents(request)
-            grand_total = int(cart['grand_total'] * 100)
+            grand_total = int(cart['grand_total'] * 100)  # Stripe expects amount in cents
 
+            # Create Stripe Checkout session
             session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[{
@@ -300,35 +306,60 @@ def create_checkout_session(request):
                     'quantity': 1,
                 }],
                 mode='payment',
-                success_url=request.build_absolute_uri('/checkout/checkout_success_page/{CHECKOUT_SESSION_ID}/'),
+                success_url=request.build_absolute_uri(
+                    f'/checkout/checkout_success_page/{session.id}/'),  # Use an f-string for correct formatting
                 cancel_url=request.build_absolute_uri('/checkout/summary/'),
             )
+
+            # Return the session ID so you can redirect the user to Stripe
             return JsonResponse({'sessionId': session.id})
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
-def checkout_success(request, order_number):
+def checkout_success_page(request, session_id):
     """
-    Handle successful checkout
+    Handle successful checkout by processing the session_id from Stripe.
     """
-    save_info = request.session.get('save_info')
-    order = get_object_or_404(Order, order_number=order_number)
+    try:
+        # Retrieve the session from Stripe using the session_id
+        session = stripe.checkout.Session.retrieve(session_id)
 
-    messages.success(request, f'Order successfully processed! \
-        Your order number is {order_number}. A confirmation \
-        email will be sent to {order.email}.')
+        # Check if the session has been paid
+        if session.payment_status == 'paid':
+            # You might want to store the order number in metadata when creating the session
+            order_number = session.metadata.get('order_number')
 
-    if 'cart' in request.session:
-        del request.session['cart']
+            # Get the order from the database using the order_number
+            order = get_object_or_404(Order, order_number=order_number)
 
-    template = 'checkout/success.html'
-    context = {
-        'order': order,
-    }
-    return render(request, template, context)
+            # Handle the post-payment logic (e.g., mark the order as paid, send confirmation emails, etc.)
+            messages.success(request, f'Order successfully processed! Your order number is {order_number}. A confirmation email will be sent to {order.email}.')
 
-logger = logging.getLogger(__name__)
+            # Clear the cart after successful checkout
+            if 'cart' in request.session:
+                del request.session['cart']
+
+            # Optionally, render a custom success page
+            template = 'checkout/success.html'
+            context = {'order': order}
+            return render(request, template, context)
+        else:
+            # Handle the case where the payment wasn't successful
+            messages.error(request, "Payment was not successful. Please try again.")
+            return redirect('checkout:order_summary')
+
+    except stripe.error.StripeError as e:
+        # Handle Stripe API errors
+        logger.error(f"Stripe error: {e.user_message}")
+        messages.error(request, "An error occurred while processing your payment.")
+        return redirect('checkout:order_summary')
+
+    except Exception as e:
+        # Handle other exceptions
+        logger.error(f"Error during checkout success page processing: {str(e)}")
+        messages.error(request, "An error occurred. Please try again.")
+        return redirect('checkout:order_summary')
 
 
 @csrf_exempt
@@ -428,9 +459,6 @@ def payment_success(request, order_number):
         if session.payment_status == 'paid':
             order.status = 'Paid'
             order.save()
-
-            # Optionally save some information to the user profile or any other place if needed
-            # Profile related actions, etc.
 
             # Clear the cart from session after successful payment
             if 'cart' in request.session:

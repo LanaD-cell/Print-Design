@@ -24,3 +24,5 @@ Allow: /
 # Allow Bingbot full access
 User-agent: Bingbot
 Allow: /
+
+Sitemap: https://www.xml-sitemaps.com/download/print-design-d837920c6712.herokuapp.com-92b283b88/sitemap.xml
