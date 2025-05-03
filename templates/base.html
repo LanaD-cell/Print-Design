@@ -170,6 +170,19 @@
 
     </div>
 
+    {% if request.path != '/subscribe/' %}
+    <!-- Newsletter Subscription Call-to-Action -->
+    <section class="newsletter-cta text-center py-5" style="background-color: #f8f9fa;">
+      <div class="container">
+        <h2 class="mb-3">Stay Updated!</h2>
+        <p class="mb-4">Subscribe to our newsletter for the latest designs, deals, and updates.</p>
+        <a href="{% url 'subscribe' %}" class="btn btn-primary btn-lg px-4 py-2">
+          Subscribe Now
+        </a>
+      </div>
+    </section>
+    {% endif %}
+
     <footer class="bg-white text-dark py-4 mt-5" id="footer-container">
         <div class="container">
             <div class="row justify-content-center">

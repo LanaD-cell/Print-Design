@@ -848,11 +848,10 @@ p.card-text {
     height: 100%;
     z-index: 9999;
 }
-#cart-form {
+#cart-form, #subscribe {
     background-color: rgba(77, 25, 77, 0.7);
     border: 2px solid #4d194d;
     border-radius: 8px;
-    padding: 30px 15px;
     margin: 20px auto;
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
@@ -874,7 +873,7 @@ p.card-text {
     background-color: #f1f1f1;
 }
 
-#cart-form .btn {
+#cart-form .btn,  #subscribe .btn {
     display: inline-flex;
     align-items: center;
     background-color: #272640;
@@ -901,6 +900,14 @@ p.card-text {
     border-radius: 8px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
 }
+
+#subscribe .d-flex {
+    gap: 1rem;
+  }
+  .subscribe-bot img {
+    max-width: 100%;
+    height: auto;
+  }
 
 /* Styling for Cart Items */
 .cart-item {
@@ -1211,17 +1218,9 @@ p.card-text {
         padding-right: 30px;
     }
 
-    #cart-form {
-        padding: 25px;
 
-    }
-
-    #cart-form .table th, #cart-form .table td {
+    #cart-form .table th, .table td, .subscribe-form {
         padding: 10px;
-        font-size: 12px;
-    }
-
-    #cart-form .table {
         font-size: 14px;
     }
 
@@ -1232,13 +1231,6 @@ p.card-text {
         width: 100%;
         text-align: center;
         margin-top: 15px;
-    }
-
-    #cart-form .btn {
-        font-size: 12px;
-        padding: 8px 16px;
-        width: 100%;
-        text-align: center;
     }
 
     #cart-form .text-right {

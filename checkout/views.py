@@ -22,7 +22,6 @@ from .forms import OrderForm
 import logging
 import re
 
-
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
 logger = logging.getLogger(__name__)
@@ -39,7 +38,6 @@ def get_or_create_cart(request):
             cart = Cart.objects.create()
             request.session['cart_id'] = cart.id
     return cart
-
 
 def create_order(request):
     if not request.user.is_authenticated:
@@ -62,7 +60,9 @@ def create_order(request):
     delivery_total = Decimal(0)
 
     for item in cart.items.all():
-        quantity_info = next((q for q in item.product.quantities if q['quantity'] == item.quantity), None)
+        quantity_info = next(
+            (q for q in item.product.quantities if q['quantity'] == item.quantity), None
+        )
         item_price = Decimal(quantity_info['price']) if quantity_info else Decimal(0)
         cart_total += item_price
         service_total += Decimal(item.service_price)
@@ -85,7 +85,9 @@ def create_order(request):
     )
 
     for item in cart.items.all():
-        quantity_info = next((q for q in item.product.quantities if q['quantity'] == item.quantity), None)
+        quantity_info = next(
+            (q for q in item.product.quantities if q['quantity'] == item.quantity), None
+        )
         item_price = quantity_info['price'] if quantity_info else 0
         OrderLineItem.objects.create(
             order=order,
@@ -103,7 +105,6 @@ def create_order(request):
         'order': order, 'grand_total': grand_total
     })
 
-
 def signup_view(request):
     confirm_password_success = None
 
@@ -116,11 +117,9 @@ def signup_view(request):
             if password1 == password2:
                 confirm_password_success = "Passwords match!"
 
-            # Save the user and log them in
             user = signup_form.save()
             login(request, user)
 
-            # Create the user's profile after signup
             Profile.objects.create(
                 user=user,
                 phone_number='',
@@ -140,10 +139,8 @@ def signup_view(request):
         'confirm_password_success': confirm_password_success
     })
 
-
 def order_summary(request):
     return render(request, 'checkout/order_checkout.html')
-
 
 def add_to_cart(request):
     if request.method == 'POST':
@@ -214,7 +211,6 @@ def add_to_cart(request):
 
     return redirect('cart:cart_details')
 
-
 def checkout(request):
     stripe_public_key = settings.STRIPE_PUBLIC_KEY
     stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
@@ -278,21 +274,15 @@ def checkout(request):
 
     return render(request, 'checkout/order_checkout.html', context)
 
-
-from django.http import JsonResponse
-import stripe
-
-stripe.api_key = 'your-secret-key'  # Make sure your API key is set
+stripe.api_key = 'your-secret-key'
 
 @csrf_exempt
 def create_checkout_session(request):
     if request.method == 'POST':
         try:
-            # Get cart contents from session (you can replace this with your own cart logic)
             cart = cart_contents(request)
-            grand_total = int(cart['grand_total'] * 100)  # Stripe expects amount in cents
+            grand_total = int(cart['grand_total'] * 100)
 
-            # Create Stripe Checkout session
             session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[{
@@ -307,92 +297,31 @@ def create_checkout_session(request):
                 }],
                 mode='payment',
                 success_url=request.build_absolute_uri(
-                    f'/checkout/checkout_success_page/{session.id}/'),  # Use an f-string for correct formatting
+                    f'/checkout/checkout_success_page/{session.id}/'),
                 cancel_url=request.build_absolute_uri('/checkout/summary/'),
             )
 
-            # Return the session ID so you can redirect the user to Stripe
             return JsonResponse({'sessionId': session.id})
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
 
 def checkout_success_page(request, session_id):
-    """
-    Handle successful checkout by processing the session_id from Stripe.
-    """
     try:
-        # Retrieve the session from Stripe using the session_id
         session = stripe.checkout.Session.retrieve(session_id)
-
-        # Check if the session has been paid
-        if session.payment_status == 'paid':
-            # You might want to store the order number in metadata when creating the session
-            order_number = session.metadata.get('order_number')
-
-            # Get the order from the database using the order_number
-            order = get_object_or_404(Order, order_number=order_number)
-
-            # Handle the post-payment logic (e.g., mark the order as paid, send confirmation emails, etc.)
-            messages.success(request, f'Order successfully processed! Your order number is {order_number}. A confirmation email will be sent to {order.email}.')
-
-            # Clear the cart after successful checkout
-            if 'cart' in request.session:
-                del request.session['cart']
-
-            # Optionally, render a custom success page
-            template = 'checkout/success.html'
-            context = {'order': order}
-            return render(request, template, context)
-        else:
-            # Handle the case where the payment wasn't successful
-            messages.error(request, "Payment was not successful. Please try again.")
-            return redirect('checkout:order_summary')
-
+        order_id = session.client_reference_id
+        order = get_object_or_404(Order, id=order_id)
     except stripe.error.StripeError as e:
-        # Handle Stripe API errors
         logger.error(f"Stripe error: {e.user_message}")
-        messages.error(request, "An error occurred while processing your payment.")
-        return redirect('checkout:order_summary')
-
+        messages.error(request, "An error occurred while processing the payment.")
+        return redirect('checkout:summary')
     except Exception as e:
-        # Handle other exceptions
-        logger.error(f"Error during checkout success page processing: {str(e)}")
-        messages.error(request, "An error occurred. Please try again.")
-        return redirect('checkout:order_summary')
+        logger.error(f"Unexpected error: {e}")
+        messages.error(request, "An unexpected error occurred.")
+        return redirect('checkout:summary')
 
+    return render(request, 'checkout/order_summary.html', {'order': order})
 
-@csrf_exempt
-@require_POST
-def create_payment_intent(request):
-    try:
-        # Parse the JSON body of the request
-        data = json.loads(request.body)
-
-        # Get the grand_total (in currency) and id_name from the received data
-        grand_total = data.get('grand_total')
-        id_name = data.get('id_name')
-
-        # Ensure that grand_total and id_name are provided
-        if not grand_total or not id_name:
-            return JsonResponse({'error': 'Missing grand_total or id_name'}, status=400)
-
-        # Convert grand_total to cents (Stripe expects amounts in cents)
-        amount_in_cents = int(grand_total * 100)
-
-        # Create the PaymentIntent with the amount and metadata
-        payment_intent = stripe.PaymentIntent.create(
-            amount=amount_in_cents,
-            currency='eur',
-            metadata={'id_name': id_name}
-        )
-
-        # Return the client secret to the frontend
-        return JsonResponse({'clientSecret': payment_intent['client_secret']})
-
-    except Exception as e:
-        # Return an error if any exception occurs
-        return JsonResponse({'error': str(e)}, status=400)
 
 @csrf_exempt
 def payment_confirm(request):

@@ -1,6 +1,7 @@
 from django.db import models
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import User
+from django.utils import timezone
 
 
 # Product model
@@ -69,3 +70,35 @@ class Subscriber(models.Model):
 
     def __str__(self):
         return self.email
+
+
+class Newsletter(models.Model):
+    PENDING = 'Pending'
+    SENT = 'Sent'
+    STATUS_CHOICES = [
+        (PENDING, 'Pending'),
+        (SENT, 'Sent'),
+    ]
+
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    send_at = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default=PENDING,
+    )
+
+    def __str__(self):
+        return self.title
+
+    def mark_as_sent(self):
+        """ Mark the newsletter as sent """
+        self.status = self.SENT
+        self.save()
+
+    @property
+    def status_display(self):
+        """ Return a human-readable status for display """
+        return self.get_status_display()

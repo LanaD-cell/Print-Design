@@ -3,8 +3,10 @@ from django import forms
 from django_summernote.admin import SummernoteModelAdmin
 from .models import FAQ
 from .models import Profile, PrintData
-from django.contrib import admin
+from .models import Newsletter
 from .models import Subscriber
+from django.core.mail import send_mail
+from django.utils.timezone import now
 
 
 # Custom form for FAQ to use in the admin interface
@@ -52,6 +54,37 @@ class PrintDataAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'product__name')
 
 
+class NewsletterAdmin(admin.ModelAdmin):
+    list_display = ('title', 'created_at', 'send_at', 'status_display')
+    actions = ['send_newsletter']
+
+    def send_newsletter(self, request, queryset):
+        """ Custom admin action to send the selected newsletters to subscribers """
+        for newsletter in queryset:
+            if newsletter.send_at and newsletter.send_at > now():
+                self.message_user(request, f"Newsletter '{newsletter.title}' is scheduled to send at {newsletter.send_at}.")
+                continue
+
+            # If send_at is in the past or None, proceed with sending the newsletter.
+            recipients = [subscriber.email for subscriber in Subscriber.objects.all()]
+
+            send_mail(
+                subject=newsletter.title,
+                message=newsletter.content,
+                from_email='c.wnt.nd1053@gmail.com',
+                recipient_list=recipients,
+            )
+
+            # Mark as sent and save
+            newsletter.status = Newsletter.SENT
+            newsletter.send_at = now()
+            newsletter.save()
+
+            self.message_user(request, f"Newsletter '{newsletter.title}' sent to all subscribers!")
+
+    send_newsletter.short_description = "Send selected newsletters to subscribers"
+
+
 # Register the Profile model in the admin interface
 admin.site.register(Profile, ProfileAdmin)
 # Register FAQ with the modified admin configuration
@@ -59,3 +92,4 @@ admin.site.register(FAQ, FAQAdmin)
 # Register PrintData
 admin.site.register(PrintData)
 admin.site.register(Subscriber)
+admin.site.register(Newsletter, NewsletterAdmin)
