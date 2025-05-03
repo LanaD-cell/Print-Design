@@ -61,6 +61,7 @@ def custom_404_view(request, exception):
 def custom_500_view(request):
     return render(request, '500.html', status=500)
 
+
 def subscribe(request):
     """ Handle user subscription to the newsletter """
     if request.method == "POST":
@@ -69,19 +70,23 @@ def subscribe(request):
             email = form.cleaned_data['email']
             # Avoid duplicate subscriptions
             Subscriber.objects.get_or_create(email=email)
-            messages.success(request, 'You have successfully subscribed to our newsletter!')
-            form = SubscriberForm()  # Reset the form after success
+
+            messages.success(request, 'You have successfully subscribed to our newsletter!', extra_tags="subscription")
+
+            # Reinitialize the form after successful submission
+            form = SubscriberForm()  # Clear the form
+
+            return redirect('subscribe')
+
     else:
         form = SubscriberForm()
 
     return render(request, 'newsletter/subscribe.html', {'form': form})
 
+
 def send_newsletter(subject, message):
     recipients = [s.email for s in Subscriber.objects.all()]
     send_mail(subject, message, 'c.wnt.nd1053@gmail.com', recipients)
-
-def subscribe_success(request):
-    return render(request, 'subscribe_success.html')
 
 def facebook_mockup(request):
     return render(request, 'mockups/facebook_mockup.html')

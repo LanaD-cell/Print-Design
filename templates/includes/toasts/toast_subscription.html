@@ -1,0 +1,28 @@
+<div id="custom-toast" class="custom-toast" style="display: none;">
+    <div class="custom-toast-header">
+      <strong>Success!</strong>
+      <button type="button" class="btn-close" id="close-toast">×</button>
+    </div>
+    <div class="custom-toast-body">
+      <p id="toast-message">{{ message }}</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const toast = document.getElementById("custom-toast");
+      const closeBtn = document.getElementById("close-toast");
+
+      if (toast && toast.style.display === "none") {
+        toast.style.display = "block";
+
+        setTimeout(function () {
+          toast.style.display = "none";
+        }, 5000);
+      }
+
+      closeBtn?.addEventListener("click", function () {
+        toast.style.display = "none";
+      });
+    });
+  </script>

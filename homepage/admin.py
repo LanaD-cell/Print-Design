@@ -55,6 +55,7 @@ class PrintDataAdmin(admin.ModelAdmin):
 
 
 class NewsletterAdmin(admin.ModelAdmin):
+    summernote_fields = ('content',)
     list_display = ('title', 'created_at', 'send_at', 'status_display')
     actions = ['send_newsletter']
 

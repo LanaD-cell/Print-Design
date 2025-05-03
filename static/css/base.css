@@ -1067,6 +1067,40 @@ p.card-text {
     height: 2px;
 }
 
+.subscribe-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #198754; /* Bootstrap green */
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    z-index: 9999;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: none;
+    max-width: 300px;
+  }
+
+  .subscribe-toast-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+  }
+
+  .subscribe-toast-body {
+    margin-top: 10px;
+  }
+
+  #close-toast {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+
 /* from CSS-tricks.com: https://css-tricks.com/snippets/css/css-triangle/ */
 
 .arrow-up {

@@ -7,8 +7,7 @@
   <p class="text-white mb-4">
     Stay ahead of the curve with our exclusive newsletter —
     packed with fresh design inspiration, special discounts,
-    and insider updates. Join our creative community and be the
-    first to know what’s new!
+    and insider updates.
   </p>
 
   <div class="row align-items-center g-4">
@@ -21,20 +20,48 @@
     </div>
 
     <div class="col-lg-6 text-center">
-      <img src="/static/images/stay-in-touch.webp"
-          alt="black robot holding a sign"
-          class="img-fluid"
-          style="max-width: 300px;">
+      <img src="{% static 'images/stay-in-touch.webp' %}"
+           alt="black robot holding a sign"
+           class="img-fluid"
+           style="max-width: 300px;">
     </div>
   </div>
+
+  <!-- Toast for subscription success -->
+  {% if messages %}
+    {% for message in messages %}
+      {% if "subscription" in message.tags %}
+        <div id="subscribe-toast" class="subscribe-toast">
+          <div class="subscribe-toast-header">
+            <strong>Success!</strong>
+            <button type="button" class="btn-close" id="close-toast">×</button>
+          </div>
+          <div class="subscribe-toast-body">
+            <p>{{ message }}</p>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
 </div>
+{% endblock %}
 
-{% if messages %}
-  {% for message in messages %}
-    {% if message.tags == "success" %}
-      {% include 'components/toast_success.html' with message=message %}
-    {% endif %}
-  {% endfor %}
-{% endif %}
+{% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const toast = document.getElementById("subscribe-toast");
+    const closeBtn = document.getElementById("close-toast");
 
+    if (toast) {
+      toast.style.display = "block";
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 5000);
+
+      closeBtn?.addEventListener("click", () => {
+        toast.style.display = "none";
+      });
+    }
+  });
+</script>
 {% endblock %}
