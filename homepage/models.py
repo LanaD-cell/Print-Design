@@ -58,6 +58,7 @@ class Profile(models.Model):
     delivery_street_address1 = models.CharField(max_length=255, blank=True)
     delivery_street_address2 = models.CharField(max_length=255, blank=True)
 
+    purchased_products = models.ManyToManyField(Product, related_name='purchased_products', blank=True)
     print_data_files = models.ManyToManyField(PrintData, blank=True, related_name='profiles')
 
     def __str__(self):

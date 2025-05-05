@@ -1,40 +1,46 @@
-const stripe = Stripe('your_publishable_key');
-
-let elements = stripe.elements();
-let card = elements.create('card');
-card.mount('#card-element');
+const stripe = Stripe('pk_test_51REARw07B3iAgZ7iWDLVkGICKIihYRy4Qwkgp2xmVPq8wulwd3E2mszbQkvII5BLzpDrhiEr2e24vr9vyjwNYVpx00moQgnZMh');
 
 document.getElementById('payment-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    // Step 1: Get the clientSecret from the server
-    const res = await fetch('/checkout/create-payment-intent/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ amount: 1099 }) // or dynamically set this
-    });
+    try {
+        // ✅ Make the fetch request first and define `res`
+        const response = await fetch('/checkout/create_checkout_session/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                grand_total: parseFloat(document.getElementById('grand-total').value) // Make sure you have this in your form
+            })
+        });
 
-    const { clientSecret, error } = await res.json();
-    if (error) {
-        document.getElementById('error-message').textContent = error;
-        return;
-    }
+        const res = await response.json();  // ✅ Now res is defined
 
-    // Step 2: Confirm the card payment
-    const result = await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-            card: card,
+        if (res.error) {
+            document.getElementById('error-message').textContent = res.error;
+            return;
         }
-    });
 
-    if (result.error) {
-        document.getElementById('error-message').textContent = result.error.message;
-    } else {
-        if (result.paymentIntent.status === 'succeeded') {
-            alert('Payment successful!');
-            // Redirect or update UI
+        const clientSecret = res.clientSecret;
+
+        const result = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: card, // Make sure `card` is defined via Stripe Elements
+            }
+        });
+
+        if (result.error) {
+            document.getElementById('error-message').textContent = result.error.message;
+        } else {
+            if (result.paymentIntent.status === 'succeeded') {
+                alert('Payment successful!');
+                // Optionally redirect
+            }
         }
+
+    } catch (err) {
+        document.getElementById('error-message').textContent = 'An unexpected error occurred.';
+        console.error(err);
     }
 });

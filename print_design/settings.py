@@ -36,7 +36,6 @@ ALLOWED_HOSTS = [
 
 # Application definition
 INSTALLED_APPS = [
-    # Django core apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -44,8 +43,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.sites',
-
-    # Third-party apps
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -53,8 +50,6 @@ INSTALLED_APPS = [
     'jazzmin',
     'django_summernote',
     'crispy_forms',
-
-    # Custom apps (your project's apps)
     'homepage',
     'products',
     'cart',

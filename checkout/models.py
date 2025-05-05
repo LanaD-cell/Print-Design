@@ -87,25 +87,27 @@ class Order(models.Model):
         """
         print("Updating total for order:", self.order_number)
 
-        # pylint: disable=no-member
-        self.order_total = self.line_items.aggregate(
-            Sum('lineitem_total'))['lineitem_total__sum'] or 0
+        # Calculate the total of all line items
+        self.order_total = self.line_items.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
 
-        # Calculate the service cost
+        # Calculate the service cost, ensuring additional services are correctly accounted for
         self.additional_services = self.additional_services or []
 
-        # If the total = 0
+        # If the total is below the free delivery threshold, apply standard delivery costs
         if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
             self.delivery_cost = (
                 self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
             )
         else:
+            # If above the free delivery threshold, no delivery cost is added
             self.delivery_cost = 0
 
+        # Calculate the grand total, adding order total, service cost, and delivery cost
         self.grand_total = (
             self.order_total + Decimal(self.delivery_cost) + Decimal(self.service_cost)
-)
+        )
 
+        # Debugging outputs to confirm calculations
         print(
             "Updated totals -> order_total:", self.order_total,
             "service_cost:", self.service_cost,

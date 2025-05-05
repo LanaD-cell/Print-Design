@@ -380,47 +380,6 @@
             </div>
         </fieldset>
 
-        {% block corejs %}
-        {% if free_delivery_qualified %}
-            <!-- Confetti effect when user qualifies for free delivery -->
-            <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.0/dist/confetti.browser.min.js"></script>
-            <script>
-                // Function to trigger the confetti
-                function launchConfetti() {
-                    var duration = 3 * 1000;
-                    var end = Date.now() + duration;
-                    var colors = ['#ff0', '#0f0', '#f00', '#00f', '#f0f'];
-
-                    (function frame() {
-                        confetti({
-                            particleCount: 5,
-                            angle: Math.random() * 360,
-                            spread: Math.random() * 60 + 10,
-                            origin: {
-                                x: Math.random(),
-                                y: Math.random()
-                            },
-                            colors: colors
-                        });
-
-                        if (Date.now() < end) {
-                            requestAnimationFrame(frame);
-                        }
-                    })();
-                }
-
-                // Trigger confetti effect if the user qualifies for free delivery
-                document.addEventListener("DOMContentLoaded", function() {
-                    launchConfetti();
-                });
-            </script>
-        {% else %}
-            <script>
-                console.log("User does not qualify for free delivery.");
-            </script>
-        {% endif %}
-        {% endblock %}
-
         <!-- Submit Button Section -->
         <div class="submit-button text-right mt-5 mb-2">
             <input type="hidden" id="id_client_secret" value="{{ client_secret }}">
@@ -458,106 +417,115 @@
 <!-- Pass the Stripe public key and client secret to JavaScript -->
 {{ stripe_public_key|json_script:"id_stripe_public_key" }}
 {{ client_secret|json_script:"id_client_secret" }}
-
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
-    const stripe = Stripe("pk_test_51REARw07B3iAgZ7iWDLVkGICKIihYRy4Qwkgp2xmVPq8wulwd3E2mszbQkvII5BLzpDrhiEr2e24vr9vyjwNYVpx00moQgnZMh"); // your publishable key
+    document.addEventListener("DOMContentLoaded", async () => {
+        const stripe = Stripe("pk_test_51REARw07B3iAgZ7iWDLVkGICKIihYRy4Qwkgp2xmVPq8wulwd3E2mszbQkvII5BLzpDrhiEr2e24vr9vyjwNYVpx00moQgnZMh");  // Your Stripe public key
+        const grandTotal = parseFloat(document.getElementById('grand-total').textContent.replace('€', '').trim());
 
-    // Get CSRF token from cookies
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
+        // CSRF token helper function
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
                 }
             }
+            return cookieValue;
         }
-        return cookieValue;
-    }
 
-    // Fetch the sessionId from your server (this is passed to the Stripe Checkout)
-    async function fetchSessionId() {
-        try {
-            const sessionUrl = "{% url 'checkout:create_checkout_session' %}";
-            const response = await fetch(sessionUrl, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken'),
-                },
-                body: JSON.stringify({
-                    amount: 1099,  // Example amount in cents
-                }),
-            });
+        // Function to create a checkout session
+        async function createCheckoutSession(grandTotal) {
+            try {
+                // Check if grandTotal is a valid number before proceeding
+                console.log("Received grandTotal:", grandTotal);  // Log grandTotal for debugging
 
-            // Check if the response is okay
-            if (!response.ok) {
-                throw new Error('Failed to create checkout session');
+                if (isNaN(grandTotal) || grandTotal <= 0) {
+                    throw new Error('Invalid grand total value');
+                }
+
+                // Multiply by 100 (to convert to cents for Stripe)
+                const amountInCents = grandTotal * 100;
+                console.log("Amount in cents:", amountInCents);  // Log amountInCents for debugging
+
+                // Send the request to create the checkout session
+                const response = await fetch('/checkout/create_checkout_session/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),  // Include CSRF token for security
+                    },
+                    body: JSON.stringify({
+                        grand_total: amountInCents,  // Send the amount in cents (multiply by 100)
+                    }),
+                });
+
+                const data = await response.json();
+
+                // If the response is not ok (e.g., status 500)
+                if (!response.ok) {
+                    console.error("Server error:", data.error || 'Unknown error');
+                    throw new Error(data.error || 'Failed to create checkout session');
+                }
+
+                // Return the session ID if successful
+                console.log("Checkout session created successfully with ID:", data.sessionId);
+                return data.sessionId;
+
+            } catch (error) {
+                // Log the error message
+                console.error("Error:", error);
+                // Show an error message to the user
+                alert("There was an error creating the checkout session. Please try again.");
             }
-
-            const { sessionId } = await response.json();
-            return sessionId;
-        } catch (error) {
-            console.error('Error fetching sessionId:', error);
-            // Display error message to user or take alternative actions
-            document.querySelector("#error-message").textContent = 'There was an error processing your payment. Please try again.';
-            return null;
         }
-    }
 
-    // Fetch sessionId
-    const sessionId = await fetchSessionId();
+        // Fetch session ID from the server and redirect to Stripe checkout
+        const sessionId = await createCheckoutSession(grandTotal);
 
-    if (!sessionId) {
-        // If there was an error fetching sessionId, stop the process
-        return;
-    }
+        if (!sessionId) {
+            // If sessionId couldn't be fetched, stop the process
+            return;
+        }
 
-    // Redirect to Stripe Checkout when the form is submitted
-    const form = document.getElementById("payment-form");
-    form.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
+        // Redirect to Stripe Checkout
         const { error } = await stripe.redirectToCheckout({
-            sessionId: sessionId,  // Pass the sessionId to Stripe Checkout
+            sessionId: sessionId,  // Pass sessionId from the server
         });
 
         if (error) {
+            console.error('Error redirecting to checkout:', error.message);
             document.querySelector("#error-message").textContent = error.message;
         }
-    });
 
-    // Example of retrieving PaymentIntent status on the return URL (Stripe success or failure page)
-    const clientSecretFromUrl = new URLSearchParams(window.location.search).get('payment_intent_client_secret');
-    if (clientSecretFromUrl) {
-        stripe.retrievePaymentIntent(clientSecretFromUrl).then(({ paymentIntent }) => {
-            const message = document.querySelector('#message');
+        // Handle success or failure of payment on the return URL (Stripe success/failure page)
+        const clientSecretFromUrl = new URLSearchParams(window.location.search).get('payment_intent_client_secret');
+        if (clientSecretFromUrl) {
+            stripe.retrievePaymentIntent(clientSecretFromUrl).then(({ paymentIntent }) => {
+                const message = document.querySelector('#message');
 
-            switch (paymentIntent.status) {
-                case 'succeeded':
-                    message.innerText = 'Success! Payment received.';
-                    break;
-                case 'processing':
-                    message.innerText = "Payment processing. We'll update you when payment is received.";
-                    break;
-                case 'requires_payment_method':
-                    message.innerText = 'Payment failed. Please try another payment method.';
-                    break;
-                default:
-                    message.innerText = 'Something went wrong.';
-                    break;
-            }
-        });
-    }
-});
-</script>
+                switch (paymentIntent.status) {
+                    case 'succeeded':
+                        message.innerText = 'Success! Payment received.';
+                        break;
+                    case 'processing':
+                        message.innerText = "Payment processing. We'll update you when payment is received.";
+                        break;
+                    case 'requires_payment_method':
+                        message.innerText = 'Payment failed. Please try another payment method.';
+                        break;
+                    default:
+                        message.innerText = 'Something went wrong.';
+                        break;
+                }
+            });
+        }
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
+        // Handling the "different address" checkbox visibility
         const differentAddressCheckbox = document.getElementById('different-address-checkbox');
         const differentAddressFields = document.getElementById('different-address-fields');
 
@@ -571,8 +539,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         }
 
+        // Pre-fill user info if authenticated
         {% if user.is_authenticated %}
-            // Use escapejs to protect against issues with quotes in JavaScript
             const nameField = document.getElementById('id_name');
             const emailField = document.getElementById('id_email');
             const phoneField = document.getElementById('id_phone_number');
@@ -585,6 +553,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         {% endif %}
     });
 </script>
+
 
 <!-- Script for populating the checkout form from hidden fields -->
 <script>
@@ -654,16 +623,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         document.querySelector('.delivery-option:checked')?.dispatchEvent(new Event('change'));
     });
-</script>
-
-<script>
-function launchConfetti() {
-    // Check if the confetti function is available
-    if (typeof confetti !== 'undefined') {
-        confetti();  // or your custom confetti function code
-    } else {
-        console.error('Confetti library is not loaded!');
-    }
-}
 </script>
 {% endblock %}
