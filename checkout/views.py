@@ -297,6 +297,10 @@ stripe.api_key = 'your-secret-key'
 
 @csrf_exempt
 def create_checkout_session(request):
+    if 'HEROKU' in os.environ:  # Check if running on Heroku
+        YOUR_DOMAIN = 'https://your-app-name.herokuapp.com'
+    else:
+        YOUR_DOMAIN = 'http://127.0.0.1:8000/'
     if request.method == 'POST':
         try:
             cart = cart_contents(request)
