@@ -4,18 +4,17 @@ document.getElementById('payment-form').addEventListener('submit', async (e) => 
     e.preventDefault();
 
     try {
-        // ✅ Make the fetch request first and define `res`
-        const response = await fetch('/checkout/create_checkout_session/', {
+        const response = await fetch('/cart/create_checkout_session/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                grand_total: parseFloat(document.getElementById('grand-total').value) // Make sure you have this in your form
+                grand_total: parseFloat(document.getElementById('grand-total').value)
             })
         });
 
-        const res = await response.json();  // ✅ Now res is defined
+        const res = await response.json();
 
         if (res.error) {
             document.getElementById('error-message').textContent = res.error;

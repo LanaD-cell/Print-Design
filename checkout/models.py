@@ -61,6 +61,7 @@ class Order(models.Model):
         max_digits=6, decimal_places=2, null=False, default=0)
     order_total = models.DecimalField(
         max_digits=10, decimal_places=2, null=False, default=0)
+    cart_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     grand_total = models.DecimalField(
         max_digits=10, decimal_places=2, null=False, default=0)
 
@@ -73,6 +74,9 @@ class Order(models.Model):
         max_digits=10, decimal_places=2, default=Decimal('0.00'))
     status = models.CharField(
         max_length=10, choices=STATUS_CHOICES, default=PENDING)
+
+    def get_grand_total(self):
+        return self.order_total + self.service_cost + self.delivery_cost
 
     def _generate_order_number(self):
         """
@@ -93,20 +97,13 @@ class Order(models.Model):
         # Calculate the service cost, ensuring additional services are correctly accounted for
         self.additional_services = self.additional_services or []
 
-        # If the total is below the free delivery threshold, apply standard delivery costs
-        if self.order_total < settings.FREE_DELIVERY_THRESHOLD:
-            self.delivery_cost = (
-                self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
-            )
-        else:
-            # If above the free delivery threshold, no delivery cost is added
-            self.delivery_cost = 0
+        self.delivery_cost = 0 if self.order_total >= settings.FREE_DELIVERY_THRESHOLD else \
+            self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
 
         # Calculate the grand total, adding order total, service cost, and delivery cost
-        self.grand_total = (
-            self.order_total + Decimal(self.delivery_cost) + Decimal(self.service_cost)
-        )
+        self.grand_total = self.get_grand_total()
 
+        self.save()
         # Debugging outputs to confirm calculations
         print(
             "Updated totals -> order_total:", self.order_total,
@@ -114,6 +111,7 @@ class Order(models.Model):
             "delivery_cost:", self.delivery_cost,
             "grand_total:", self.grand_total
         )
+
 
     def save(self, *args, **kwargs):
         """
@@ -123,15 +121,14 @@ class Order(models.Model):
         if not self.order_number:
             self.order_number = self._generate_order_number()
 
-        super().save(*args, **kwargs)
-
         # Update the total without causing recursion
         self.update_total()
 
+         # Now save the order instance
+        super().save(*args, **kwargs)
+
         print(f"Saving Order {self.order_number}, Total: {self.grand_total}")
 
-        # Now save the order instance
-        super().save(*args, **kwargs)
 
     def __str__(self):
         # pylint: disable=no-member
@@ -145,9 +142,6 @@ class Order(models.Model):
         """
         # pylint: disable=no-member
         return sum(item.total_price() for item in self.items.all())
-
-    def get_grand_total(self):
-        return self.total_price() + self.service_price + self.delivery_price
 
 
 class OrderLineItem(models.Model):
@@ -185,8 +179,7 @@ class OrderLineItem(models.Model):
 
         # Add service and delivery prices to the total
         self.lineitem_total = (
-            Decimal(total_price) + self.service_price + self.delivery_price
-        )
+            Decimal(total_price) + self.service_price + self.delivery_price)
         super().save(*args, **kwargs)
 
     def __str__(self):

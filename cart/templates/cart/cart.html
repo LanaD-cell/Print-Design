@@ -12,90 +12,596 @@
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
+        <form id="payment-form" action="{% url 'cart:create_checkout_session' %}" method="POST">
+            {% csrf_token %}
 
-        <!-- Cart Form Column -->
-        <div id="cart-form" class="col-12 col-md-8 col-lg-8 cart-form">
+            <!-- Cart Form Column -->
+            <div id="cart-form" class="col-12 col-md-8 col-lg-8 cart-form">
 
-            <div class="col cart-col w-100 p-0">
-                <hr style="color: white;">
-                <h2 class="logo-font mb-4 text-center" style="color: white; font-size: 50px;">Shopping Cart</h2>
-                <hr style="color: white;">
-            </div>
-
-            <div class="row d-flex justify-content-center">
-                <!-- Side Column (Image or Additional Info) - First Position (Visible on larger screens) -->
-                <div class="col-12 col-md-4 d-none d-md-block order-md-first mx-auto px-2" id="cart-side-column">
-                    <div class="text-center position-relative robot-col">
-                        <img src="/static/images/almost-there.png"
-                             alt="Checkout Illustration"
-                             id="robot">
-                    </div>
+                <div class="col cart-col w-100 p-0">
+                    <hr style="color: white;">
+                    <h2 class="logo-font mb-4 text-center" style="color: white; font-size: 50px;">Shopping Cart</h2>
+                    <hr style="color: white;">
                 </div>
 
-                <!-- Cart Items Column - Second Position (Main content) -->
-                <div class="col-12 col-md-8 px-2 position-relative" style="z-index: 1;">
-                    {% if cart_items %}
-                    <div class="cart-items-container">
-                        {% for item in cart_items %}
-                        <div class="cart-card mb-3">
-                            <div class="row no-gutters">
-                                <div class="col-md-4">
-                                    {% if item.product.image_url %}
-                                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="card-img" style="width: 100%; height: auto;">
-                                    {% else %}
-                                    <img src="{{ MEDIA_URL }}noimage.png" alt="{{ item.product.name }}" class="card-img" style="width: 100%; height: auto;">
-                                    {% endif %}
-                                </div>
-                                <div class="col-md-8">
-                                    <div class="cart-card-body">
-                                        <h5 class="cart-card-title">{{ item.product.name }}</h5>
-                                        <p class="cart-card-text"><strong>Size:</strong> {{ item.size }}</p>
-                                        <p class="cart-card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
-                                        <p class="cart-card-text"><strong>Price:</strong> €{{ item.price }}</p>
-                                        <p class="cart-card-text"><strong>Services:</strong> €{{ item.service_price }}</p>
-                                        <p class="cart-card-text"><strong>Total:</strong> €{{ total_price }}</p>
+                <div class="row d-flex justify-content-center">
+                    <!-- Side Column (Image or Additional Info) - First Position (Visible on larger screens) -->
+                    <div class="col-12 col-md-4 d-none d-md-block order-md-first mx-auto px-2" id="cart-side-column">
+                        <div class="text-center position-relative robot-col">
+                            <img src="/static/images/almost-there.png"
+                                 alt="Checkout Illustration"
+                                 id="robot">
+                        </div>
+                    </div>
 
-                                        <form method="POST" action="{% url 'cart:remove_item' item.id %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-danger btn-sm">
-                                                <i class="fas fa-trash-alt"></i> Remove
-                                            </button>
-                                        </form>
+                    <!-- Cart Items Column and Delivery Options - Both in Same Background -->
+                    <div class="col-12 col-md-8 px-2 position-relative" style="z-index: 1;">
+                        <div class="cart-and-delivery-wrapper" style="background-color: white; padding: 20px; border-radius: 8px;">
+                            <!-- Cart Items -->
+                            {% if cart_items %}
+                            <div class="cart-items-container">
+                                {% for item in cart_items %}
+                                <div class="cart-card mb-3">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4">
+                                            {% if item.product.image_url %}
+                                            <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="card-img" style="width: 100%; height: auto;">
+                                            {% else %}
+                                            <img src="{{ MEDIA_URL }}noimage.png" alt="{{ item.product.name }}" class="card-img" style="width: 100%; height: auto;">
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="cart-card-body">
+                                                <h5 class="cart-card-title">{{ item.product.name }}</h5>
+                                                <p class="cart-card-text"><strong>Size:</strong> {{ item.size }}</p>
+                                                <p class="cart-card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
+                                                <p class="cart-card-text"><strong>Price:</strong> €{{ item.price }}</p>
+                                                <p class="cart-card-text"><strong>Services:</strong> €{{ item.service_price }}</p>
+                                                <p class="cart-card-text"><strong>Total:</strong> €{{ total_price }}</p>
+
+                                                <form method="POST" action="{% url 'cart:remove_item' item.id %}">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        <i class="fas fa-trash-alt"></i> Remove
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                {% endfor %}
+                            </div>
+                            {% else %}
+                            <p style="color: white;">Your cart is empty.</p>
+                            {% endif %}
+
+                            <!-- Delivery Options Section -->
+                            <div class="delivery-options mt-4">
+                                <fieldset class="rounded px-3 mb-5">
+                                    <legend class="fieldset-label small text-black px-2 w-auto">Delivery Options</legend>
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="standard_delivery">
+                                            <input class="form-check-input delivery-option" type="radio" name="delivery_option" id="standard_delivery" value="Standard Production" data-price="0.00" checked>
+                                            Standard Production (€0.00)
+                                            <i class="fa-solid fa-turtle"></i>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="priority_delivery">
+                                            <input class="form-check-input delivery-option" type="radio" name="delivery_option" id="priority_delivery" value="48h Express Production" data-price="15.00">
+                                            Priority Delivery (€15.00)
+                                            <i class="fa-solid fa-truck"></i>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="48h_express_delivery">
+                                            <input class="form-check-input delivery-option" type="radio" name="delivery_option" id="express_delivery" value="24h Express Production" data-price="25.00">
+                                            48h Express Delivery (€25.00)
+                                            <i class="fa-solid fa-truck-fast"></i>
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <label class="form-check-label" for="24_express_delivery">
+                                            <input class="form-check-input delivery-option" type="radio" name="delivery_option" id="express_delivery" value="24h Express Production" data-price="35.00">
+                                            24h Express Delivery (€35.00)
+                                            <i class="fa-solid fa-truck-fast"></i>
+                                        </label>
+                                    </div>
+                                </fieldset>
+                            </div>
+
+                            <div class="col-12 col-lg-6">
+                                <p class="text-muted">Please fill out the form below to complete your order</p>
+                                    <div id="payment-element">
+                                    {% csrf_token %}
+
+                                    <!-- Hidden fields for user data -->
+                                    <input type="hidden" id="hidden_name" value="{{ user_details.name }}">
+                                    <input type="hidden" id="hidden_email" value="{{ user_details.email }}">
+                                    <input type="hidden" id="hidden_phone_number" value="{{ user_details.phone_number }}">
+                                    <input type="hidden" id="hidden_country" value="{{ user_details.country }}">
+                                    <input type="hidden" id="hidden_postcode" value="{{ user_details.postcode }}">
+                                    <input type="hidden" id="hidden_town_or_city" value="{{ user_details.town_or_city }}">
+                                    <input type="hidden" id="hidden_street_address1" value="{{ user_details.street_address1 }}">
+                                    <input type="hidden" id="hidden_street_address2" value="{{ user_details.street_address2 }}">
+                                    <!-- Delivery fields -->
+                                    <input type="hidden" id="hidden_delivery_country" value="{{ user_details.delivery_country }}">
+                                    <input type="hidden" id="hidden_delivery_postcode" value="{{ user_details.delivery_postcode }}">
+                                    <input type="hidden" id="hidden_delivery_town_or_city" value="{{ user_details.delivery_town_or_city }}">
+                                    <input type="hidden" id="hidden_delivery_street_address1" value="{{ user_details.delivery_street_address1 }}">
+                                    <input type="hidden" id="hidden_delivery_street_address2" value="{{ user_details.delivery_street_address2 }}">
+
+                                    <!-- Personal Information Section -->
+                                    <fieldset class="rounded px-3 mb-5">
+                                        <legend class="fieldset-label small text-black px-2 w-auto">Details</legend>
+
+                                        <!-- Full Name -->
+                                        <div class="form-group required" id="id_full_name">
+                                            <label for="{{ order_form.name.id_for_label }}">
+                                                Full Name
+                                                {% if order_form.name.field.required %}
+                                                    <span class="text-danger">*</span>
+                                                {% endif %}
+                                            </label>
+                                            <input type="text" id="id_name"
+                                                name="{{ order_form.name.name }}" value="{{ order_form.name.value|default:'' }}"
+                                                class="form-control" placeholder="Full Name">
+                                            {% if order_form.name.errors %}
+                                                <ul class="errorlist text-danger">
+                                                    {% for error in order_form.name.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Email Address -->
+                                        <div class="form-group required" id="id_email">
+                                            <label for="{{ order_form.email.id_for_label }}">
+                                                Email Address
+                                                {% if order_form.email.field.required %}
+                                                    <span class="text-danger">*</span>
+                                                {% endif %}
+                                            </label>
+                                            <input type="email" id="email"
+                                                name="{{ order_form.email.name }}" value="{{ order_form.email.value|default:'' }}"
+                                                class="form-control" placeholder="Email Address">
+                                            {% if order_form.email.errors %}
+                                                <ul class="errorlist text-danger">
+                                                    {% for error in order_form.email.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Delivery Information Section -->
+                                        <legend class="fieldset-label small text-black px-2 w-auto">Delivery Address Details</legend>
+
+                                        <!-- Phone Number -->
+                                        <div class="form-group required">
+                                            <label for="{{ order_form.phone_number.id_for_label }}">
+                                                Phone Number
+                                                {% if order_form.phone_number.field.required %}
+                                                    <span class="text-danger">*</span>
+                                                {% endif %}
+                                            </label>
+                                            <input type="text" id="phone_number"
+                                                name="{{ order_form.phone_number.name }}" value="{{ order_form.phone_number.value|default:'' }}"
+                                                class="form-control" placeholder="Phone Number">
+                                            {% if order_form.phone_number.errors %}
+                                                <ul class="errorlist text-danger">
+                                                    {% for error in order_form.phone_number.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Street Address 1 -->
+                                        <div class="form-group required">
+                                            <label for="{{ order_form.address_line_1.id_for_label }}">
+                                                Street Address 1
+                                                {% if order_form.address_line_1.field.required %}
+                                                    <span class="text-danger">*</span>
+                                                {% endif %}
+                                            </label>
+                                            <input type="text" id="address_line_1"
+                                                name="{{ order_form.address_line_1.name }}" value="{{ order_form.address_line_1.value|default:'' }}"
+                                                class="form-control" placeholder="Street Address 1">
+                                            {% if order_form.address_line_1.errors %}
+                                                <ul class="errorlist text-danger">
+                                                    {% for error in order_form.address_line_1.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Street Address 2 -->
+                                        <div class="form-group">
+                                            <label for="{{ order_form.address_line_2.id_for_label }}">
+                                                Street Address 2
+                                            </label>
+                                            <input type="text" id="address_line_2"
+                                                name="{{ order_form.address_line_2.name }}" value="{{ order_form.address_line_2.value|default:'' }}"
+                                                class="form-control" placeholder="Street Address 2">
+                                            {% if order_form.address_line_2.errors %}
+                                                <ul class="errorlist text-danger">
+                                                    {% for error in order_form.address_line_2.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Town or City -->
+                                        <div class="form-group required">
+                                            <label for="{{ order_form.town_or_city.id_for_label }}">
+                                                Town or City
+                                                {% if order_form.town_or_city.field.required %}
+                                                    <span class="text-danger">*</span>
+                                                {% endif %}
+                                            </label>
+                                            <input type="text" id="town_or_city"
+                                                name="{{ order_form.town_or_city.name }}" value="{{ order_form.town_or_city.value|default:'' }}"
+                                                class="form-control" placeholder="Town or City">
+                                            {% if order_form.town_or_city.errors %}
+                                                <ul class="errorlist text-danger">
+                                                    {% for error in order_form.town_or_city.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Postcode -->
+                                        <div class="form-group required">
+                                            <label for="{{ order_form.postcode.id_for_label }}">
+                                                Postcode
+                                                {% if order_form.postcode.field.required %}
+                                                    <span class="text-danger">*</span>
+                                                {% endif %}
+                                            </label>
+                                            <input type="text" id="postcode"
+                                                name="{{ order_form.postcode.name }}" value="{{ order_form.postcode.value|default:'' }}"
+                                                class="form-control" placeholder="Postcode">
+                                            {% if order_form.postcode.errors %}
+                                                <ul class="errorlist text-danger">
+                                                    {% for error in order_form.postcode.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Country -->
+                                        <div class="form-group required">
+                                            <label for="{{ order_form.country.id_for_label }}">
+                                                Country
+                                                {% if order_form.country.field.required %}
+                                                    <span class="text-danger">*</span>
+                                                {% endif %}
+                                            </label>
+                                            <input type="text" id="country"
+                                                name="{{ order_form.country.name }}" value="{{ order_form.country.value|default:'' }}"
+                                                class="form-control" placeholder="Country">
+                                            {% if order_form.country.errors %}
+                                                <ul class="errorlist text-danger">
+                                                    {% for error in order_form.country.errors %}
+                                                        <li>{{ error }}</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Use different delivery address checkbox -->
+                                        <div class="form-check form-check-inline">
+                                            <input class="form-check-input" type="checkbox" id="different-address-checkbox" name="use_different_delivery_address"
+                                                value="1">
+                                            <label class="form-check-label" for="different-address-checkbox">
+                                                Send to a different address?
+                                            </label>
+                                        </div>
+
+                                        <!-- Additional Delivery Address Fields -->
+                                        <div id="different-address-fields" style="display:none;">
+                                            <div class="form-group">
+                                                <label>
+                                                    Recipient
+                                                </label>
+                                                <input type="text"
+                                                class="form-control">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>
+                                                    Delivery Street Address 1
+                                                </label>
+                                                <input type="text"
+                                                class="form-control">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>
+                                                    Delivery Street Address 2
+                                                </label>
+                                                <input type="text"
+                                                class="form-control">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>
+                                                    Delivery Town or City
+                                                </label>
+                                                <input type="text"
+                                                class="form-control">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>
+                                                    Delivery Postcode
+                                                </label>
+                                                <input type="text"
+                                                class="form-control">
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label>
+                                                    Delivery Country
+                                                </label>
+                                                <input type="text"
+                                                class="form-control">
+                                            </div>
+                                        </div>
+                                    </fieldset>
+
+
+                                    <!-- Card Charge Notification -->
+                                    <p class="small text-danger my-0">
+                                        <span class="icon">
+                                            <i class="fas fa-exclamation-circle"></i>
+                                        </span>
+                                        <span>Your card will be charged <strong id="card-charge">€{{ grand_total|floatformat:2 }}</strong></span>
+                                    </p>
+
+
+                           <!-- Cart Total -->
+                    <hr class="my-0">
+                    <div class="row text-black text-right">
+                        <div class="col-7 offset-2">
+                            <p class="my-0">Order Total:</p>
+                            <p class="my-0">Delivery:</p>
+                            <p class="my-0">VAT (19%):</p>
+                            <p class="my-0">Grand Total:</p>
+                        </div>
+                        <div class="col-3">
+                            <p class="my-0" id="order-total">€{{ total|floatformat:2 }}</p>
+                            <p class="my-0" id="delivery-amount">€0.00</p>
+                            <p class="my-0" id="vat-amount">€0.00</p>
+                            <p class="my-0"><strong id="grand-total">€{{ grand_total|floatformat:2 }}</strong></p>
+                        </div>
+                    </div>
+
+                    </div>
+
+                    <!-- Stripe Card Element -->
+                    <fieldset>
+                        <div class="form-row">
+                            <div class="col-12">
+                                <div id="card-element">
+                                    <!-- A Stripe Element will be inserted here. -->
+                                </div>
+                                <div id="card-errors" role="alert"></div>
                             </div>
                         </div>
-                        {% endfor %}
+                    </fieldset>
+
+                    <!-- Button Row: Parallel Layout with Same Size -->
+                    <div class="d-flex justify-content-between mt-5 mb-2">
+                        <!-- Confirm and Pay Button -->
+                        <div class="submit-button flex-grow-1 mx-2">
+                            <button type="submit" class="btn btn-secondary w-100" id="submit-button">
+                                <i class="fas fa-lock"></i> Confirm and Pay
+                            </button>
+                        </div>
+
+                        <!-- Keep Shopping Button -->
+                        <div class="gap-2 d-md-block flex-grow-1 mx-2" id="keepshopping">
+                            <a href="{% url 'products' %}" class="btn btn-secondary w-100">
+                                <span class="icon" style="color: white;">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </span>
+                                <span class="text-uppercase">Keep Shopping</span>
+                            </a>
+                        </div>
                     </div>
-                    {% else %}
-                    <p style="color: white;">Your cart is empty.</p>
-                    {% endif %}
+                    </fieldset>
 
-                    <!-- First Form for Checkout Session -->
-                    <form method="GET" action="{% url 'checkout:order_summary' %}">
-                        <button type="submit" class="btn btn-primary checkout-btn">
-                            <span class="icon"><i class="fas fa-credit-card"></i></span>
-                            <span class="text-uppercase">Proceed to Checkout</span>
-                        </button>
-                    </form>
-
-                    <!-- Keep Shopping Button -->
-                    <div class="gap-2 d-md-block" id="keepshopping">
-                        <a href="{% url 'products' %}" class="btn btn-secondary">
-                            <span class="icon" style="color: white;">
-                                <i class="fa-solid fa-chevron-left"></i>
-                            </span>
-                            <span class="text-uppercase">Keep Shopping</span>
-                        </a>
-                    </div>
-
-                    <!-- Cart Total -->
-                    <div class="total-price" style="color: white;">
-                        <p>Cart Total: €{{ total_price }}</p>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
+</div>
+<div id="loading-overlay">
+    <h1 class="text-light logo-font loading-spinner">
+        <span class="icon">
+            <i class="fas fa-3x fa-sync-alt fa-spin"></i>
+        </span>
+    </h1>
+</div>
+</div>
 {% endblock %}
+
+{% block postloadjs %}
+{{ block.super }}
+
+<!-- Pass the Stripe public key and client secret to JavaScript -->
+{{ stripe_public_key|json_script:"id_stripe_public_key" }}
+{{ client_secret|json_script:"id_client_secret" }}
+
+<script>
+   document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('payment-form');
+        if (!form) {
+            console.error("Payment form not found!");
+            return;
+        }
+        form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            console.log("Form submitted!");
+
+            const grandTotal = parseFloat(document.getElementById('grand-total').innerText.replace('€', '').replace(',', '.'));
+            const orderNumber = '{{ order.order_number }}';
+
+            // Send the grand_total and order_number to create checkout session
+            fetch('/create-checkout-session/', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": '{{ csrf_token }}'
+                },
+                body: JSON.stringify({
+                    grand_total: grandTotal,
+                    order_number: orderNumber
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.sessionId) {
+                    const stripe = Stripe('{{ STRIPE_TEST_PUBLIC_KEY }}');
+                    stripe.redirectToCheckout({ sessionId: data.sessionId });
+                    console.log("Checkout session response:", data);
+                } else {
+                    document.getElementById('error-message').innerText = data.error || 'Unexpected error.';
+                }
+            })
+            .catch(error => {
+                document.getElementById('error-message').innerText = 'Network error. Try again.';
+                console.error(error);
+            });
+        });
+    });
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Handling the "different address" checkbox visibility
+        const differentAddressCheckbox = document.getElementById('different-address-checkbox');
+        const differentAddressFields = document.getElementById('different-address-fields');
+
+        if (differentAddressCheckbox) {
+            differentAddressCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    differentAddressFields.style.display = 'block';
+                } else {
+                    differentAddressFields.style.display = 'none';
+                }
+            });
+        }
+
+        // Pre-fill user info if authenticated
+        {% if user.is_authenticated %}
+            const nameField = document.getElementById('id_name');
+            const emailField = document.getElementById('id_email');
+            const phoneField = document.getElementById('id_phone_number');
+            const countryField = document.getElementById('id_country');
+
+            if (nameField) nameField.value = "{{ user.first_name|escapejs }}";
+            if (emailField) emailField.value = "{{ user.email|escapejs }}";
+            if (phoneField) phoneField.value = "{{ user.profile.phone_number|escapejs }}";
+            if (countryField) countryField.value = "{{ user.profile.country|escapejs }}";
+        {% endif %}
+
+    })
+</script>
+
+
+<!-- Script for populating the checkout form from hidden fields -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the hidden fields containing the user data
+        const hiddenName = document.getElementById('hidden_name').value;
+        const hiddenEmail = document.getElementById('hidden_email').value;
+        const hiddenPhoneNumber = document.getElementById('hidden_phone_number').value;
+        const hiddenCountry = document.getElementById('hidden_country').value;
+        const hiddenPostcode = document.getElementById('hidden_postcode').value;
+        const hiddenTownOrCity = document.getElementById('hidden_town_or_city').value;
+        const hiddenStreetAddress1 = document.getElementById('hidden_street_address1').value;
+        const hiddenStreetAddress2 = document.getElementById('hidden_street_address2').value;
+
+        // Get the form fields
+        const fullNameField = document.getElementById('{{ checkout_form.full_name.id_for_label }}');
+        const emailField = document.getElementById('{{ checkout_form.email.id_for_label }}');
+        const phoneNumberField = document.getElementById('{{ checkout_form.phone_number.id_for_label }}');
+        const countryField = document.getElementById('{{ checkout_form.country.id_for_label }}');
+        const postcodeField = document.getElementById('{{ checkout_form.postcode.id_for_label }}');
+        const townOrCityField = document.getElementById('{{ checkout_form.town_or_city.id_for_label }}');
+        const streetAddress1Field = document.getElementById('{{ checkout_form.address_line_1.id_for_label }}');
+        const streetAddress2Field = document.getElementById('{{ checkout_form.address_line_2.id_for_label }}');
+
+        // Set the form fields with the corresponding hidden field values
+        if (fullNameField) fullNameField.value = hiddenName;
+        if (emailField) emailField.value = hiddenEmail;
+        if (phoneNumberField) phoneNumberField.value = hiddenPhoneNumber;
+        if (countryField) countryField.value = hiddenCountry;
+        if (postcodeField) postcodeField.value = hiddenPostcode;
+        if (townOrCityField) townOrCityField.value = hiddenTownOrCity;
+        if (streetAddress1Field) streetAddress1Field.value = hiddenStreetAddress1;
+        if (streetAddress2Field) streetAddress2Field.value = hiddenStreetAddress2;
+    });
+</script>
+
+<!-- Update the checkout totals -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deliveryOptions = document.querySelectorAll('.delivery-option');
+        const orderTotalEl = document.getElementById('order-total');
+        const deliveryAmountEl = document.getElementById('delivery-amount');
+        const vatAmountEl = document.getElementById('vat-amount');
+        const grandTotalEl = document.getElementById('grand-total');
+        const cardChargeEl = document.getElementById('card-charge');
+
+        function parseEuro(value) {
+            return parseFloat(value.replace('€', '').replace(',', '.')) || 0;
+        }
+
+        const orderTotal = parseEuro(orderTotalEl.innerText);
+        const VAT_RATE = 0.19;
+
+        deliveryOptions.forEach(option => {
+            option.addEventListener('change', () => {
+                const deliveryPrice = parseFloat(option.dataset.price) || 0;
+
+                const vatAmount = orderTotal * VAT_RATE;
+                const grandTotal = orderTotal + vatAmount + deliveryPrice;
+
+                deliveryAmountEl.innerText = `€${deliveryPrice.toFixed(2)}`;
+                vatAmountEl.innerText = `€${vatAmount.toFixed(2)}`;
+                grandTotalEl.innerText = `€${grandTotal.toFixed(2)}`;
+                cardChargeEl.innerText = `€${grandTotal.toFixed(2)}`;
+            });
+        });
+
+        document.querySelector('.delivery-option:checked')?.dispatchEvent(new Event('change'));
+    });
+</script>
+{% endblock %}
+

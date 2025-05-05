@@ -4,9 +4,26 @@
 <html lang="en" dir="ltr">
   <head>
     {% block meta %}
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A brief description of the page content goes here.">
+    <meta name="keywords" content="keyword1, keyword2, keyword3">
+
+    <!-- Open Graph Meta Tags for Social Media: -->
+    <meta property="og:title" content="Title of the page">
+    <meta property="og:description" content="Description of the page">
+    <meta property="og:image" content="{% static 'images/preview-image.jpg' %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Title of the page">
+    <meta name="twitter:description" content="Description of the page">
+    <meta name="twitter:image" content="{% static 'images/preview-image.jpg' %}">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'images/favicon.ico' %}" type="image/x-icon">
     {% endblock %}
 
     {% block stripe %}
@@ -34,7 +51,7 @@
     {% endblock %}
 
     {% block extra_css %}
-      <link rel="stylesheet" href="{% static 'checkout/css/checkout.css' %}">
+      <link rel="stylesheet" href="{% static 'cart/css/checkout.css' %}">
     {% endblock %}
 
     {% block corejs %}
@@ -332,59 +349,62 @@
 </div>
 
 
+  <!-- Bootstrap and core JS libraries -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+
   <!-- Summernote -->
   <script src="{% static 'summernote/summernote-bs4.min.js' %}"></script>
 
+  <!-- Custom JS -->
+  <script src="{% static 'cart/js/checkout.js' %}"></script>
+
+  <!-- Inline scripts -->
   <script>
       document.addEventListener("DOMContentLoaded", function () {
-        console.log("Dropdown setup initialized");
+          console.log("Dropdown setup initialized");
 
-  // Handle dropdown toggle for submenus
-  const dropdownSubmenus = document.querySelectorAll('.dropdown-submenu > a');
+          // Dropdown submenu toggle
+          const dropdownSubmenus = document.querySelectorAll('.dropdown-submenu > a');
+          dropdownSubmenus.forEach(submenu => {
+              submenu.addEventListener('click', function (e) {
+                  e.preventDefault();
+                  const submenuMenu = this.nextElementSibling;
+                  document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(menu => {
+                      menu.classList.remove('show');
+                  });
+                  submenuMenu.classList.toggle('show');
+              });
+          });
 
-  dropdownSubmenus.forEach(submenu => {
-    submenu.addEventListener('click', function (e) {
-      e.preventDefault();  // Prevent default link behavior
-      const submenuMenu = this.nextElementSibling;  // Get the corresponding dropdown menu (<ul>)
+          // Close dropdowns if clicked outside
+          document.addEventListener('click', function (e) {
+              if (!e.target.closest('.dropdown-submenu') && !e.target.closest('.dropdown-menu')) {
+                  document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(menu => {
+                      menu.classList.remove('show');
+                  });
+              }
+          });
 
-      // Toggle the submenu visibility
-      if (submenuMenu.classList.contains('show')) {
-        submenuMenu.classList.remove('show');  // If open, close it
-      } else {
-        // Close any other open submenus
-        document.querySelectorAll('.dropdown-submenu .dropdown-menu').forEach(menu => {
-          menu.classList.remove('show');
-        });
-        submenuMenu.classList.add('show');  // Open the clicked submenu
-      }
-    });
-  });
+          // Close modals when clicking outside modal content
+          document.querySelectorAll(".modal").forEach(modal => {
+              modal.addEventListener("click", event => {
+                  if (event.target.classList.contains("modal")) {
+                      const modalInstance = bootstrap.Modal.getInstance(modal);
+                      if (modalInstance) modalInstance.hide();
+                  }
+              });
+          });
 
-  // Close all dropdowns when clicking outside
-  document.addEventListener('click', function (e) {
-    if (!e.target.closest('.dropdown-submenu') && !e.target.closest('.dropdown-menu')) {
-      document.querySelectorAll('.dropdown-submenu .dropdown-menu.show').forEach(menu => {
-        menu.classList.remove('show');
+          // Bootstrap toasts
+          const toastEls = document.querySelectorAll(".toast");
+          toastEls.forEach((toastEl) => {
+              const toast = new bootstrap.Toast(toastEl, { delay: 5000 });
+              toast.show();
+          });
       });
-    }
-  });
 
-  // Handle modal close behavior when clicking outside modal content
-  document.querySelectorAll(".modal").forEach(modal => {
-    modal.addEventListener("click", event => {
-      if (event.target.classList.contains("modal")) {
-        const modalInstance = bootstrap.Modal.getInstance(modal);
-        if (modalInstance) modalInstance.hide();
-      }
-    });
-  });
-});
-</script>
-
-  {% block scripts %}{% endblock %}
-
-  {% block extra_js %}
-  <script>
       function togglePassword(elem, inputId) {
           const input = document.getElementById(inputId);
           const icon = elem.querySelector('i');
@@ -395,54 +415,16 @@
           } else {
               input.type = "password";
               icon.classList.remove("bi-eye-slash-fill");
-              icon.classList.add("bi", "bi-eye");
+              icon.classList.add("bi-eye");
           }
       }
   </script>
-  {% endblock %}
+
+  {% block scripts %}{% endblock %}
+  {% block extra_js %}{% endblock %}
 
   {% block postloadjs %}
-  {{ block.super }}
-
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const toastEls = document.querySelectorAll(".toast");
-      toastEls.forEach((toastEl) => {
-        const toast = new bootstrap.Toast(toastEl, {
-          delay: 5000
-        });
-        toast.show();
-      });
-    });
-  </script>
-
-  {{ stripe_public_key|json_script:"id_stripe_public_key" }}
-  {{ client_secret|json_script:"id_client_secret" }}
-{% endblock %}
-
-  {% if messages %}
-        <div class="message-container">
-              {% for message in messages %}
-                  {% with message.level as level %}
-                      {% if level == 40 %}
-                          {% include 'includes/toasts/toast_error.html' %}
-                      {% elif level == 30 %}
-                          {% include 'includes/toasts/toast_warning.html' %}
-                      {% elif level == 25 %}
-                          {% include 'includes/toasts/toast_success.html' %}
-                      {% else %}
-                          {% include 'includes/toasts/toast_info.html' %}
-                      {% endif %}
-                  {% endwith%}
-              {% endfor %}
-          </div>
-      {% endif %}
-
-    <!-- Bootstrap Bundle JS (Includes Popper) -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-
-    <script src="{% static 'checkout/js/checkout.js' %}" defer></script>
-  </body>
+      {{ block.super }}
+  {% endblock %}
+</body>
 </html>

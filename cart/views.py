@@ -1,5 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 from .models import Product, Cart, CartItem
+from django.conf import settings
+import stripe
 from homepage.models import PrintData
 from django.contrib import messages
 from decimal import Decimal
@@ -178,3 +182,168 @@ def remove_item(request, item_id):
         pass
 
     return redirect('cart:cart_details')
+
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
+
+def create_checkout_session():
+  session = stripe.checkout.Session.create(
+                payment_method_types=['card'],
+                line_items=[{
+                    'price_data': {
+                        'currency': 'eur',
+                        'product_data': {
+                            'name': f"Order #{order_number}",
+                        },
+                        'unit_amount': int(grand_total * 100),
+                    },
+                    'quantity': 1,
+                }],
+                mode='payment',
+                success_url='https://your-site.com/success',
+                cancel_url='https://your-site.com/cancel',
+            )
+
+  return redirect(session.url, code=303)
+
+if __name__== '__main__':
+    app.run(port=4242)
+
+
+def create_payment_intent(request):
+    try:
+        # Assuming 'grand_total' comes from the request body
+        data = json.loads(request.body)
+        grand_total = data.get('grand_total')
+
+        # Check if grand_total is provided
+        if not grand_total:
+            return JsonResponse({'error': 'Missing grand_total'}, status=400)
+
+        # Convert the grand total into the smallest currency unit (cents)
+        stripe_total = int(grand_total * 100)
+
+        # Create the PaymentIntent with the calculated total
+        payment_intent = stripe.PaymentIntent.create(
+            amount=stripe_total,
+            currency='eur',
+        )
+
+        # Return the client_secret to confirm the payment on the frontend
+        return JsonResponse({'client_secret': payment_intent.client_secret})
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
+
+
+def payment_cancel(request):
+    return render(request, 'checkout/cancel.html')
+
+
+def checkout_success_page(request, session_id):
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+        order_id = session.client_reference_id
+        order = get_object_or_404(Order, id=order_id)
+    except stripe.error.StripeError as e:
+        logger.error(f"Stripe error: {e.user_message}")
+        messages.error(request, "An error occurred while processing the payment.")
+        return redirect('checkout:summary')
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}")
+        messages.error(request, "An unexpected error occurred.")
+        return redirect('checkout:summary')
+
+    return render(request, 'checkout/order_summary.html', {'order': order})
+
+
+@csrf_exempt
+def payment_confirm(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+
+            payment_method = data.get('payment_method')
+            client_secret = data.get('client_secret')
+
+            # Log the data to ensure client_secret is passed correctly
+            logger.debug(f"Received payment_method: {payment_method}, client_secret: {client_secret}")
+
+            # Extract the PaymentIntent ID from the client_secret
+            match = re.match(r'^(pi_[^_]+)', client_secret or '')
+            if not match:
+                return JsonResponse({'success': False, 'error': 'Invalid client secret'})
+
+            payment_intent_id = match.group(1)
+
+            intent = stripe.PaymentIntent.confirm(
+                payment_intent_id,
+                payment_method=payment_method
+            )
+
+            if intent.status == 'succeeded':
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False, 'error': 'Payment failed'})
+
+        except stripe.error.StripeError as e:
+            return JsonResponse({'success': False, 'error': str(e)})
+
+        except Exception as e:
+            return JsonResponse({'success': False, 'error': 'An error occurred: ' + str(e)})
+
+    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+
+@login_required
+def payment_success(request, order_number):
+    session_id = request.GET.get('session_id')
+
+    if not session_id:
+        messages.error(request, "Session ID missing!")
+        return redirect('checkout:order_summary')
+
+    try:
+        # Retrieve the Stripe session using the session ID
+        session = stripe.checkout.Session.retrieve(session_id)
+
+        # Get the associated order using the order_number
+        order = get_object_or_404(Order, order_number=order_number)
+
+        # Check if the session corresponds to the order
+        if order.order_number != session.client_reference_id:
+            messages.error(request, "Order number mismatch!")
+            return redirect('checkout:order_summary')
+
+        # If payment was successful, update the order status and save the order
+        if session.payment_status == 'paid':
+            order.status = 'Paid'
+            order.save()
+
+            # Now, link the order products to the user's profile
+            user = request.user
+            products = order.products.all()
+
+            for product in products:
+                user.purchased_products.add(product)
+
+            # Optionally, clear the cart after the purchase is successful
+            if 'cart' in request.session:
+                del request.session['cart']
+                request.session.modified = True
+
+            # Success message
+            messages.success(request, f"Payment successful! Your order number is {order_number}.")
+
+            # Render success page
+            return render(request, 'checkout/success.html', {'order': order})
+
+        else:
+            # If payment failed
+            messages.error(request, "Payment failed. Please try again.")
+            return redirect('checkout:order_checkout')
+
+    except Exception as e:
+        # Catch any errors that occur during the process
+        messages.error(request, f"An error occurred: {str(e)}")
+        return redirect('checkout:order_summary')
+

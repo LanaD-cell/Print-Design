@@ -14,7 +14,6 @@ from django.conf import settings
 import json
 from cart.models import Cart, CartItem
 from cart.contexts import cart_contents
-
 from products.models import Product
 from .models import Order, OrderLineItem
 from homepage.models import Profile
@@ -74,15 +73,17 @@ def create_order(request):
     if not cart or not cart.items.exists():
         raise Http404("Cart is empty or missing.")
 
-    cart_total = Decimal(0)
+    order_total = Decimal(0)
     service_total = Decimal(0)
     delivery_total = Decimal(0)
+    cart_total = Decimal(0)
 
     for item in cart.items.all():
         quantity_info = next(
             (q for q in item.product.quantities if q['quantity'] == item.quantity), None
         )
         item_price = Decimal(quantity_info['price']) if quantity_info else Decimal(0)
+        order_total += item_price
         cart_total += item_price
         service_total += Decimal(item.service_price)
         delivery_total += Decimal(item.delivery_price)
@@ -97,11 +98,14 @@ def create_order(request):
         town_or_city=request.POST.get('town_or_city', ''),
         street_address1=request.POST.get('street_address1', ''),
         street_address2=request.POST.get('street_address2', ''),
-        order_total=cart_total,
+        order_total=order_total,
+        cart_total=cart_total,
         service_cost=service_total,
         delivery_cost=delivery_total,
         grand_total=cart_total + service_total + delivery_total
     )
+
+    grand_total = order.get_grand_total()
 
     for item in cart.items.all():
         quantity_info = next(
@@ -118,11 +122,9 @@ def create_order(request):
         )
 
     cart.items.all().delete()
-    grand_total = order.get_grand_total()
+    return order
 
-    return render(request, 'order/order_summary.html', {
-        'order': order, 'grand_total': grand_total
-    })
+
 
 def signup_view(request):
     confirm_password_success = None
@@ -294,36 +296,35 @@ def checkout(request):
 
     return render(request, 'checkout/order_checkout.html', context)
 
+stripe.api_key = os.getenv('STRIPE_SECRET_KEY')
+
 @csrf_exempt
 def create_checkout_session(request):
     if request.method == "POST":
         try:
-            data = json.loads(request.body)
-            grand_total = data.get('grand_total')
-            stripe_total = int(grand_total * 100)
-
-            success_url = request.build_absolute_uri(reverse('checkout.payment_success'))
-            cancel_url = request.build_absolute_uri(reverse('checkout.payment_cancel'))
+            # Extract order details from the request
+            grand_total = float(request.POST.get("grand_total", 0))
+            order_number = request.POST.get("order_number", "No Order Number")
 
             if not grand_total:
                 return JsonResponse({"error": "Missing grand_total"}, status=400)
 
-            # Create a checkout session
+            # Create a Stripe Checkout session
             session = stripe.checkout.Session.create(
                 payment_method_types=['card'],
                 line_items=[{
                     'price_data': {
                         'currency': 'eur',
                         'product_data': {
-                            'name': 'T-shirt',
+                            'name': f"Order #{order_number}",
                         },
-                        'unit_amount': stripe_total,
+                        'unit_amount': int(grand_total * 100),
                     },
                     'quantity': 1,
                 }],
                 mode='payment',
-                success_url=success_url,
-                cancel_url=cancel_url,
+                success_url='https://your-site.com/success',
+                cancel_url='https://your-site.com/cancel',
             )
 
             return JsonResponse({"sessionId": session.id})
@@ -331,23 +332,36 @@ def create_checkout_session(request):
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=500)
 
-def payment_success(request):
-    return render(request, 'checkout/success.html')
-
-def payment_cancel(request):
-    return render(request, 'checkout/cancel.html')
-
+    return JsonResponse({"error": "Only POST method is allowed"}, status=405)
 
 def create_payment_intent(request):
     try:
-        # Logic to create payment intent using Stripe
+        # Assuming 'grand_total' comes from the request body
+        data = json.loads(request.body)
+        grand_total = data.get('grand_total')
+
+        # Check if grand_total is provided
+        if not grand_total:
+            return JsonResponse({'error': 'Missing grand_total'}, status=400)
+
+        # Convert the grand total into the smallest currency unit (cents)
+        stripe_total = int(grand_total * 100)
+
+        # Create the PaymentIntent with the calculated total
         payment_intent = stripe.PaymentIntent.create(
-            amount=1000,  # amount in the smallest currency unit (e.g., cents)
-            currency='usd',
+            amount=stripe_total,
+            currency='eur',
         )
+
+        # Return the client_secret to confirm the payment on the frontend
         return JsonResponse({'client_secret': payment_intent.client_secret})
+
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
+
+def payment_cancel(request):
+    return render(request, 'checkout/cancel.html')
 
 
 def checkout_success_page(request, session_id):
@@ -450,7 +464,7 @@ def payment_success(request, order_number):
         else:
             # If payment failed
             messages.error(request, "Payment failed. Please try again.")
-            return redirect('checkout:order_summary')
+            return redirect('checkout:order_checkout')
 
     except Exception as e:
         # Catch any errors that occur during the process
