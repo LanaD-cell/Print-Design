@@ -294,10 +294,6 @@ def checkout(request):
 
     return render(request, 'checkout/order_checkout.html', context)
 
-
-# Set your secret key here (use your actual secret key)
-stripe.api_key = 'sk_test_51REARw07B3iAgZ7itLipNzjFL51UML8MOuE3ueX4BdHOKsqi4VDSsRsnASCwTBL3xd1IjRcSDx9rU4U2nWt1dlV500N3lLe44N'
-
 @csrf_exempt
 def create_checkout_session(request):
     if request.method == "POST":
