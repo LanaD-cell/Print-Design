@@ -655,4 +655,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.querySelector('.delivery-option:checked')?.dispatchEvent(new Event('change'));
     });
 </script>
+
+<script>
+function launchConfetti() {
+    // Check if the confetti function is available
+    if (typeof confetti !== 'undefined') {
+        confetti();  // or your custom confetti function code
+    } else {
+        console.error('Confetti library is not loaded!');
+    }
+}
+</script>
 {% endblock %}

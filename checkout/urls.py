@@ -22,6 +22,9 @@ urlpatterns = [
         views.create_checkout_session,
         name='create_checkout_session'
     ),
+    path('get_cart_total/',
+        views.get_cart_total,
+        name='get_cart_total'),
     path(
         'payment-success/<order_number>/',
         views.payment_success,

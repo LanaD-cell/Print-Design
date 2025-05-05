@@ -72,8 +72,16 @@
       "rating": 4.6,
       "image_url": "http://example.com/images/brochures.jpg",
       "image": "brochures.jpg",
-      "sizes": [{"size": "A3", "price": 39.99}, {"size": "A4", "price": 35.00}],
-      "quantities": [{"quantity": 100, "price": 42.00}, {"quantity": 250, "price": 80.00}],
+      "sizes": [{"size": "A3"},{"size": "A4"}, {"size": "A5"}, {"size": "A6"}],
+      "quantities": [
+        { "quantity": 25, "price": 12.40 },
+        { "quantity": 50, "price": 15.32 },
+        { "quantity": 100, "price": 21.45 },
+        { "quantity": 200, "price": 36.03 },
+        { "quantity": 300, "price": 60.34 },
+        { "quantity": 500, "price": 61.75 },
+        { "quantity": 1000, "price": 78.15 }
+      ],
       "additional_services": [
         {
           "service": "Own Print Data Upload",
@@ -125,7 +133,7 @@
       "rating": 4.9,
       "image_url": "http://example.com/images/banners.jpg",
       "image": "banners.jpg",
-      "sizes": [{"size": "3x6 m", "price": 59.99}, {"size": "4x8 m", "price": 79.99}],
+      "sizes": [{"size": "3x6 m"}, {"size": "4x8 m"}],
       "quantities": [{"quantity": 1, "price": 100.00}, {"quantity": 2, "price": 450.00}],
       "additional_services": [
         {
@@ -178,8 +186,16 @@
       "rating": 4.7,
       "image_url": "http://example.com/images/invitations.jpg",
       "image": "invitations.jpg",
-      "sizes": [{"size": "A5", "price": 19.99}, {"size": "A4", "price": 29.99}],
-      "quantities": [{"quantity": 100, "price": 25.99}, {"quantity": 200, "price": 45.99}],
+      "sizes": [{"size": "A3"},{"size": "A4"}, {"size": "A5"}, {"size": "A6"}],
+      "quantities": [
+        { "quantity": 25, "price": 12.40 },
+        { "quantity": 50, "price": 15.32 },
+        { "quantity": 100, "price": 21.45 },
+        { "quantity": 200, "price": 36.03 },
+        { "quantity": 300, "price": 60.34 },
+        { "quantity": 500, "price": 61.75 },
+        { "quantity": 1000, "price": 78.15 }
+      ],
       "additional_services": [
         {
           "service": "Own Print Data Upload",
@@ -231,7 +247,7 @@
       "rating": 4.6,
       "image_url": "http://example.com/images/labels.jpg",
       "image": "labels.jpg",
-      "sizes": [{"size": "Small", "price": 14.99}, {"size": "Large", "price": 24.99}],
+      "sizes": [{"size": "Small"}, {"size": "Large"}],
       "quantities": [{"quantity": 500, "price": 45.00}, {"quantity": 1000, "price": 80.00}],
       "additional_services": [
         {
@@ -386,6 +402,12 @@
         "rating": 4.7,
         "image_url": "http://example.com/images/digital-art.jpg",
         "image": "digital-art.jpg",
+        "sizes": [{"size": "A3"},{"size": "A4"}, {"size": "A5"}, {"size": "A6"}],
+      "quantities": [
+        { "quantity": 1, "price": 55.00 },
+        { "quantity": 2, "price": 75.00 },
+        { "quantity": 3, "price": 95.00 }
+      ],
         "additional_services": [
           {
             "service": "Own Print Data Upload",

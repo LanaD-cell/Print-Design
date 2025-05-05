@@ -39,6 +39,24 @@ def get_or_create_cart(request):
             request.session['cart_id'] = cart.id
     return cart
 
+def get_cart_total(request):
+    # Get the cart for the current user, or use a mock cart object for testing
+    cart = get_or_create_cart(request)  # This should be your actual cart object retrieval logic
+
+    # Let's assume these methods are available on the cart object
+    cart_total = cart.total_price()
+    delivery_fee = cart.delivery_fee()
+    vat_amount = cart.vat_amount()
+    grand_total = cart_total + delivery_fee + vat_amount
+
+    # Return the data as JSON
+    return JsonResponse({
+        'cart_total': str(cart_total),
+        'delivery_fee': str(delivery_fee),
+        'vat_amount': str(vat_amount),
+        'grand_total': str(grand_total)
+    })
+
 def create_order(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
@@ -221,8 +239,9 @@ def checkout(request):
         return redirect('homepage')
 
     current_cart = cart_contents(request)
-    cart_total = current_cart['cart_total']
-    service_price = current_cart['service_price']
+    cart_total = cart.total_price()
+    service_price = Decimal(0)
+
 
     delivery_option = request.POST.get('delivery_option', 'Standard Production')
     delivery_prices = {
@@ -232,7 +251,7 @@ def checkout(request):
     }
 
     delivery_fee = delivery_prices.get(delivery_option, Decimal('0.00'))
-    if delivery_option == 'Standard Production' and cart_total >= Decimal(settings.FREE_DELIVERY_THRESHOLD):
+    if delivery_option == 'Standard Production' and cart.total_price() >= Decimal(settings.FREE_DELIVERY_THRESHOLD):
         delivery_fee = Decimal('0.00')
 
     grand_total = cart_total + service_price + delivery_fee
@@ -245,7 +264,7 @@ def checkout(request):
     user = request.user
     profile = getattr(user, 'profile', None)
     initial_data = {
-        'name': user.get_name(),
+        'name': user.get_full_name() or user.username,
         'email': user.email,
         'phone_number': getattr(profile, 'phone_number', ''),
         'street_address1': getattr(profile, 'street_address1', ''),
