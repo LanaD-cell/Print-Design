@@ -1,6 +1,8 @@
 from django.contrib import admin
 from django.shortcuts import redirect
 from django.conf import settings
+from django.contrib.sitemaps.views import sitemap
+from print_design.sitemaps import sitemaps
 from django.conf.urls.static import static
 from django.urls import path, include
 from homepage.views import (CustomLoginView,
@@ -11,6 +13,7 @@ from homepage.views import (CustomLoginView,
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='sitemap'),
     path('summernote/', include('django_summernote.urls')),
     path('signup/', lambda request: redirect('/account/signup/'), name='signup'),
     path('login/', CustomLoginView.as_view(), name='login'),

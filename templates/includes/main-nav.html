@@ -26,22 +26,9 @@
         <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal5">Banners</a>
         <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal4">Brochures</a>
         <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal12">Digital Art</a>
-        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal9">FMCG Products</a>
         <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal2">Flyers</a>
         <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal7">Invitations</a>
         <div class="dropdown-divider"></div>
-
-
-        <!-- Custom Design Services -->
-        <h5 class="dropdown-header">Custom Design Services</h5>
-        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal15">Branding</a>
-        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal16">Merchandising</a>
-        <div class="dropdown-divider"></div>
-
-
-        <!-- Digital Designs -->
-        <h5 class="dropdown-header">Digital Designs</h5>
-        <a href="#" class="dropdown-item product-link" data-bs-toggle="modal" data-bs-target="#productDetailModal10">Logo Design</a>
       </div>
     </li>
 
@@ -147,26 +134,6 @@
               </div>
             </div>
 
-        <!-- FMCG -->
-        <div class="modal fade" id="productDetailModal9" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel9" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="9">FMCG Products</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img src="/static/images/fmcg.webp" alt="Brochures" class="img-fluid mb-3" />
-                    <p><strong>Description:</strong> High-quality FMCG Products</p>
-                    <p><strong>Rating:</strong> 4.60 stars</p>
-                    <!-- Order Button -->
-                    <a href="{% url 'product_detail' product_id=9 %}" class="btn w-100" style="color: white; background-color: #006466;">Order Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-
         <!-- Flyers -->
         <div class="modal fade" id="productDetailModal2" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel2" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
@@ -207,64 +174,6 @@
             </div>
 
 
-        <!-- Logo -->
-        <div class="modal fade" id="productDetailModal10" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel10" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="10">Logo Design</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <img src="/static/images/logo.png" alt="Brochures" class="img-fluid mb-3" />
-                    <p><strong>Description:</strong> High-quality brochures</p>
-                    <p><strong>Rating:</strong> 4.60 stars</p>
-                    <!-- Order Button -->
-                    <a href="{% url 'product_detail' product_id=10 %}"
-                        class="btn w-100" style="color: white; background-color: #006466;">
-                      Order Now</a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-         <!-- Branding -->
-        <div class="modal fade" id="productDetailModal15" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel15" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="15">Branding</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <img src="/static/images/branding.jpg" alt="Branding" class="img-fluid mb-3" />
-                <p><strong>Description:</strong> Custom branding services</p>
-                <p><strong>Rating:</strong> 4.80 stars</p>
-                <!-- Order Button -->
-                <a href="{% url 'product_detail' product_id=15 %}" class="btn w-100" style="color: white; background-color: #006466;">Order Now</a>
-              </div>
-            </div>
-          </div>
-        </div>
-
-          <!-- Merchandising -->
-        <div class="modal fade" id="productDetailModal16" data-bs-backdrop="false" tabindex="-1" aria-labelledby="productDetailModalLabel16" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="16">Merchandising</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <img src="/static/images/merch-packages.jpg" alt="Branding" class="img-fluid mb-3" />
-                <p><strong>Description:</strong> Custom Merchandising designs</p>
-                <p><strong>Rating:</strong> 4.80 stars</p>
-                <!-- Order Button -->
-                <a href="{% url 'product_detail' product_id=16 %}" class="btn w-100" style="color: white; background-color: #006466;">Order Now</a>
-              </div>
-            </div>
-          </div>
-        </div>
 <script>
       document.addEventListener("DOMContentLoaded", function () {
         var modals = document.querySelectorAll(".modal");

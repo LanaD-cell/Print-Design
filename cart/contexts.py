@@ -9,13 +9,10 @@ def cart_contents(request):
 
     cart = None
 
-    # Handle cart for authenticated or guest users
-    if request.user.is_authenticated:
-        cart, _ = Cart.objects.get_or_create(user=request.user)
-    else:
-        cart = request.session.get('cart', {})
+    cart, _ = Cart.objects.get_or_create(user=request.user)
 
-    cart_items = cart.items.all() if hasattr(cart, 'items') else []
+    # Get the items and calculate the subtotal
+    cart_items = cart.items.all()
     subtotal = cart.total_price() if hasattr(cart, 'total_price') else Decimal('0.00')
 
     # VAT calculation
