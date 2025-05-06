@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>There was an error loading your cart</h1>
+  <p>{{ error_message }}</p>
+  <a href="{% url 'cart' %}">Try again</a>
+{% endblock %}

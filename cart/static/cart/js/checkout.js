@@ -1,13 +1,30 @@
 const stripe = Stripe('pk_test_51REARw07B3iAgZ7iWDLVkGICKIihYRy4Qwkgp2xmVPq8wulwd3E2mszbQkvII5BLzpDrhiEr2e24vr9vyjwNYVpx00moQgnZMh');
 
+// Event listener for the payment form submit
 document.getElementById('payment-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
 
     try {
-        const response = await fetch('/cart/create_checkout_session/', {
+        // Send a request to your server to create a checkout session
+        const response = await fetch('/cart/create-checkout-session/', {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify({
                 grand_total: parseFloat(document.getElementById('grand-total').value)
@@ -21,22 +38,15 @@ document.getElementById('payment-form').addEventListener('submit', async (e) => 
             return;
         }
 
-        const clientSecret = res.clientSecret;
+        // Get the session ID from the response
+        const checkoutSessionId = res.sessionId;
 
-        const result = await stripe.confirmCardPayment(clientSecret, {
-            payment_method: {
-                card: card, // Make sure `card` is defined via Stripe Elements
+        // Redirect to Checkout
+        stripe.redirectToCheckout({ sessionId: checkoutSessionId }).then(function (result) {
+            if (result.error) {
+                console.error(result.error.message);
             }
         });
-
-        if (result.error) {
-            document.getElementById('error-message').textContent = result.error.message;
-        } else {
-            if (result.paymentIntent.status === 'succeeded') {
-                alert('Payment successful!');
-                // Optionally redirect
-            }
-        }
 
     } catch (err) {
         document.getElementById('error-message').textContent = 'An unexpected error occurred.';

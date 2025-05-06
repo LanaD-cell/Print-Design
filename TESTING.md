@@ -69,6 +69,16 @@ This is the testing information for my project 5 eCommerce store Print & Design
 
 <br>
 
+### Validator Testing
+
+- HTML
+  - No errors were returned when passing through the official [W3C validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Fcode-institute-org.github.io%2Flove-running-2.0%2Findex.html)
+- CSS
+  - No errors were found when passing through the official [(Jigsaw) validator](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fvalidator.w3.org%2Fnu%2F%3Fdoc%3Dhttps%253A%252F%252Fcode-institute-org.github.io%252Flove-running-2.0%252Findex.html&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en#css)
+
+
+
+
 ## Features Testing
 
 A thorough manual testing process was undertaken to ensure all parts of the store worked as it should. Both the admin area and the main store were tested.
@@ -400,9 +410,7 @@ stripe_elements.js
 | All Compliance Pages | <img src="readme/testing/rm-html-checker-success.png" width="90%"> |
 | Footer | <img src="readme/testing/rm-html-checker-success.png" width="90%">   |
 
-The newsletter and event pages contains errors because of the code provided by MailChimp for the newsletter, which I didn't want to tamper with so those errors remain.
 
-The products page highlighted errors due to the sort selector, but nothing to do with the html code itself.
 
 </details>
 
@@ -411,7 +419,7 @@ The products page highlighted errors due to the sort selector, but nothing to do
 
 ## Lighthouse Validation
 
-The original lighthouse score for the index page was 80% so I had to add aria tags to my footer, add "defer" to some of the scripts in base.html, reduce the size of the images on the homepage plus save them as webp rather than png. The score increased to 90%. The remaining issue is the box at the top of the page with web content in it, which Lighthouse refers to as the "largest contentful paint".
+
 
 <details>
 
@@ -478,145 +486,14 @@ Test results the same across all pages e.g. sort category price high to low, a-z
 
 </details>
 
-## Behaviour Driven Testing
-
-Behaviour driven tests have been carried out based on user stories and using the Gerkin format. The behaviour of each story was tested to ensure the 'Scenario', 'Given', 'When' 'Then' and 'And' aspects of testing work correctly. For example:
-
-<details>
-
-**Behaviour Driven Test**
-
-**SCENARIO:** "As a buyer I receive email confirmation after purchase"
-
-Given: That a user has purchased a product
-
-And: Their email has been received and is correct
-
-When: The sale goes through
-
-Then: The system will automatically generate an email
-
-And: It will be sent to the buyer as confirmation of their purchase
-
-The behaviour driven tests have been included inside each user story on the [GitHub Project Page](https://github.com/users/todiane/projects/10/views/1)
-
-
-</details>
-
 ## Automated Testing
 
-I had originally set up a number of tests (as you can see from my commits) but wasn't sure if they were correct so deleted them.
-Tests have been written, and added to the tests folder, for models, views, and urls.
 
-<details>
+### Bugs
 
-I have set up the database in the settings file so that I can change from the production database to the development database (DEVELOPMENT_DB) during testing. The development database is free of products/users and so can be used to test as if the project is just beginning.
-
-
-The Django built-in unit testing framework was used to test the applications functionality.
-
-In order to run the tests, I ran the following command:
-
-```
-python3 manage.py test
-```
-
-To create the coverage report, I  first installed coverage
-
-```
-pip install coverage
-
-```
-
-Then I was able to run any of the following commands:
-
-```
-
-coverage run manage.py test
-
-coverage run --source=name-of-app manage.py test
-
-coverage report
-
-```
-
-To see the HTML version of the reports, and find out whether some pieces of code were missing, I ran the following command:
-
-```
-
-coverage html - generates the htmlcov/index.html file to view the report
-
-python -m http.server
-
-```
-
-The following files were added to gitignore
-
-```
-.coverage
-htmlcov/
-
-```
-
-TestCase was used to test models and views. As there is no database needed for tessting urls SimpleTestCase was used.
-
-Below are the results from my coverage report:
-
-<img src="readme/testing/test-coverage-report.png" width="90%"><br><br>
-
-</details>
-
-## Bugs
-
-<details>
-
-- When saving a product to the wishlist you can not select a size. If you select XL size an error occurs. Doesn’t always happen on heroku, but size isn't an option for the wishlist, just the product.
-
-- Another size issue is making a size a required field. I have tried to change the size model (as per my commits) in different ways so that a size must be selected but I wasn't able to get it to work, despite help from tutor support. I didn't want to change the model too many times in case the database ended up corrupted, so it is possible to add a product without selecting a size and the order will still go through. I could have added javascript to validate the size and bring up an error if a size wasn't selected but that only really changes the client side validation and I want to be able to add server side validation. This is something I am focused on learning how to achieve so I can update the site at some point.
-
-- When writing a review the star rating is required as a minimum. A buyer cannot add a review without it. If they complete the title and review box but do not select a star rating nothing happens. I have tried to include an error message to let them know if the star rating is not selected but despite using different code (and help from tutor support) the error message does not display.
-
-- Phone number area on checkout form let me put in letters. It should be numbers only and an attempt was made to change that but this broke the checkout process. Further investigation into making it work is needed.
-
-- Creating a sticky footer. Despite trying I have been unable to create a sticky footer and discovering how to include this in Django is something I need to learn.
-
-- There is an error message in the browser after checkout
-
-```Uncaught (in promise) Error: Could not establish connection. Receiving end does not exist.```
-
-However, I placed an order and it went through to Stripe
-
-<img src="readme/testing/rm-stripe-payment.png" width="90%"><br><br>
-
-<img src="readme/testing/rm-stripe-payment1.png" width="90%"><br><br>
-
-
-- when you write a review selecting a star rating is required however no error message appears if you do not select stars. I have attempted to add it using the following as shown at [Geeksforgeeks](https://www.geeksforgeeks.org/error_messages-django-form-field-validation/)
-
-```
-class Meta:
-        model = Reviews
-        fields = ['subject', 'rating', 'review']
-        error_messages = {
-            'rating': {
-                'required': "Please select a rating."  # Custom error message for the required field
-            }
-        }
-```
-and to override the __init__ method of the form and set the required attribute for the "rating" field to True. Neither worked. The review won't submit without the rating but no indication as to why shows up for the user, which is not UI friendly.
-
-```
-class ReviewForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super(ReviewForm, self).__init__(*args, **kwargs)
-        self.fields['rating'].required = True
-        self.fields['rating'].error_messages = {'required': 'Please select a rating'}
-
-    class Meta:
-        model = Reviews
-        fields = ["subject", "review", "rating"]
-
-```
+  #### Secret Key commited
+    - I added the SK to the Js in order_checkout js for testing purposes, as the payment was throuwing Invalid Client Secret errors.
+      Then I forgot to remove it before committing changes and opened a can of worms. I received a fatal error that Github piscked up that a SK was commit and refused access. I then proceeded to do a major rebate on all commits. After that I once again received the same error, as the commit was stuck in the history eventhough I did the rebate. After some restless sleep, I throught of just changing my SK in Stripe and allowing the old SK to be sent through as a test SK to Guthub. On the surface it seems to have worked.
 
 </details>
 
@@ -629,26 +506,11 @@ class ReviewForm(forms.ModelForm):
 - [HTML validator](https://validator.w3.org/nu/#textarea)
 - [CSS validator](https://jigsaw.w3.org/css-validator/)
 - [Google Lighthouse](https://chromewebstore.google.com/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk)
-- [TestCase](https://docs.djangoproject.com/en/4.2/topics/testing/tools/#testcase)
 - [Django Testing](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Testing)
 - [Mastering Django Unit Testing](https://www.youtube.com/watch?v=N_HLNV2UQjg)
 
 ## Retrospective
 
-Manual testing is a straight forward process that I have performed many times and find easy to complete. After completing the project I decided to learn more about automated testing.
-
-<details>
-
-I still struggle to understand the concept a little and went over the CI training material again. Going back to the Javascript training and watching the Testing Paradigms video reminded me about behaviour driven testing, which I added to my project. In the same video it mentioned that testing can be carried out after the creation of code which is why I decided to add automated testing to my project.
-
-Separating the database and using the development database that had none of the current content/information made it similar to starting from zero and adding testing.
-
-The training suggested that tests can be carried out in a folder or under each individual app. I opted to put the tests in a folder but adding all the views became a little confusing so in the future I will add tests within their own app.
-
-I still have some work to do to really appreciate the value of test driven data and will continue learning about this area of coding.
-
-With so many different testing options available to save confusion I need to decide on a testing framework and focus on learning that until I understand how it works.
-
-</details>
+At the end of this process, I feel pretty dissatisfied. With the previous 4 projects I had ample time to give it my best, learn some additional things on the side etc. This, the last and most important project, the time  limit was simply inadequate. I had major problems along the way that caused me immense time wastage (the error in accidentally commiting the secret key) and then also made the initial error in choosing products that have a fixed quantity to price combinations. that was not at all straight forward to figure out for correct pricing.
 
 <p align="right">(<a href="#contents">back to top</a>)</p>

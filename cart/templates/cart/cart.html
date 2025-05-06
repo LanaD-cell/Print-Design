@@ -12,8 +12,6 @@
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
-        <form id="payment-form" action="{% url 'cart:create_checkout_session' %}" method="POST">
-            {% csrf_token %}
 
             <!-- Cart Form Column -->
             <div id="cart-form" class="col-12 col-md-8 col-lg-8 cart-form">
@@ -379,45 +377,32 @@
                             <p class="my-0" id="order-total">€{{ total|floatformat:2 }}</p>
                             <p class="my-0" id="delivery-amount">€0.00</p>
                             <p class="my-0" id="vat-amount">€0.00</p>
-                            <p class="my-0"><strong id="grand-total">€{{ grand_total|floatformat:2 }}</strong></p>
+                            <p class="my-0"><strong id="grand_total">€{{ grand_total|floatformat:2 }}</strong></p>
                         </div>
                     </div>
 
                     </div>
 
-                    <!-- Stripe Card Element -->
-                    <fieldset>
-                        <div class="form-row">
-                            <div class="col-12">
-                                <div id="card-element">
-                                    <!-- A Stripe Element will be inserted here. -->
-                                </div>
-                                <div id="card-errors" role="alert"></div>
-                            </div>
-                        </div>
-                    </fieldset>
+                    <!-- Payment Form -->
+                    <form id="payment-form">
+                        {% csrf_token %}  <!-- CSRF token here -->
+                        <input type="hidden" id="grand-total" value="{{ grand_total|floatformat:2 }}">
 
-                    <!-- Button Row: Parallel Layout with Same Size -->
-                    <div class="d-flex justify-content-between mt-5 mb-2">
-                        <!-- Confirm and Pay Button -->
-                        <div class="submit-button flex-grow-1 mx-2">
-                            <button type="submit" class="btn btn-secondary w-100" id="submit-button">
+                        <div id="payment-element"></div>  <!-- Stripe Elements for payment input -->
+                        <div id="error-message" class="text-danger mt-2"></div>  <!-- Error display -->
+
+                        <div class="d-flex justify-content-between mt-5 mb-2">
+                            <button type="submit" class="btn btn-secondary w-100 mx-2" id="submit-button">
                                 <i class="fas fa-lock"></i> Confirm and Pay
                             </button>
-                        </div>
-
-                        <!-- Keep Shopping Button -->
-                        <div class="gap-2 d-md-block flex-grow-1 mx-2" id="keepshopping">
-                            <a href="{% url 'products' %}" class="btn btn-secondary w-100">
+                            <a href="{% url 'products' %}" class="btn btn-secondary w-100 mx-2">
                                 <span class="icon" style="color: white;">
                                     <i class="fa-solid fa-chevron-left"></i>
                                 </span>
                                 <span class="text-uppercase">Keep Shopping</span>
                             </a>
                         </div>
-                    </div>
-                    </fieldset>
-
+                    </form>
                     </div>
                 </div>
             </div>
@@ -443,48 +428,8 @@
 {{ client_secret|json_script:"id_client_secret" }}
 
 <script>
-   document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('payment-form');
-        if (!form) {
-            console.error("Payment form not found!");
-            return;
-        }
-        form.addEventListener('submit', function (event) {
-            event.preventDefault();
-            console.log("Form submitted!");
-
-            const grandTotal = parseFloat(document.getElementById('grand-total').innerText.replace('€', '').replace(',', '.'));
-            const orderNumber = '{{ order.order_number }}';
-
-            // Send the grand_total and order_number to create checkout session
-            fetch('/create-checkout-session/', {
-                method: 'POST',
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-CSRFToken": '{{ csrf_token }}'
-                },
-                body: JSON.stringify({
-                    grand_total: grandTotal,
-                    order_number: orderNumber
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.sessionId) {
-                    const stripe = Stripe('{{ STRIPE_TEST_PUBLIC_KEY }}');
-                    stripe.redirectToCheckout({ sessionId: data.sessionId });
-                    console.log("Checkout session response:", data);
-                } else {
-                    document.getElementById('error-message').innerText = data.error || 'Unexpected error.';
-                }
-            })
-            .catch(error => {
-                document.getElementById('error-message').innerText = 'Network error. Try again.';
-                console.error(error);
-            });
-        });
-    });
-
+document.addEventListener('DOMContentLoaded', function () {
+    // Function to get the CSRF token from the browser's cookies
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -499,6 +444,46 @@
         }
         return cookieValue;
     }
+
+    // Check if the payment form exists before adding the event listener
+    const paymentForm = document.getElementById('payment-form');
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            try {
+                // Send a request to the server to create a checkout session
+                const response = await fetch('/cart/create-checkout-session/', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': getCookie('csrftoken'),  // Add CSRF token for Django protection
+                    },
+                    body: JSON.stringify({
+                        grand_total: parseFloat(document.getElementById('grand-total').value)
+                    })
+                });
+
+                const res = await response.json();
+
+                if (res.error) {
+                    document.getElementById('error-message').textContent = res.error;
+                    return;
+                }
+
+                // Redirect to Stripe Checkout
+                await stripe.redirectToCheckout({ sessionId: res.sessionId });
+
+            } catch (err) {
+                document.getElementById('error-message').textContent = 'An unexpected error occurred.';
+                console.error(err);
+            }
+        });
+    } else {
+        console.error('Payment form not found');
+    }
+});
+
 </script>
 
 <script>

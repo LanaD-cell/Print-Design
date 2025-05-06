@@ -13,6 +13,11 @@ urlpatterns = [
         'order_checkout/', views.checkout, name='order_checkout'
     ),
     path(
+        'checkout/success/<session_id>',
+        views.checkout_success_page,
+        name='checkout_success_page'
+    ),
+    path(
         'webhook/',
         webhook,
         name='webhook'
