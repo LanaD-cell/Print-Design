@@ -27,7 +27,8 @@ document.getElementById('payment-form').addEventListener('submit', async (e) => 
                 'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify({
-                grand_total: parseFloat(document.getElementById('grand-total').value)
+                grand_total: parseFloat(document.getElementById('grand-total').value),
+                delivery_option: data.get('delivery_option')
             })
         });
 

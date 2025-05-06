@@ -65,17 +65,6 @@
                     <div class="card-header">Additional Services</div>
                     <div class="card-body">
                         <div class="card-text delivery-container">
-                            <div class="col-12 option-box mb-1 border-green">
-                                <label>
-                                    <input type="checkbox" name="services" value="Own Print Data Upload" id="own-print-checkbox">
-                                    <span class="service-title"><i class="fas fa-upload"></i> Own Print Data</span>
-                                    <span class="service-price-title">- Free of charge</span>
-                                </label>
-                                <div id="upload-file-box" style="display: none; margin-top: 10px;">
-                                    <input type="file" name="print_data_file" accept=".pdf,.jpg,.jpeg,.png,.zip">
-                                    <small class="text-muted">Accepted formats: PDF, JPG, PNG, ZIP</small>
-                                </div>
-                            </div>
 
                             <div class="col-12 mb-1 option-box">
                                 <label>
@@ -149,21 +138,9 @@
 
     // Define the fixed prices for services
     const servicePrices = {
-        'Own Print Data Upload': 0,
         'Online Designer': 35.00,
         'Design Service': 40.00
     };
-
-    const ownPrintCheckbox = document.getElementById('own-print-checkbox');
-    const fileUploadBox = document.getElementById('upload-file-box');
-
-    if (ownPrintCheckbox && fileUploadBox) {
-        ownPrintCheckbox.addEventListener('change', function () {
-            const isChecked = this.checked;
-            fileUploadBox.style.display = isChecked ? 'block' : 'none';
-            fileUploadBox.querySelector('input[type="file"]').required = isChecked;
-        });
-    }
 
     // Function to update the summary
     function updateSummary() {

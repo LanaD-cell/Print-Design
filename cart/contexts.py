@@ -13,7 +13,7 @@ def cart_contents(request):
 
     # Get the items and calculate the subtotal
     cart_items = cart.items.all()
-    subtotal = cart.total_price() if hasattr(cart, 'total_price') else Decimal('0.00')
+    subtotal = cart.grand_total() if hasattr(cart, 'total_price') else Decimal('0.00')
 
     # VAT calculation
     vat = subtotal * VAT_RATE

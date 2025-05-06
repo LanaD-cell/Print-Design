@@ -17,8 +17,8 @@ class GenericModelSitemap(Sitemap):
         return self.model.objects.all()
 
     def lastmod(self, obj):
-        return obj.updated_at 06.05.2025
-..
+        return obj.updated_at
+
     def __init__(self, model):
         self.model = model
 
@@ -27,7 +27,6 @@ class GenericModelSitemap(Sitemap):
 sitemaps = {
     'products': GenericModelSitemap(Product),
     'faqs': GenericModelSitemap(FAQ),
-    'print_data': GenericModelSitemap(PrintData),
     'profiles': GenericModelSitemap(Profile),
     'subscribers': GenericModelSitemap(Subscriber),
     'newsletters': GenericModelSitemap(Newsletter),

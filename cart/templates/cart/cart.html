@@ -53,7 +53,7 @@
                                                 <p class="cart-card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
                                                 <p class="cart-card-text"><strong>Price:</strong> €{{ item.price }}</p>
                                                 <p class="cart-card-text"><strong>Services:</strong> €{{ item.service_price }}</p>
-                                                <p class="cart-card-text"><strong>Total:</strong> €{{ total_price }}</p>
+                                                <p class="cart-card-text"><strong>Total:</strong> €{{ item.total_price }}</p>
 
                                                 <form method="POST" action="{% url 'cart:remove_item' item.id %}">
                                                     {% csrf_token %}
@@ -346,13 +346,13 @@
                                         <hr class="my-0">
                                         <div class="row text-black text-right">
                                             <div class="col-7 offset-2">
-                                                <p class="my-0">Order Total:</p>
+                                                <p class="my-0">Order Subtotal:</p>
                                                 <p class="my-0">Delivery:</p>
                                                 <p class="my-0">VAT (19%):</p>
                                                 <p class="my-0">Grand Total:</p>
                                             </div>
                                             <div class="col-3">
-                                                <p class="my-0" id="order-total">€{{ subtotal|floatformat:2 }}</p>
+                                                <p class="my-0" id="order-subtotal">€{{ subtotal|floatformat:2 }}</p>
                                                 <p class="my-0" id="delivery-amount">€{{ delivery|floatformat:2 }}</p>
                                                 <p class="my-0" id="vat-amount">€{{ vat|floatformat:2 }}</p>
                                                 <p class="my-0"><strong id="grand_total">€{{ grand_total|floatformat:2 }}</strong></p>
@@ -430,14 +430,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
                 // Send a request to the server to create a checkout session
+                const grandTotal = document.getElementById('grand_total').innerText.replace('€', '').trim();
                 const response = await fetch('/cart/create-checkout-session/', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken'),  // Add CSRF token for Django protection
+                        'X-CSRFToken': getCookie('csrftoken'),
                     },
                     body: JSON.stringify({
-                        grand_total: parseFloat(document.getElementById('grand-total').value)
+                        grand_total: grandTotal,
+                        delivery_option: document.querySelector('input[name="delivery_option"]:checked').value
                     })
                 });
 
@@ -449,7 +451,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 // Redirect to Stripe Checkout
-                await stripe.redirectToCheckout({ sessionId: res.sessionId });
+                const { sessionId } = res;
+                if (sessionId) {
+                    await stripe.redirectToCheckout({ sessionId: sessionId });
+                } else {
+                    document.getElementById('error-message').textContent = 'Error processing checkout session.';
+                }
 
             } catch (err) {
                 document.getElementById('error-message').textContent = 'An unexpected error occurred.';

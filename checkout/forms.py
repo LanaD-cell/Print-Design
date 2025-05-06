@@ -105,7 +105,7 @@ class OrderForm(forms.ModelForm):
 
     class Meta:
         model = Order
-        fields = ('name', 'email', 'phone_number', 'print_data_file',
+        fields = ('name', 'email', 'phone_number',
                   'street_address1', 'street_address2',
                   'town_or_city', 'postcode', 'country')
 
@@ -126,23 +126,6 @@ class OrderForm(forms.ModelForm):
             'street_address1': 'Street Address 1',
             'street_address2': 'Street Address 2',
         }
-
-        self.fields['name'].widget.attrs['autofocus'] = True
-        for field in self.fields:
-            if field != 'print_data_file':
-                placeholder = placeholders.get(field, '')
-                if self.fields[field].required:
-                    placeholder = f'{placeholder} *'
-                self.fields[field].widget.attrs['placeholder'] = placeholder
-                self.fields[field].widget.attrs['class'] = 'stripe-style-input'
-                self.fields[field].label = False
-
-        if self.instance.print_data_file:
-            # Display the uploaded file name in the placeholder
-            self.fields['print_data_file'].widget.attrs[
-                'placeholder'] = f"File uploaded: {
-                    self.instance.print_data_file.name}"
-            self.fields['print_data_file'].widget.attrs['readonly'] = True
 
 
 class CheckoutForm(forms.Form):

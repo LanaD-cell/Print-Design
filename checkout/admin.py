@@ -11,7 +11,7 @@ class OrderAdmin(admin.ModelAdmin):
     ordering = ['created_at']
 
     # Display fields for the Order model, not OrderItem
-    list_display = ('order_number', 'created_at', 'name', 'print_data_file',
+    list_display = ('order_number', 'created_at', 'name',
                     'order_total', 'delivery_cost', 'service_cost',
                     'grand_total',)
 

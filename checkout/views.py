@@ -43,7 +43,7 @@ def get_cart_total(request):
     cart = get_or_create_cart(request)  # This should be your actual cart object retrieval logic
 
     # Let's assume these methods are available on the cart object
-    cart_total = cart.total_price()
+    cart_total = cart.grand_price()
     delivery_fee = cart.delivery_fee()
     vat_amount = cart.vat_amount()
     grand_total = cart_total + delivery_fee + vat_amount
@@ -124,7 +124,6 @@ def create_order(request):
     return order
 
 
-
 def signup_view(request):
     confirm_password_success = None
 
@@ -173,7 +172,7 @@ def checkout(request):
         return redirect('homepage')
 
     current_cart = cart_contents(request)
-    cart_total = cart.total_price()
+    cart_total = cart.grand_price()
     service_price = Decimal(0)
 
 
@@ -185,7 +184,7 @@ def checkout(request):
     }
 
     delivery_fee = delivery_prices.get(delivery_option, Decimal('0.00'))
-    if delivery_option == 'Standard Production' and cart.total_price() >= Decimal(settings.FREE_DELIVERY_THRESHOLD):
+    if delivery_option == 'Standard Production' and cart.grand_total_price() >= Decimal(settings.FREE_DELIVERY_THRESHOLD):
         delivery_fee = Decimal('0.00')
 
     grand_total = cart_total + service_price + delivery_fee

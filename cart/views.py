@@ -6,7 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
 from .models import Product, Cart, CartItem
 from django.conf import settings
+import uuid
 import stripe
+from .models import Cart
 from homepage.models import PrintData
 from django.contrib import messages
 from decimal import Decimal
@@ -30,24 +32,41 @@ def view_cart(request):
         cart_items = cart.items.all()
         logger.info(f"Found {len(cart_items)} items in the cart.")
 
-        # Process each cart item and handle services
+        # Safely load the services field for each cart item
         for item in cart_items:
             try:
-                # Attempt to decode the JSON string stored in 'services'
-                item.services = json.loads(item.services)
+                if isinstance(item.services, str):
+                    item.services = json.loads(item.services)
                 logger.info(f"Services for item {item.id}: {item.services}")
-            except (json.JSONDecodeError, TypeError):
-                item.services = []  # Set to an empty list if decoding fails
-                logger.warning(f"Failed to decode services for item {item.id}, setting to empty list.")
+            except (json.JSONDecodeError, TypeError) as e:
+                item.services = []
+                logger.warning(f"Failed to decode services for item {item.id}: {e}")
 
-        # Use the method from the Cart model to calculate the total price
-        total_price = cart.total_price()
-        logger.info(f"Total price for the cart: {total_price} EUR.")
+        # Calculate the subtotal: sum of prices + service prices for all items
+        subtotal = sum(item.total_price() for item in cart_items)
+        logger.info(f"Subtotal calculated: {subtotal} EUR.")
+
+        # Retrieve delivery charge (this can come from the session or user input)
+        # Example: Default to 0 or retrieve from user session
+        delivery = Decimal(request.session.get('delivery', 0))  # Default delivery charge to 0 if not set
+        logger.info(f"Delivery charge: {delivery} EUR.")
+
+        # Calculate VAT (19%)
+        vat = subtotal * Decimal('0.19')
+        logger.info(f"VAT (19%) calculated: {vat} EUR.")
+
+        # Calculate grand total: subtotal + delivery charge + VAT
+        grand_total = subtotal + delivery + vat
+        grand_total = grand_total.quantize(Decimal('0.01'))  # Round to 2 decimal places
+        logger.info(f"Grand total calculated: {grand_total} EUR.")
 
         # Prepare the context to pass to the template
         context = {
             'cart_items': cart_items,
-            'total_price': total_price,
+            'subtotal': subtotal.quantize(Decimal('0.01')),  # Ensure 2 decimal places
+            'delivery': delivery.quantize(Decimal('0.01')),  # Ensure 2 decimal places
+            'vat': vat.quantize(Decimal('0.01')),  # Ensure 2 decimal places
+            'grand_total': grand_total,
         }
 
         return render(request, 'cart/cart.html', context)
@@ -61,7 +80,6 @@ def view_cart(request):
         # Log any other errors and return a generic error page
         logger.error(f"Error loading cart for user {request.user}: {str(e)}")
         return render(request, 'cart/cart_error.html', {'error_message': "There was an error loading your cart."})
-
 
 def add_to_cart(request):
     if request.method == 'POST':
@@ -118,35 +136,6 @@ def add_to_cart(request):
             servicePrices.get(
                 service, Decimal('0.00')) for service in selected_services)
 
-        # Handle the 'Own Print Data Upload' service, if selected
-        file = None
-        if 'Own Print Data Upload' in selected_services and \
-                'print_data_file' in request.FILES:
-            file = request.FILES['print_data_file']
-
-        # Check if user is authenticated
-        if not request.user.is_authenticated:
-            # Show an error message
-            messages.error(
-                request, "Please sign up or log in to upload print data.")
-
-            # Redirect to the login page
-            return redirect('login')
-
-        # Create a PrintData object and link it to the user, only if a file was uploaded
-        if file:
-            print_data = PrintData.objects.create(
-                user=request.user,
-                product=product,
-                uploaded_file=file,
-                service_type='Own Print Data Upload'
-            )
-
-            request.user.profile.print_data_files.add(print_data)
-            request.user.profile.save()
-
-            messages.success(request, f"Print data uploaded: {file.name} for product {product.name}")
-
         # Check if the user is authenticated and get the cart
         if request.user.is_authenticated:
             cart, _ = Cart.objects.get_or_create(user=request.user)
@@ -178,13 +167,13 @@ def add_to_cart(request):
 
         cart_item.save()
 
-        total_price = sum(
-            (item.price + item.service_price)  # Without multiplying by item.quantity
+        grand_total = sum(
+            (item.price + item.service_price)
             for item in cart.items.all()
         )
 
         # Update the cart's total price
-        cart.total_price = total_price()
+        cart.grand_total = grand_total.quantize(Decimal('0.01'))
         cart.save()
 
         # Save cart data to session
@@ -199,9 +188,9 @@ def add_to_cart(request):
 
         messages.success(request, "Item added to your Cart!")
 
-        return redirect('cart:cart_details')
+        return redirect('cart:cart')
     else:
-        return redirect('cart:cart_details')
+        return redirect('cart:cart')
 
 
 def remove_item(request, item_id):
@@ -217,65 +206,51 @@ def remove_item(request, item_id):
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-@csrf_exempt  # Ensure CSRF token doesn't block the request
-def create_checkout_session(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-
-            success_url = request.build_absolute_uri(
-                reverse('checkout:checkout_success_page', args=['{SESSION_ID}']))
-
-            # Create a new Checkout Session
-            session = stripe.checkout.Session.create(
-                payment_method_types=['card'],
-                line_items=[
-                    {
-                        'price_data': {
-                            'currency': 'eur',
-                            'product_data': {
-                                'name': 'Total',
-                            },
-                            'unit_amount': int(data['grand_total'] * 100),
-                        },
-                        'quantity': 1,
-                    },
-                ],
-                mode='payment',
-                success_url=success_url,
-                cancel_url=request.build_absolute_uri(
-                    reverse('cart:payment_cancel')),
-                )
-
-            # Return the session ID to the frontend
-            return JsonResponse({
-                'sessionId': session.id
-            })
-
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-
-
 @csrf_exempt
 @require_POST
-def create_payment_intent(request):
+def create_checkout_session(request):
     try:
+        # Parse the JSON body manually
         data = json.loads(request.body)
         grand_total = data.get('grand_total')
+
+        # Handle the case where 'grand_total' is not provided
         if not grand_total:
             return JsonResponse({'error': 'Missing grand_total'}, status=400)
 
+        # Convert the grand total to the correct format for Stripe
         stripe_total = int(float(grand_total) * 100)
 
-        payment_intent = stripe.PaymentIntent.create(
-            amount=stripe_total,
-            currency='eur',
-            automatic_payment_methods={'enabled': True},
+        order_number = uuid.uuid4().hex.upper()[:10]
+        request.session['order_number'] = order_number
+
+        # Create the Checkout Session
+        checkout_session = stripe.checkout.Session.create(
+            payment_method_types=['card'],
+            line_items=[{
+                'price_data': {
+                    'currency': 'eur',
+                    'product_data': {
+                        'name': f'Cart Total - Order #{order_number}',
+                    },
+                    'unit_amount': stripe_total,
+                },
+                'quantity': 1,
+            }],
+            mode='payment',
+            success_url=request.build_absolute_uri('checkout/success/'),
+            cancel_url=request.build_absolute_uri('/cancel/'),
         )
 
-        return JsonResponse({'client_secret': payment_intent.client_secret})
+        request.session['order_number'] = order_number
+
+        # Return the session ID to the frontend
+        return JsonResponse({
+            'sessionId': checkout_session.id
+        })
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+
 
 def payment_cancel(request):
     return render(request, 'checkout/cancel.html')
@@ -295,7 +270,7 @@ def checkout_success_page(request, session_id):
         messages.error(request, "An unexpected error occurred.")
         return redirect('checkout:summary')
 
-    return render(request, 'checkout/order_summary.html', {'order': order})
+    return render(request, 'checkout/success.html', {'order': order})
 
 
 @csrf_exempt
@@ -337,13 +312,31 @@ def payment_confirm(request):
 
 @login_required
 def payment_success(request):
-    client_secret = request.GET.get('payment_intent_client_secret')
-    try:
-        intent = stripe.PaymentIntent.retrieve(request.GET.get('payment_intent'))
-        if intent.status == 'succeeded':
-            # Process order logic here
-            ...
-            return render(request, 'checkout/success.html')
-    except Exception as e:
-        messages.error(request, f"Error: {str(e)}")
+    # Get session_id from URL
+    session_id = request.GET.get('session_id')
+
+    if session_id:
+        try:
+            # Retrieve the session using the session_id
+            session = stripe.checkout.Session.retrieve(session_id)
+
+            # Retrieve the associated payment_intent
+            payment_intent_id = session.get('payment_intent')
+
+            if payment_intent_id:
+                intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+
+                if intent.status == 'succeeded':
+                    # Process order logic here
+                    return render(request, 'checkout/success.html', {'order_number': intent.id})
+                else:
+                    messages.error(request, "Payment was not successful.")
+            else:
+                messages.error(request, "No payment intent found.")
+
+        except stripe.error.StripeError as e:
+            messages.error(request, f"Stripe error: {str(e)}")
+        except Exception as e:
+            messages.error(request, f"Error: {str(e)}")
+
     return redirect('checkout:summary')
