@@ -12,17 +12,15 @@
 {% block content %}
 <div class="container">
     <div class="row justify-content-center">
-
-            <!-- Cart Form Column -->
-            <div id="cart-form" class="col-12 col-md-8 col-lg-8 cart-form">
-
-                <div class="col cart-col w-100 p-0">
+        <!-- Cart Form Column -->
+        <div id="cart-form" class="col-12 col-md-8 col-lg-8 cart-form">
+            <div class="col cart-col w-100 p-0">
                     <hr style="color: white;">
                     <h2 class="logo-font mb-4 text-center" style="color: white; font-size: 50px;">Shopping Cart</h2>
                     <hr style="color: white;">
-                </div>
+            </div>
 
-                <div class="row d-flex justify-content-center">
+            <div class="row d-flex justify-content-center">
                     <!-- Side Column (Image or Additional Info) - First Position (Visible on larger screens) -->
                     <div class="col-12 col-md-4 d-none d-md-block order-md-first mx-auto px-2" id="cart-side-column">
                         <div class="text-center position-relative robot-col">
@@ -305,55 +303,36 @@
                                         <!-- Additional Delivery Address Fields -->
                                         <div id="different-address-fields" style="display:none;">
                                             <div class="form-group">
-                                                <label>
-                                                    Recipient
-                                                </label>
-                                                <input type="text"
-                                                class="form-control">
+                                                <label>Recipient</label>
+                                                <input type="text" class="form-control">
                                             </div>
 
                                             <div class="form-group">
-                                                <label>
-                                                    Delivery Street Address 1
-                                                </label>
-                                                <input type="text"
-                                                class="form-control">
+                                                <label>Delivery Street Address 1</label>
+                                                <input type="text" class="form-control">
                                             </div>
 
                                             <div class="form-group">
-                                                <label>
-                                                    Delivery Street Address 2
-                                                </label>
-                                                <input type="text"
-                                                class="form-control">
+                                                <label>Delivery Street Address 2</label>
+                                                <input type="text" class="form-control">
                                             </div>
 
                                             <div class="form-group">
-                                                <label>
-                                                    Delivery Town or City
-                                                </label>
-                                                <input type="text"
-                                                class="form-control">
+                                                <label>Delivery Town or City</label>
+                                                <input type="text" class="form-control">
                                             </div>
 
                                             <div class="form-group">
-                                                <label>
-                                                    Delivery Postcode
-                                                </label>
-                                                <input type="text"
-                                                class="form-control">
+                                                <label>Delivery Postcode</label>
+                                                <input type="text" class="form-control">
                                             </div>
 
                                             <div class="form-group">
-                                                <label>
-                                                    Delivery Country
-                                                </label>
-                                                <input type="text"
-                                                class="form-control">
+                                                <label>Delivery Country</label>
+                                                <input type="text" class="form-control">
                                             </div>
                                         </div>
                                     </fieldset>
-
 
                                     <!-- Card Charge Notification -->
                                     <p class="small text-danger my-0">
@@ -363,52 +342,51 @@
                                         <span>Your card will be charged <strong id="card-charge">€{{ grand_total|floatformat:2 }}</strong></span>
                                     </p>
 
+                                    <!-- Cart Total -->
+                                        <hr class="my-0">
+                                        <div class="row text-black text-right">
+                                            <div class="col-7 offset-2">
+                                                <p class="my-0">Order Total:</p>
+                                                <p class="my-0">Delivery:</p>
+                                                <p class="my-0">VAT (19%):</p>
+                                                <p class="my-0">Grand Total:</p>
+                                            </div>
+                                            <div class="col-3">
+                                                <p class="my-0" id="order-total">€{{ subtotal|floatformat:2 }}</p>
+                                                <p class="my-0" id="delivery-amount">€{{ delivery|floatformat:2 }}</p>
+                                                <p class="my-0" id="vat-amount">€{{ vat|floatformat:2 }}</p>
+                                                <p class="my-0"><strong id="grand_total">€{{ grand_total|floatformat:2 }}</strong></p>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                           <!-- Cart Total -->
-                    <hr class="my-0">
-                    <div class="row text-black text-right">
-                        <div class="col-7 offset-2">
-                            <p class="my-0">Order Total:</p>
-                            <p class="my-0">Delivery:</p>
-                            <p class="my-0">VAT (19%):</p>
-                            <p class="my-0">Grand Total:</p>
-                        </div>
-                        <div class="col-3">
-                            <p class="my-0" id="order-total">€{{ total|floatformat:2 }}</p>
-                            <p class="my-0" id="delivery-amount">€0.00</p>
-                            <p class="my-0" id="vat-amount">€0.00</p>
-                            <p class="my-0"><strong id="grand_total">€{{ grand_total|floatformat:2 }}</strong></p>
-                        </div>
-                    </div>
+                                    <!-- Payment Form -->
+                                    <form id="payment-form">
+                                        {% csrf_token %}  <!-- CSRF token here -->
+                                        <input type="hidden" id="grand-total" value="{{ grand_total|floatformat:2 }}">
 
-                    </div>
+                                        <div id="payment-element"></div>  <!-- Stripe Elements for payment input -->
+                                        <div id="error-message" class="text-danger mt-2"></div>  <!-- Error display -->
 
-                    <!-- Payment Form -->
-                    <form id="payment-form">
-                        {% csrf_token %}  <!-- CSRF token here -->
-                        <input type="hidden" id="grand-total" value="{{ grand_total|floatformat:2 }}">
-
-                        <div id="payment-element"></div>  <!-- Stripe Elements for payment input -->
-                        <div id="error-message" class="text-danger mt-2"></div>  <!-- Error display -->
-
-                        <div class="d-flex justify-content-between mt-5 mb-2">
-                            <button type="submit" class="btn btn-secondary w-100 mx-2" id="submit-button">
-                                <i class="fas fa-lock"></i> Confirm and Pay
-                            </button>
-                            <a href="{% url 'products' %}" class="btn btn-secondary w-100 mx-2">
-                                <span class="icon" style="color: white;">
-                                    <i class="fa-solid fa-chevron-left"></i>
-                                </span>
-                                <span class="text-uppercase">Keep Shopping</span>
-                            </a>
+                                        <div class="d-flex justify-content-between mt-5 mb-2">
+                                            <button type="submit" class="btn btn-secondary w-100 mx-2" id="submit-button">
+                                                <i class="fas fa-lock"></i> Confirm and Pay
+                                            </button>
+                                            <a href="{% url 'products' %}" class="btn btn-secondary w-100 mx-2">
+                                                <span class="icon" style="color: white;">
+                                                    <i class="fa-solid fa-chevron-left"></i>
+                                                </span>
+                                                <span class="text-uppercase">Keep Shopping</span>
+                                            </a>
+                                        </div>
+                                    </form>
+                                </div>
                         </div>
                     </form>
-                    </div>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
-</div>
 </div>
 <div id="loading-overlay">
     <h1 class="text-light logo-font loading-spinner">
@@ -416,7 +394,6 @@
             <i class="fas fa-3x fa-sync-alt fa-spin"></i>
         </span>
     </h1>
-</div>
 </div>
 {% endblock %}
 
@@ -561,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const orderTotalEl = document.getElementById('order-total');
         const deliveryAmountEl = document.getElementById('delivery-amount');
         const vatAmountEl = document.getElementById('vat-amount');
-        const grandTotalEl = document.getElementById('grand-total');
+        const grandTotalEl = document.getElementById('grand_total');
         const cardChargeEl = document.getElementById('card-charge');
 
         function parseEuro(value) {

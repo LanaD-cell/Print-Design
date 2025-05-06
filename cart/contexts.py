@@ -2,57 +2,42 @@ from decimal import Decimal
 from django.conf import settings
 from .models import Cart
 
+VAT_RATE = Decimal('0.19')
 
 def cart_contents(request):
-    """ Create Cart contents for Cost and Delivery Calculations """
+    """Create Cart contents for cost, VAT, and delivery calculations."""
 
-    cart = None  # Default to None
+    cart = None
 
-    # If the user is authenticated, fetch or create the user's cart
+    # Handle cart for authenticated or guest users
     if request.user.is_authenticated:
-        try:
-            cart = Cart.objects.get(user=request.user)
-        except Cart.DoesNotExist:
-            cart = Cart(user=request.user)
-            cart.save()
-
+        cart, _ = Cart.objects.get_or_create(user=request.user)
     else:
-        # For unauthenticated users, use the session to get the cart
-        cart = request.session.get('cart', None)
+        cart = request.session.get('cart', {})
 
-        # If no cart exists in session, create an empty cart (or redirect to a login page if needed)
-        if not cart:
-            cart = {}  # Empty cart for unauthenticated users
+    cart_items = cart.items.all() if hasattr(cart, 'items') else []
+    subtotal = cart.total_price() if hasattr(cart, 'total_price') else Decimal('0.00')
 
-    # If cart is valid, process the cart contents
-    cart_items = cart.items.all() if cart and hasattr(cart, 'items') else []
-    total = cart.total_price() if cart and hasattr(cart, 'total_price') else Decimal('0.00')
+    # VAT calculation
+    vat = subtotal * VAT_RATE
 
-    # Product count (number of unique items in the cart)
-    product_count = cart.items.count() if cart and hasattr(cart, 'items') else 0
-
-    # Initialize delivery cost logic
-    delivery = Decimal('0.00')
-
-    # Delivery logic (if the cart total is below the free delivery threshold)
-    if total < settings.FREE_DELIVERY_THRESHOLD:
-        free_delivery_delta = settings.FREE_DELIVERY_THRESHOLD - total
+    # Delivery logic
+    if subtotal < settings.FREE_DELIVERY_THRESHOLD:
+        delivery = settings.STANDARD_DELIVERY_COST
+        free_delivery_delta = settings.FREE_DELIVERY_THRESHOLD - subtotal
     else:
         delivery = Decimal('0.00')
         free_delivery_delta = Decimal('0.00')
 
-    # Grand total (including delivery)
-    grand_total = delivery + total
+    grand_total = subtotal + vat + delivery
 
-    context = {
+    return {
         'cart_items': cart_items,
-        'total': total,
-        'product_count': product_count,
+        'subtotal': subtotal,
+        'vat': vat,
         'delivery': delivery,
         'free_delivery_delta': free_delivery_delta,
         'free_delivery_threshold': settings.FREE_DELIVERY_THRESHOLD,
         'grand_total': grand_total,
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
     }
-
-    return context

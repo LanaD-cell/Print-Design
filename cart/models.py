@@ -47,13 +47,8 @@ class CartItem(models.Model):
         This includes the price of the product, any service price,
         delivery price, and the quantity.
         """
-        if self.is_service:
-            return Decimal(self.service_price) + Decimal(self.delivery_price)
-
         return (
-            Decimal(self.price or 0)
-            + Decimal(self.service_price or 0)
-            + Decimal(self.delivery_price or 0)
+            Decimal(self.price or 0) + Decimal(self.service_price or 0)
         )
 
     def save(self, *args, **kwargs):

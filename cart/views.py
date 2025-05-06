@@ -66,6 +66,8 @@ def view_cart(request):
 def add_to_cart(request):
     if request.method == 'POST':
         print("POST data:", request.POST)
+        print(request.POST)
+        print(request.FILES)
 
         product_id = request.POST.get('product_id')
         product = get_object_or_404(Product, id=product_id)
@@ -176,8 +178,13 @@ def add_to_cart(request):
 
         cart_item.save()
 
+        total_price = sum(
+            (item.price + item.service_price)  # Without multiplying by item.quantity
+            for item in cart.items.all()
+        )
+
         # Update the cart's total price
-        cart.total_price = cart.total_price()
+        cart.total_price = total_price()
         cart.save()
 
         # Save cart data to session
@@ -205,7 +212,7 @@ def remove_item(request, item_id):
     except CartItem.DoesNotExist:
         pass
 
-    return redirect('cart:cart_details')
+    return redirect('cart:cart')
 
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -217,7 +224,7 @@ def create_checkout_session(request):
             data = json.loads(request.body)
 
             success_url = request.build_absolute_uri(
-                reverse('checkout:checkout_success_page', args=['{CHECKOUT_SESSION_ID}']))
+                reverse('checkout:checkout_success_page', args=['{SESSION_ID}']))
 
             # Create a new Checkout Session
             session = stripe.checkout.Session.create(

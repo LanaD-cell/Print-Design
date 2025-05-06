@@ -1,10 +1,10 @@
 from pathlib import Path
 import os
-
 import cloudinary
 import cloudinary.api
 import cloudinary.uploader
 import dj_database_url
+from decimal import Decimal
 from decouple import config
 from dotenv import load_dotenv
 
@@ -179,7 +179,8 @@ JAZZMIN_SETTINGS = {
 
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
-FREE_DELIVERY_THRESHOLD = 50
+FREE_DELIVERY_THRESHOLD = Decimal('50.00')
+STANDARD_DELIVERY_COST = Decimal('0.00')
 
 STRIPE_CURRENCY = 'eur'
 STRIPE_WH_SECRET = os.getenv('STRIPE_WH_SECRET')

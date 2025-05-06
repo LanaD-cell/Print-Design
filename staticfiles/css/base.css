@@ -1402,10 +1402,6 @@ p.card-text {
         padding-top: 150px !important;
     }
 
-    .product-container {
-        padding-top: 150px !important;
-    }
-
     .about-card {
         max-width: 100% !important;
         margin-top: 220px !important;
@@ -1582,5 +1578,9 @@ p.card-text {
         font-size: 14px;
         text-align: center;
         margin-top: 15px;
+    }
+
+    #product-details {
+        margin-left: 20px;
     }
 }
