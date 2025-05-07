@@ -23,8 +23,6 @@ import re
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
-logger = logging.getLogger(__name__)
-
 def get_or_create_cart(request):
     """Utility to get or create cart for authenticated or guest user."""
     if request.user.is_authenticated:
@@ -218,7 +216,6 @@ def checkout(request):
         'grand_total': grand_total,
         'stripe_public_key': settings.STRIPE_PUBLIC_KEY,
         'client_secret': payment_intent.client_secret,
-        'free_delivery_qualified': cart_total >= Decimal(settings.FREE_DELIVERY_THRESHOLD),
     }
 
     if not stripe_public_key:
@@ -304,11 +301,9 @@ def checkout_success_page(request, session_id):
         order_id = session.client_reference_id
         order = get_object_or_404(Order, id=order_id)
     except stripe.error.StripeError as e:
-        logger.error(f"Stripe error: {e.user_message}")
         messages.error(request, "An error occurred while processing the payment.")
         return redirect('cart:cart')
     except Exception as e:
-        logger.error(f"Unexpected error: {e}")
         messages.error(request, "An unexpected error occurred.")
         return redirect('cart:cart')
 
@@ -323,9 +318,6 @@ def payment_confirm(request):
 
             payment_method = data.get('payment_method')
             client_secret = data.get('client_secret')
-
-            # Log the data to ensure client_secret is passed correctly
-            logger.debug(f"Received payment_method: {payment_method}, client_secret: {client_secret}")
 
             # Extract the PaymentIntent ID from the client_secret
             match = re.match(r'^(pi_[^_]+)', client_secret or '')

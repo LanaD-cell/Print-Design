@@ -5,7 +5,9 @@ from webhooks import webhook
 app_name = 'checkout'
 
 urlpatterns = [
-    path('summary/', views.order_summary, name='order_summary'),
-    path('checkout/', views.create_order, name='create_cart_order'),
-    path('webhook/', webhook, name='webhook'),
+    path('create-order/', views.create_order, name='create_order'),
+    path('create-checkout-session/', views.create_checkout_session, name='create_checkout_session'),
+    path('success/', views.payment_success, name='payment_success'),
+    path('cancel/', views.payment_cancel, name='payment_cancel'),
+    path('webhook/', webhook, name='stripe_webhook'),
 ]

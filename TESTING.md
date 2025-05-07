@@ -363,9 +363,10 @@ Once I had completed the store I used the [Black code formatter](https://pypi.or
 
 ## CSS Validation
 
-I used the CSS Validation service to test the site. I have been testing using the Heroku site and one error was found (added 2o0px instead of 200px) in the file and I corrected this and tested again in local.
+I used the CSS Validation service to test the site. (W3E Validator)[https://jigsaw.w3.org/css-validator/]
 
-<img src="readme/testing/rm-css-validation.png" width="90%"><br><br>
+<img src="static/testing-docs/w3e-base-css.png" width="90%"><br><br>
+<img src="static/testing-docs/w3e-checkout-css.png" width="90%"><br><br>
 
 </details>
 
@@ -507,7 +508,6 @@ Test results the same across all pages e.g. sort category price high to low, a-z
 - [CSS validator](https://jigsaw.w3.org/css-validator/)
 - [Google Lighthouse](https://chromewebstore.google.com/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk)
 - [Django Testing](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Testing)
-- [Mastering Django Unit Testing](https://www.youtube.com/watch?v=N_HLNV2UQjg)
 
 ## Retrospective
 

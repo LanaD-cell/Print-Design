@@ -13,57 +13,40 @@ import stripe
 import re
 from decimal import Decimal
 import json
-import logging
 
 
-# Initialize logger
-logger = logging.getLogger(__name__)
-
-@login_required
 def view_cart(request):
     try:
-        logger.info(f"User {request.user} is accessing their cart.")
-
         # Get the user's cart, raise an exception if not found
         cart = Cart.objects.get(user=request.user)
-        logger.info(f"Cart found for user {request.user}: {cart.id}")
 
         # Get the related CartItems
         cart_items = cart.items.all()
-        logger.info(f"Found {len(cart_items)} items in the cart.")
 
         if not cart_items.exists():
             return render(request, 'cart/cart_empty.html', {'error_message': "Your cart is empty."})
-
-        logger.info(f"Found {len(cart_items)} items in the cart.")
 
         # Safely load the services field for each cart item
         for item in cart_items:
             try:
                 if isinstance(item.services, str):
                     item.services = json.loads(item.services)
-                logger.info(f"Services for item {item.id}: {item.services}")
             except (json.JSONDecodeError, TypeError) as e:
                 item.services = []
-                logger.warning(f"Failed to decode services for item {item.id}: {e}")
 
         # Calculate the subtotal: sum of prices + service prices for all items
         subtotal = sum(item.total_price() for item in cart_items)
-        logger.info(f"Subtotal calculated: {subtotal} EUR.")
 
         # Retrieve delivery charge (this can come from the session or user input)
         # Example: Default to 0 or retrieve from user session
         delivery = Decimal(request.session.get('delivery', 0))
-        logger.info(f"Delivery charge: {delivery} EUR.")
 
         # Calculate VAT (19%)
         vat = subtotal * Decimal('0.19')
-        logger.info(f"VAT (19%) calculated: {vat} EUR.")
 
         # Calculate grand total: subtotal + delivery charge + VAT
         grand_total = subtotal + delivery + vat
         grand_total = grand_total.quantize(Decimal('0.01'))
-        logger.info(f"Grand total calculated: {grand_total} EUR.")
 
         # Prepare the context to pass to the template
         context = {
@@ -78,12 +61,10 @@ def view_cart(request):
 
     except Cart.DoesNotExist:
         # Handle the case where the user doesn't have a cart yet
-        logger.warning(f"User {request.user} does not have a cart.")
         return render(request, 'cart/cart_empty.html', {'error_message': "Your cart is empty."})
 
     except Exception as e:
         # Log any other errors and return a generic error page
-        logger.error(f"Error loading cart for user {request.user}: {str(e)}")
         return render(request, 'cart/cart_error.html', {'error_message': "There was an error loading your cart."})
 
 def add_to_cart(request):

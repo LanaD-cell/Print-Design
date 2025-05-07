@@ -67,8 +67,15 @@ class Order(models.Model):
         """Override save method to ensure order number is set and totals are updated."""
         if not self.order_number:
             self.order_number = self._generate_order_number()
-        self.update_total()
+
+        # First save to ensure PK exists
         super().save(*args, **kwargs)
+
+        # Update totals only after the instance is saved and has a PK
+        self.update_total()
+
+        # Save only the updated total fields
+        super().save(update_fields=["order_total", "grand_total", "delivery_cost"])
 
     def __str__(self):
         return f"Order #{self.order_number} - {self.user.username}"
