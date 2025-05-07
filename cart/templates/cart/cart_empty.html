@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Your Cart is Empty</h1>
+<div class="container" style="background-color: white; align-content: center;">
+  <h1>Oh no, that simply won't do. Your Cart is Empty</h1>
   <p>{{ error_message }}</p>
   <a href="{% url 'products' %}">Go back to products</a>
+</div>
 {% endblock %}

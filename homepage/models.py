@@ -43,7 +43,7 @@ class PrintData(models.Model):
         verbose_name_plural = "Print Data Entries"
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     phone_number = models.CharField(max_length=20)
     country = models.CharField(max_length=100)
     postcode = models.CharField(max_length=20, blank=True)

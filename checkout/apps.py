@@ -6,4 +6,5 @@ class CheckoutConfig(AppConfig):
     name = 'checkout'
 
     def ready(self):
-        import checkout.signals  # noqa: F401, pylint: disable=unused-import
+        print("Checkout app is ready!")
+        import checkout.signals

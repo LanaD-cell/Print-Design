@@ -253,10 +253,14 @@ def create_checkout_session(request):
                     'quantity': 1,
                 }],
                 mode='payment',
-                success_url='https://your-site.com/success',
-                cancel_url='https://your-site.com/cancel',
-            )
+                success_url = request.build_absolute_uri(
+                    reverse('cart:payment_success')
+                ) + '?session_id={CHECKOUT_SESSION_ID}',
 
+                cancel_url = request.build_absolute_uri(
+                    reverse('checkout:payment_cancel')
+                )
+            )
             return JsonResponse({"sessionId": session.id})
 
         except Exception as e:
@@ -302,13 +306,13 @@ def checkout_success_page(request, session_id):
     except stripe.error.StripeError as e:
         logger.error(f"Stripe error: {e.user_message}")
         messages.error(request, "An error occurred while processing the payment.")
-        return redirect('checkout:summary')
+        return redirect('cart:cart')
     except Exception as e:
         logger.error(f"Unexpected error: {e}")
         messages.error(request, "An unexpected error occurred.")
-        return redirect('checkout:summary')
+        return redirect('cart:cart')
 
-    return render(request, 'checkout/order_summary.html', {'order': order})
+    return render(request, 'cart:cart', {'order': order})
 
 
 @csrf_exempt
@@ -366,7 +370,7 @@ def payment_success(request, order_number):
         # Check if the session corresponds to the order
         if order.order_number != session.client_reference_id:
             messages.error(request, "Order number mismatch!")
-            return redirect('checkout:order_summary')
+            return redirect('cart:cart')
 
         # If payment was successful, update the order status and save the order
         if session.payment_status == 'paid':
@@ -389,7 +393,7 @@ def payment_success(request, order_number):
             messages.success(request, f"Payment successful! Your order number is {order_number}.")
 
             # Render success page
-            return render(request, 'checkout/success.html', {'order': order})
+            return render(request, 'cart:success.html', {'order': order})
 
         else:
             # If payment failed
@@ -399,4 +403,4 @@ def payment_success(request, order_number):
     except Exception as e:
         # Catch any errors that occur during the process
         messages.error(request, f"An error occurred: {str(e)}")
-        return redirect('checkout:order_summary')
+        return redirect('cart:cart')

@@ -52,10 +52,10 @@ INSTALLED_APPS = [
     'jazzmin',
     'django_summernote',
     'crispy_forms',
-    'homepage',
     'products',
     'cart',
-    'checkout',
+    'checkout.apps.CheckoutConfig',
+    'homepage.apps.HomepageConfig',
 ]
 
 MIDDLEWARE = [

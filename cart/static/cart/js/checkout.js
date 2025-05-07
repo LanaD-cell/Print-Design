@@ -3,6 +3,8 @@ const stripe = Stripe('pk_test_51REARw07B3iAgZ7iWDLVkGICKIihYRy4Qwkgp2xmVPq8wulw
 // Event listener for the payment form submit
 document.getElementById('payment-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Function to get CSRF token from cookies
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -19,6 +21,10 @@ document.getElementById('payment-form').addEventListener('submit', async (e) => 
     }
 
     try {
+        // Gather the data needed to send to the backend
+        const grandTotal = parseFloat(document.getElementById('grand-total').value);
+        const deliveryOption = document.querySelector('input[name="delivery_option"]:checked').value;  // Assuming you have a delivery option field
+
         // Send a request to your server to create a checkout session
         const response = await fetch('/cart/create-checkout-session/', {
             method: 'POST',
@@ -27,20 +33,21 @@ document.getElementById('payment-form').addEventListener('submit', async (e) => 
                 'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify({
-                grand_total: parseFloat(document.getElementById('grand-total').value),
-                delivery_option: data.get('delivery_option')
+                grand_total: grandTotal,
+                delivery_option: deliveryOption
             })
         });
 
-        const res = await response.json();
+        // Parse the JSON response
+        const data = await response.json();
 
-        if (res.error) {
-            document.getElementById('error-message').textContent = res.error;
+        if (data.error) {
+            document.getElementById('error-message').textContent = data.error;
             return;
         }
 
         // Get the session ID from the response
-        const checkoutSessionId = res.sessionId;
+        const checkoutSessionId = data.sessionId;
 
         // Redirect to Checkout
         stripe.redirectToCheckout({ sessionId: checkoutSessionId }).then(function (result) {

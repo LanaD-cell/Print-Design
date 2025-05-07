@@ -2,9 +2,6 @@ from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from .models import OrderLineItem
 
-print("checkout.signals has been loaded")
-
-
 @receiver(post_save, sender=OrderLineItem)
 def update_on_save(sender, instance, created, **kwargs):
     # Debugging
@@ -24,3 +21,5 @@ def update_on_delete(sender, instance, **kwargs):
     """
     print('delete signal received!')
     instance.order.update_total()
+
+    print("checkout.signals has been loaded")

@@ -73,37 +73,16 @@
 
                             <!-- Delivery Options Section -->
                             <div class="delivery-options mt-4">
-                                <fieldset class="rounded px-3 mb-5">
+                                <div class="rounded px-3 mb-5">
                                     <legend class="fieldset-label small text-black px-2 w-auto">Delivery Options</legend>
                                     <div class="form-check">
                                         <label class="form-check-label" for="standard_delivery">
                                             <input class="form-check-input delivery-option" type="radio" name="delivery_option" id="standard_delivery" value="Standard Production" data-price="0.00" checked>
-                                            Standard Production (€0.00)
+                                            Standard Production (€5.00)
                                             <i class="fa-solid fa-turtle"></i>
                                         </label>
                                     </div>
-                                    <div class="form-check">
-                                        <label class="form-check-label" for="priority_delivery">
-                                            <input class="form-check-input delivery-option" type="radio" name="delivery_option" id="priority_delivery" value="48h Express Production" data-price="15.00">
-                                            Priority Delivery (€15.00)
-                                            <i class="fa-solid fa-truck"></i>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <label class="form-check-label" for="48h_express_delivery">
-                                            <input class="form-check-input delivery-option" type="radio" name="delivery_option" id="express_delivery" value="24h Express Production" data-price="25.00">
-                                            48h Express Delivery (€25.00)
-                                            <i class="fa-solid fa-truck-fast"></i>
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <label class="form-check-label" for="24_express_delivery">
-                                            <input class="form-check-input delivery-option" type="radio" name="delivery_option" id="express_delivery" value="24h Express Production" data-price="35.00">
-                                            24h Express Delivery (€35.00)
-                                            <i class="fa-solid fa-truck-fast"></i>
-                                        </label>
-                                    </div>
-                                </fieldset>
+                                </div>
                             </div>
 
                             <div class="col-12 col-lg-6">
@@ -132,7 +111,7 @@
                                         <legend class="fieldset-label small text-black px-2 w-auto">Details</legend>
 
                                         <!-- Full Name -->
-                                        <div class="form-group required" id="id_full_name">
+                                        <div class="form-group required">
                                             <label for="{{ order_form.name.id_for_label }}">
                                                 Full Name
                                                 {% if order_form.name.field.required %}
@@ -152,7 +131,7 @@
                                         </div>
 
                                         <!-- Email Address -->
-                                        <div class="form-group required" id="id_email">
+                                        <div class="form-group required">
                                             <label for="{{ order_form.email.id_for_label }}">
                                                 Email Address
                                                 {% if order_form.email.field.required %}
@@ -362,11 +341,11 @@
 
                                     <!-- Payment Form -->
                                     <form id="payment-form">
-                                        {% csrf_token %}  <!-- CSRF token here -->
+                                        {% csrf_token %}
                                         <input type="hidden" id="grand-total" value="{{ grand_total|floatformat:2 }}">
 
-                                        <div id="payment-element"></div>  <!-- Stripe Elements for payment input -->
-                                        <div id="error-message" class="text-danger mt-2"></div>  <!-- Error display -->
+                                        <div id="payment-element"></div>
+                                        <div id="error-message" class="text-danger mt-2"></div>
 
                                         <div class="d-flex justify-content-between mt-5 mb-2">
                                             <button type="submit" class="btn btn-secondary w-100 mx-2" id="submit-button">
@@ -429,8 +408,8 @@ document.addEventListener('DOMContentLoaded', function () {
             e.preventDefault();
 
             try {
-                // Send a request to the server to create a checkout session
                 const grandTotal = document.getElementById('grand_total').innerText.replace('€', '').trim();
+                const deliveryOption = document.querySelector('input[name="delivery_option"]:checked').value;
                 const response = await fetch('/cart/create-checkout-session/', {
                     method: 'POST',
                     headers: {
@@ -439,7 +418,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: JSON.stringify({
                         grand_total: grandTotal,
-                        delivery_option: document.querySelector('input[name="delivery_option"]:checked').value
+                        delivery_option: deliveryOption,
+                        order_number: ""
                     })
                 });
 
@@ -463,12 +443,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error(err);
             }
         });
-    } else {
-        console.error('Payment form not found');
     }
 });
 
 </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Safely pass the order number from Django context into JavaScript
+      const orderNumber = "{{ request.session.order_number }}";
+
+      console.log('Order Number:', orderNumber);
+    });
+  </script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -541,35 +528,38 @@ document.addEventListener('DOMContentLoaded', function () {
 <!-- Update the checkout totals -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const deliveryOptions = document.querySelectorAll('.delivery-option');
-        const orderTotalEl = document.getElementById('order-total');
+        const orderTotalEl = document.getElementById('order-subtotal');
         const deliveryAmountEl = document.getElementById('delivery-amount');
         const vatAmountEl = document.getElementById('vat-amount');
         const grandTotalEl = document.getElementById('grand_total');
         const cardChargeEl = document.getElementById('card-charge');
 
+        // Set a fixed delivery fee of €5.00
+        const DELIVERY_FEE = 5.00;
+        const VAT_RATE = 0.19;
+
+        // Function to parse euro values to numeric
         function parseEuro(value) {
             return parseFloat(value.replace('€', '').replace(',', '.')) || 0;
         }
 
+        // Parse the order total from the page
         const orderTotal = parseEuro(orderTotalEl.innerText);
-        const VAT_RATE = 0.19;
 
-        deliveryOptions.forEach(option => {
-            option.addEventListener('change', () => {
-                const deliveryPrice = parseFloat(option.dataset.price) || 0;
+        // Function to update the grand total
+        function updateGrandTotal() {
+            const vatAmount = orderTotal * VAT_RATE;
+            const grandTotal = orderTotal + vatAmount + DELIVERY_FEE;
 
-                const vatAmount = orderTotal * VAT_RATE;
-                const grandTotal = orderTotal + vatAmount + deliveryPrice;
+            // Update the displayed amounts
+            deliveryAmountEl.innerText = `€${DELIVERY_FEE.toFixed(2)}`;
+            vatAmountEl.innerText = `€${vatAmount.toFixed(2)}`;
+            grandTotalEl.innerText = `€${grandTotal.toFixed(2)}`;
+            cardChargeEl.innerText = `€${grandTotal.toFixed(2)}`;
+        }
 
-                deliveryAmountEl.innerText = `€${deliveryPrice.toFixed(2)}`;
-                vatAmountEl.innerText = `€${vatAmount.toFixed(2)}`;
-                grandTotalEl.innerText = `€${grandTotal.toFixed(2)}`;
-                cardChargeEl.innerText = `€${grandTotal.toFixed(2)}`;
-            });
-        });
-
-        document.querySelector('.delivery-option:checked')?.dispatchEvent(new Event('change'));
+        // Call the update function when the page loads
+        updateGrandTotal();
     });
 </script>
 {% endblock %}

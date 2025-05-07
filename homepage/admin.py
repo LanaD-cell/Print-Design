@@ -2,7 +2,7 @@ from django.contrib import admin
 from django import forms
 from django_summernote.admin import SummernoteModelAdmin
 from .models import FAQ
-from .models import Profile, PrintData
+from .models import Profile
 from .models import Newsletter
 from .models import Subscriber
 from django.core.mail import send_mail
@@ -48,12 +48,6 @@ class ProfileAdmin(admin.ModelAdmin):
     ordering = ('user__username',)
 
 
-class PrintDataAdmin(admin.ModelAdmin):
-    list_display = ('user', 'product', 'uploaded_at', 'service_type')
-    list_filter = ('service_type', 'uploaded_at')
-    search_fields = ('user__username', 'product__name')
-
-
 class NewsletterAdmin(admin.ModelAdmin):
     summernote_fields = ('content',)
     list_display = ('title', 'created_at', 'send_at', 'status_display')
@@ -90,7 +84,7 @@ class NewsletterAdmin(admin.ModelAdmin):
 admin.site.register(Profile, ProfileAdmin)
 # Register FAQ with the modified admin configuration
 admin.site.register(FAQ, FAQAdmin)
-# Register PrintData
-admin.site.register(PrintData)
+# Register Subscriber
 admin.site.register(Subscriber)
+# Register Newsletter, Newsletteradmin
 admin.site.register(Newsletter, NewsletterAdmin)
