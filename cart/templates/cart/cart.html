@@ -406,6 +406,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (paymentForm) {
         paymentForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            submitButton.disabled = true;
 
             try {
                 const grandTotal = document.getElementById('grand_total').innerText.replace('€', '').trim();
@@ -439,6 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
             } catch (err) {
+                submitButton.disabled = false;
                 document.getElementById('error-message').textContent = 'An unexpected error occurred.';
                 console.error(err);
             }

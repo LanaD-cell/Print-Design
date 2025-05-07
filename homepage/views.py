@@ -8,13 +8,30 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
 from django.core.mail import send_mail
 from .forms import SubscriberForm
-from .models import Subscriber
+from .models import Subscriber, FAQ
+from cart.models import Cart
 
 
 def homepage(request):
-    """ View to return Homepage and FAQ """
+    # Check if the user is authenticated
+    if request.user.is_authenticated:
+        # Get or create the cart for the authenticated user
+        cart, _ = Cart.objects.get_or_create(user=request.user)
+        cart_items = cart.items.all()  # Get the items in the cart
+    else:
+        cart_items = []
+
+    # Get all FAQ entries
     faqs = FAQ.objects.all()
-    return render(request, 'homepage/homepage.html', {'faqs': faqs})
+
+    # Prepare the context to be passed to the template
+    context = {
+        'cart_items': cart_items,
+        'faqs': faqs
+    }
+
+    # Render the homepage with the context
+    return render(request, 'homepage/homepage.html', context)
 
 
 @login_required
@@ -31,11 +48,14 @@ def profile_view(request):
             'previous_orders': previous_orders,
         })
 
+
 class CustomLoginView(LoginView):
     template_name = 'account/login.html'
     def get_success_url(self):
         return '/login-success/'
 
+
+@login_required
 def login_success(request):
     """
     View to render the login success page.

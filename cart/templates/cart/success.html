@@ -3,9 +3,17 @@
 
 {% block content %}
   <section id="success" class="hidden">
+    <h1>Thank you for your purchase!</h1>
     <p>
       We appreciate your business! A confirmation email will be sent to <span id="email"></span>.
-
+    </p>
+    <p>
+      Your order number is <strong id="order-number"></strong>.
+    </p>
+    <p>
+      You paid a total of <strong id="amount-paid"></strong> EUR for your order.
+    </p>
+    <p>
       If you have any questions, please email <a href="mailto:orders@example.com">orders@example.com</a>.
     </p>
   </section>
@@ -14,10 +22,15 @@
   <a href="{% url 'profile:profile' %}">Go to your profile</a>
 
   <script>
-    // Assuming you are passing the email and success information from the server.
     window.onload = function() {
-      const email = "{{ user.email }}";  // Use Django template tag to get the logged-in user's email
+      const email = "{{ user.email }}";
+      const orderNumber = "{{ order_number }}";
+      const amountPaid = "{{ amount|floatformat:2 }}";
+
+      // Populate the page with the dynamic content
       document.getElementById("email").textContent = email;
+      document.getElementById("order-number").textContent = orderNumber;
+      document.getElementById("amount-paid").textContent = amountPaid;
 
       // Show the success message section
       document.getElementById("success").classList.remove("hidden");
