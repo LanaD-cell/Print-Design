@@ -1,9 +1,10 @@
-{% extends base.html %}
+{% extends "base.html" %}
 {% load static %}
 
 {% block content %}
-  <section id="success" class="hidden">
-    <h1>Thank you for your purchase!</h1>
+<div class="container d-flex justify-content-center align-items-center min-vh-100 p-3">
+  <section id="success" class="text-center bg-white p-4 rounded shadow-sm w-100" style="max-width: 600px;">
+    <h1 class="display-4">Thank you for your purchase!</h1>
     <p>
       We appreciate your business! A confirmation email will be sent to <span id="email"></span>.
     </p>
@@ -16,10 +17,12 @@
     <p>
       If you have any questions, please email <a href="mailto:orders@example.com">orders@example.com</a>.
     </p>
-  </section>
 
-  <!-- Optional: Redirect to user profile or home -->
-  <a href="{% url 'profile:profile' %}">Go to your profile</a>
+    <!-- Optional: Redirect to user profile or home -->
+    <a href="{% url 'homepage:profile' %}" class="btn btn-primary mt-4">Go to your profile</a>
+  </section>
+</div>
+
 
   <script>
     window.onload = function() {

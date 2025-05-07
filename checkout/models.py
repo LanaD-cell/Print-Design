@@ -22,6 +22,7 @@ class Order(models.Model):
         (DELIVERED, 'Delivered'),
     ]
 
+    # Fields
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
     order_number = models.CharField(max_length=32, null=False, editable=False)
     name = models.CharField(max_length=50, null=False, blank=False)
@@ -32,20 +33,13 @@ class Order(models.Model):
     town_or_city = models.CharField(max_length=40, null=False, blank=False)
     street_address1 = models.CharField(max_length=80, null=False, blank=False)
     street_address2 = models.CharField(max_length=80, null=True, blank=True)
-    delivery_option = models.CharField(
-        max_length=100,
-        choices=[
-            ('standard production', 'Standard Production'),
-            ('priority delivery', 'Priority Delivery'),
-            ('48h express delivery', '48h Express Delivery'),
-            ('24h express delivery', '24h Express Delivery')
-        ],
-        default='standard'
-    )
+
+    # Delivery option simplified to just standard
+    delivery_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=5.00)  # Fixed cost of 5€
+
     save_info = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     items = models.ManyToManyField('cart.CartItem', related_name='orders_items')
-    delivery_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=0)
     order_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
     cart_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     grand_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
@@ -56,38 +50,33 @@ class Order(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
 
     def get_grand_total(self):
+        """Returns the grand total (sum of order total, service cost, and delivery cost)."""
         return self.order_total + self.service_cost + self.delivery_cost
 
     def _generate_order_number(self):
+        """Generate a unique order number."""
         return uuid.uuid4().hex.upper()
 
     def update_total(self):
-        print("Updating total for order:", self.order_number)
+        """Update totals for the order."""
         self.order_total = self.line_items.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
-        self.additional_services = self.additional_services or []
-        self.delivery_cost = 0 if self.order_total >= settings.FREE_DELIVERY_THRESHOLD else \
-            self.order_total * settings.STANDARD_DELIVERY_PERCENTAGE / 100
-        self.grand_total = self.get_grand_total()
-
-        print(
-            "Updated totals -> order_total:", self.order_total,
-            "service_cost:", self.service_cost,
-            "delivery_cost:", self.delivery_cost,
-            "grand_total:", self.grand_total
-        )
+        self.delivery_cost = 5.00  # Standard delivery cost
+        self.grand_total = self.order_total + self.service_cost + self.delivery_cost
 
     def save(self, *args, **kwargs):
+        """Override save method to ensure order number is set and totals are updated."""
         if not self.order_number:
             self.order_number = self._generate_order_number()
         self.update_total()
         super().save(*args, **kwargs)
-        print(f"Saving Order {self.order_number}, Total: {self.grand_total}")
 
     def __str__(self):
         return f"Order #{self.order_number} - {self.user.username}"
 
     def total_price(self):
+        """Return the total price for all items in the order."""
         return sum(item.total_price() for item in self.items.all())
+
 
 
 class OrderLineItem(models.Model):
@@ -97,28 +86,30 @@ class OrderLineItem(models.Model):
     quantity = models.PositiveIntegerField()
     lineitem_total = models.DecimalField(max_digits=6, decimal_places=2, null=False, blank=False, editable=False)
     service_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
-    delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)
     additional_services = models.JSONField(default=list)
 
     def save(self, *args, **kwargs):
-        total_price = 0
+        """Override save to ensure correct pricing."""
+        total_price = Decimal(0)
+
+        # Find the price corresponding to the quantity
         if self.product.quantities:
             quantities = self.product.quantities or []
             for qty in quantities:
                 if self.quantity == qty["quantity"]:
                     total_price = qty["price"]
                     break
+
         if total_price == 0:
-            raise ValueError(
-                f"No price found for quantity {self.quantity} in product pricing."
-            )
-        self.lineitem_total = (
-            Decimal(total_price) + self.service_price + self.delivery_price
-        )
+            raise ValueError(f"No price found for quantity {self.quantity} in product pricing.")
+
+        # Calculate the lineitem total
+        self.lineitem_total = total_price + self.service_price
         super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Product ID {self.product.id} on order {self.order.order_number}"
 
     def total_price(self):
+        """Return the total price for this line item."""
         return self.lineitem_total

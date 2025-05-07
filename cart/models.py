@@ -65,7 +65,7 @@ class CartItem(models.Model):
         """
         return (Decimal(self.price or 0) + Decimal(self.service_price or 0))
 
-    def save(self, *args, **kwargs):
+    def clean(self):
+        from django.core.exceptions import ValidationError
         if self.is_service and self.service_price <= 0:
-            raise ValueError("Service price must be greater than zero for services.")
-        super().save(*args, **kwargs)
+            raise ValidationError("Service price must be greater than zero for services.")

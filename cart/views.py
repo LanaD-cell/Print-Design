@@ -11,7 +11,6 @@ from django.conf import settings
 import uuid
 import stripe
 import re
-from .models import Cart
 from decimal import Decimal
 import json
 import logging
@@ -267,93 +266,128 @@ def payment_cancel(request):
     return render(request, 'checkout/cancel.html')
 
 
-@login_required
-def payment_success(request):
-    print("Payment success view started.")
+def validate_session(request):
+    """Validate and retrieve session ID from request."""
     session_id = request.GET.get('session_id')
-
     if not session_id:
         messages.error(request, "No session ID provided.")
         print("No session ID provided.")
-        return redirect('cart:cart')
+        return None
+    return session_id
 
+
+def retrieve_session_and_intent(session_id):
+    """Retrieve Stripe session and payment intent."""
     try:
-        # Retrieve the session from Stripe
         print(f"Retrieving session for session_id: {session_id}")
         session = stripe.checkout.Session.retrieve(session_id)
         payment_intent_id = session.get('payment_intent')
-
-        if not payment_intent_id:
-            messages.error(request, "No payment intent found.")
-            print("No payment intent found.")
-            return redirect('cart:cart')
-
-        # Retrieve the payment intent
         print(f"Retrieving payment intent for {payment_intent_id}")
         intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+        return session, intent
+    except stripe.error.StripeError as e:
+        print(f"Stripe error: {e}")
+        return None, None
 
-        # Check if the payment was successful
-        if intent.status != 'succeeded':
-            messages.error(request, "Payment was not successful.")
-            print(f"Payment failed with status: {intent.status}")
+
+def check_payment_success(intent):
+    """Check if payment was successful."""
+    if intent.status != 'succeeded':
+        messages.error(request, "Payment was not successful.")
+        print(f"Payment failed with status: {intent.status}")
+        return False
+    return True
+
+
+def create_order(request, cart):
+    """Create the order and process order line items."""
+    order = Order.objects.create(
+        user=request.user,
+        email=request.user.email,
+        phone_number=request.user.profile.phone_number,
+        country=request.user.profile.country,
+        postcode=request.user.profile.postcode,
+        town_or_city=request.user.profile.town_or_city,
+        street_address1=request.user.profile.street_address1,
+        street_address2=request.user.profile.street_address2,
+    )
+
+    print(f"Creating OrderLineItem for {item.product.name}")
+
+    for item in cart.items.all():
+        print(f"Creating OrderLineItem for {item.product.name}")
+        OrderLineItem.objects.create(
+            order=order,
+            product=item.product,
+            product_size=item.size,
+            quantity=item.quantity,
+            service_price=item.service_price,
+            delivery_price=item.service_price,
+        )
+
+    order.update_total()
+    print(f"Order {order.id} created and total updated.")
+    return order
+
+
+def clear_cart(cart):
+    """Clear the cart and reset its total."""
+    cart.items.all().delete()
+    cart.refresh_from_db()
+    print(f"After delete: {cart.items.count()}")
+    cart.grand_total = 0
+    cart.save()
+
+
+def payment_success(request):
+    print("Payment success view started.")
+
+    # Validate session
+    session_id = validate_session(request)
+    if not session_id:
+        return redirect('cart:cart')
+
+    try:
+        # Retrieve session and payment intent
+        session, intent = retrieve_session_and_intent(session_id)
+        if not session or not intent:
+            messages.error(request, "Error retrieving session or payment intent.")
+            return redirect('cart:cart')
+
+        # Check if payment was successful
+        if not check_payment_success(intent):
+            return redirect('cart:cart')
+
+        # Retrieve order number
+        order_number = request.session.get('order_number')
+        if not order_number:
+            messages.error(request, "No order number found.")
+            print("No order number found.")
             return redirect('cart:cart')
 
         # Process the order and clear the cart
         cart = Cart.objects.filter(user=request.user).first()
         if cart:
-            print(f"Cart found for user: {request.user.username}, processing order.")
-            order = Order.objects.create(
-                user=request.user,
-                email=request.user.email,
-                phone_number=request.user.profile.phone_number,
-                country=request.user.profile.country,
-                postcode=request.user.profile.postcode,
-                town_or_city = request.user.profile.town_or_city,
-                street_address1=request.user.profile.street_address1,
-                street_address2=request.user.profile.street_address2,
-            )
-
-            # Create OrderLineItems for each cart item
-            for item in cart.items.all():
-                print(f"Creating OrderLineItem for {item.product.name}")
-                OrderLineItem.objects.create(
-                    order=order,
-                    product=item.product,
-                    product_size=item.size,
-                    quantity=item.quantity,
-                    service_price=item.service_price,
-                    delivery_price=item.service_price,
-                )
-
-            order.update_total()
-            print(f"Order {order.id} created and total updated.")
+            order = create_order(request, cart)
 
             # Clear the cart
-            print(f"Cart {cart.id} before clearing: {cart.items.count()} items.")
-            cart.items.all().delete()
-            print(f"Cart {cart.id} after clearing: {cart.items.count()} items.")
-            cart.grand_total = 0
-            cart.save()
+            clear_cart(cart)
 
-            # Clear the cart session data
+            # Clear session data
             request.session.pop('cart_id', None)
 
             return render(request, 'cart/success.html', {
-                'order_number': payment_intent_id,
+                'order_number': order_number,
                 'amount': intent.amount / 100,
                 'currency': intent.currency.upper(),
             })
 
-        # If no cart is found
         print("No cart found for the user.")
         return redirect('cart:cart')
 
-    except stripe.error.StripeError as e:
-        messages.error(request, f"Stripe error: {str(e)}")
     except Exception as e:
         messages.error(request, f"Error: {str(e)}")
-
-    return redirect('cart:cart')
+        return redirect('cart:cart')
 
 
 @csrf_exempt

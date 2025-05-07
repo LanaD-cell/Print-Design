@@ -19,7 +19,7 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login'),
     path('login-success/', login_success, name='login-success'),
     path('logout/', logout_view, name='logout'),
-    path('logot-success/', logout_success, name='logout-success'),
+    path('logout-success/', logout_success, name='logout-success'),
     path('account/', include('allauth.urls')),
     path('', include('homepage.urls')),
     path('products/', include('products.urls')),

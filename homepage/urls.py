@@ -1,10 +1,11 @@
 from django.urls import path
-from django.conf.urls import handler404, handler500
 from django.contrib.auth import views as auth_views
 from . import views
 
-handler404 = '.views.custom_404_view'
-handler500 = '.views.custom_500_view'
+app_name = 'homepage'
+
+handler404 = 'homepage.views.custom_404_view'
+handler500 = 'homepage.views.custom_500_view'
 
 urlpatterns = [
     path('', views.homepage, name='homepage'),

@@ -352,4 +352,55 @@ def payment_confirm(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request method'})
 
+@login_required
+def payment_success(request, order_number):
+    session_id = request.GET.get('session_id')
 
+    if not session_id:
+        messages.error(request, "Session ID missing!")
+        return redirect('checkout:order_summary')
+
+    try:
+        # Retrieve the Stripe session using the session ID
+        session = stripe.checkout.Session.retrieve(session_id)
+
+        # Get the associated order using the order_number
+        order = get_object_or_404(Order, order_number=order_number)
+
+        # Check if the session corresponds to the order
+        if order.order_number != session.client_reference_id:
+            messages.error(request, "Order number mismatch!")
+            return redirect('cart:cart')
+
+        # If payment was successful, update the order status and save the order
+        if session.payment_status == 'paid':
+            order.status = 'Paid'
+            order.save()
+
+            # Now, link the order products to the user's profile
+            user = request.user
+            products = order.products.all()
+
+            for product in products:
+                user.purchased_products.add(product)
+
+            # Optionally, clear the cart after the purchase is successful
+            if 'cart' in request.session:
+                del request.session['cart']
+                request.session.modified = True
+
+            # Success message
+            messages.success(request, f"Payment successful! Your order number is {order_number}.")
+
+            # Render success page
+            return render(request, 'cart:success.html', {'order': order})
+
+        else:
+            # If payment failed
+            messages.error(request, "Payment failed. Please try again.")
+            return redirect('checkout:order_checkout')
+
+    except Exception as e:
+        # Catch any errors that occur during the process
+        messages.error(request, f"An error occurred: {str(e)}")
+        return redirect('cart:cart')

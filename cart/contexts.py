@@ -4,12 +4,6 @@ from .models import Cart
 
 VAT_RATE = Decimal('0.19')
 
-from decimal import Decimal
-from django.conf import settings
-from .models import Cart
-
-VAT_RATE = Decimal('0.19')
-
 def cart_contents(request):
     """Create Cart contents for cost, VAT, and delivery calculations."""
 
