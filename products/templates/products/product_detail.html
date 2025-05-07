@@ -123,6 +123,7 @@
 
 {% block scripts %}
 <script type="text/javascript">
+    /* jshint esversion: 11 */
   document.addEventListener('DOMContentLoaded', function() {
     // Get references to the elements
     const sizeSelect = document.getElementById('selected_size');
@@ -147,7 +148,8 @@
         // Get selected size and quantity
         const selectedSize = sizeSelect.value || 'None';
         const selectedQuantity = quantitySelect.value || 'None';
-        const selectedQuantityPrice = document.querySelector(`#selected_quantity option:checked`)?.dataset?.price || 0;
+        const selectedQuantityPrice = document.querySelector(
+            `#selected_quantity option:checked`)?.dataset?.price || 0;
 
         // Get selected services
         let selectedServices = '';

@@ -204,17 +204,18 @@
 
 {% block scripts %}
 <script>
+  /* jshint esversion: 6, globals: { bootstrap: true } */
   document.addEventListener("DOMContentLoaded", function () {
     console.log("DOM fully loaded and parsed");
     const questions = document.querySelectorAll(".faq-question");
     questions.forEach((question) => {
       question.addEventListener("click", function () {
-        let answer = this.parentElement.nextElementSibling; // Get the associated answer element
-        let chevron = this.querySelector("i");  // The chevron icon inside the clicked question
+        let answer = this.parentElement.nextElementSibling;
+        let chevron = this.querySelector("i");
 
         // Bootstrap collapse method
         const collapse = new bootstrap.Collapse(answer, {
-          toggle: true // This will toggle the collapse
+          toggle: true
         });
 
         // Check if the answer is currently collapsed (hidden)

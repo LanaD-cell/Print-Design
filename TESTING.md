@@ -374,12 +374,26 @@ I used the CSS Validation service to test the site. (W3E Validator)[https://jigs
 
 All javascript was put through the [JSHINT tool](https://jshint.com/)
 
-countryfield.js
+<img src="static/testing-docs/carthtml-js-jshint.png" width="70%"><br><br>
+cart.html.js
 
-<img src="readme/testing/rm-jshint-countryfield.png" width="70%"><br><br>
-stripe_elements.js
+<img src="static/testing-docs/checkout-js-jshint.png" width="70%"><br><br>
+checkout.js
 
-<img src="readme/testing/rm-jshint-stripe.png" width="70%"><br><br>
+<img src="static/testing-docs/homepagehtml-js-jshint.png" width="70%"><br><br>
+homoepage.html.js
+
+<img src="static/testing-docs/productdetailshtml-js-jshint.png" width="70%"><br><br>
+product_detail.html.js
+
+<img src="static/testing-docs/return-js-jshint.png" width="70%"><br><br>
+return.js
+
+<img src="static/testing-docs/subscribehtml-js-jshint.png" width="70%"><br><br>
+subscribtion.html.js
+
+<img src="static/testing-docs/successhtml-js-jshint.png" width="70%"><br><br>
+success.html.js
 
 
 ## HTML Validation
