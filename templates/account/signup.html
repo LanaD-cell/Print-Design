@@ -137,19 +137,6 @@
                         {% endif %}
                     </div>
 
-                    <!-- Address Line 2 -->
-                    <div class="signup-form-group mb-4">
-                        <label for="{{ form.street_address2.id_for_label }}" class="signup-label">Address Line 2</label>
-                        {{ form.street_address2 }}
-                        {% if form.street_address2.errors %}
-                            <div class="signup-invalid-feedback">
-                                {% for error in form.street_address2.errors %}
-                                    <p>{{ error }}</p>
-                                {% endfor %}
-                            </div>
-                        {% endif %}
-                    </div>
-
                     <!-- Postcode -->
                     <div class="signup-form-group mb-4">
                         <label for="{{ form.postcode.id_for_label }}" class="signup-label">Postcode</label>

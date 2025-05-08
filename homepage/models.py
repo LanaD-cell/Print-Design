@@ -28,7 +28,6 @@ class Profile(models.Model):
     email = models.EmailField(default='default@example.com')
     phone_number = models.CharField(max_length=20)
     street_address1 = models.CharField(max_length=255)
-    street_address2 = models.CharField(max_length=255, blank=True)
     postcode = models.CharField(max_length=20, blank=True)
     town_or_city = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
@@ -39,7 +38,7 @@ class Profile(models.Model):
     delivery_town_or_city = models.CharField(max_length=100, blank=True)
     delivery_street_address1 = models.CharField(max_length=255, blank=True)
     delivery_street_address2 = models.CharField(max_length=255, blank=True)
-
+    orders = models.ManyToManyField('checkout.Order', related_name='profiles', blank=True)
     purchased_products = models.ManyToManyField(
         Product, related_name='purchased_products', blank=True)
 

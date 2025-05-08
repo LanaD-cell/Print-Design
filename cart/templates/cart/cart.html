@@ -98,13 +98,13 @@
                                     <input type="hidden" id="hidden_postcode" value="{{ user_details.postcode }}">
                                     <input type="hidden" id="hidden_town_or_city" value="{{ user_details.town_or_city }}">
                                     <input type="hidden" id="hidden_street_address1" value="{{ user_details.street_address1 }}">
-                                    <input type="hidden" id="hidden_street_address2" value="{{ user_details.street_address2 }}">
+
                                     <!-- Delivery fields -->
                                     <input type="hidden" id="hidden_delivery_country" value="{{ user_details.delivery_country }}">
                                     <input type="hidden" id="hidden_delivery_postcode" value="{{ user_details.delivery_postcode }}">
                                     <input type="hidden" id="hidden_delivery_town_or_city" value="{{ user_details.delivery_town_or_city }}">
                                     <input type="hidden" id="hidden_delivery_street_address1" value="{{ user_details.delivery_street_address1 }}">
-                                    <input type="hidden" id="hidden_delivery_street_address2" value="{{ user_details.delivery_street_address2 }}">
+
 
                                     <!-- Personal Information Section -->
                                     <fieldset class="rounded px-3 mb-5">
@@ -414,7 +414,6 @@
         const hiddenPostcode = document.getElementById('hidden_postcode').value;
         const hiddenTownOrCity = document.getElementById('hidden_town_or_city').value;
         const hiddenStreetAddress1 = document.getElementById('hidden_street_address1').value;
-        const hiddenStreetAddress2 = document.getElementById('hidden_street_address2').value;
 
         // Get the form fields
         const fullNameField = document.getElementById('{{ checkout_form.full_name.id_for_label }}');
@@ -424,7 +423,7 @@
         const postcodeField = document.getElementById('{{ checkout_form.postcode.id_for_label }}');
         const townOrCityField = document.getElementById('{{ checkout_form.town_or_city.id_for_label }}');
         const streetAddress1Field = document.getElementById('{{ checkout_form.address_line_1.id_for_label }}');
-        const streetAddress2Field = document.getElementById('{{ checkout_form.address_line_2.id_for_label }}');
+
 
         // Set the form fields with the corresponding hidden field values
         if (fullNameField) fullNameField.value = hiddenName;
@@ -434,7 +433,6 @@
         if (postcodeField) postcodeField.value = hiddenPostcode;
         if (townOrCityField) townOrCityField.value = hiddenTownOrCity;
         if (streetAddress1Field) streetAddress1Field.value = hiddenStreetAddress1;
-        if (streetAddress2Field) streetAddress2Field.value = hiddenStreetAddress2;
     });
 </script>
 

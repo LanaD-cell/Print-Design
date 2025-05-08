@@ -19,42 +19,48 @@
         </div>
         <div class="profile-card-body">
           <h4>Current Orders</h4>
-          {% if current_orders %}
-            <ul class="list-group mb-4">
-              {% for order in current_orders %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <a href="{% url 'checkout_success' %}">
-                    Order #{{ order.id }} – {{ order.created_at|date:"M d, Y" }}
-                  </a>
-                  <span class="badge
-                    {% if order.status == 'Pending' %} bg-warning
-                    {% elif order.status == 'Processing' %} bg-primary
-                    {% endif %}">
-                    {{ order.status }}
-                  </span>
-                </li>
-              {% endfor %}
-            </ul>
-          {% else %}
-            <p class="text-muted">No current orders.</p>
-          {% endif %}
+          {% for order in current_orders %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              {% if order.session_id %}
+                <a href="{% url 'cart:checkout_success' order.session_id %}">
+                  Order #{{ order.id }} – {{ order.created_at|date:"M d, Y" }}
+                </a>
+              {% else %}
+                <span>
+                  Order #{{ order.id }} – {{ order.created_at|date:"M d, Y" }} (No session)
+                </span>
+              {% endif %}
+              <span class="badge
+                {% if order.status == 'Pending' %} bg-warning
+                {% elif order.status == 'Processing' %} bg-primary
+                {% endif %}">
+                {{ order.status }}
+              </span>
+            </li>
+          {% endfor %}
 
           <h4>Previous Orders</h4>
           {% if previous_orders %}
             <ul class="list-group">
               {% for order in previous_orders %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  <a href="{% url 'checkout:checkout_success' %}">
+              <li class="list-group-item d-flex justify-content-between align-items-center">
+                {% if order.session_id %}
+                  <a href="{% url 'cart:checkout_success' order.session_id %}">
                     Order #{{ order.id }} – {{ order.created_at|date:"M d, Y" }}
                   </a>
-                  <span class="badge
-                    {% if order.status == 'Delivered' %} bg-success
-                    {% elif order.status == 'Cancelled' %} bg-danger
-                    {% endif %}">
-                    {{ order.status }}
+                {% else %}
+                  <span>
+                    Order #{{ order.id }} – {{ order.created_at|date:"M d, Y" }} (No session)
                   </span>
-                </li>
-              {% endfor %}
+                {% endif %}
+                <span class="badge
+                  {% if order.status == 'Delivered' %} bg-success
+                  {% elif order.status == 'Cancelled' %} bg-danger
+                  {% endif %}">
+                  {{ order.status }}
+                </span>
+              </li>
+            {% endfor %}
             </ul>
           {% else %}
             <p class="text-muted">No previous orders yet.</p>

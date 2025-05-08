@@ -11,8 +11,6 @@ class CustomSignupForm(UserCreationForm):
     email = forms.EmailField(max_length=100, label='Email Address', required=True)
     phone_number = forms.CharField(max_length=20, label='Phone Number', required=True)
     street_address1 = forms.CharField(max_length=255, label='Address Line 1', required=True)
-    street_address2 = forms.CharField(
-        max_length=255, label='Address Line 2', required=False)
     postcode = forms.CharField(max_length=20, required=True)
     town_or_city = forms.CharField(max_length=100, required=True)
     country = forms.CharField(max_length=100, required=True)
@@ -48,7 +46,6 @@ class CustomSignupForm(UserCreationForm):
     delivery_postcode = forms.CharField(max_length=20, required=False)
     delivery_town_or_city = forms.CharField(max_length=100, required=False)
     delivery_street_address1 = forms.CharField(max_length=255, required=False)
-    delivery_street_address2 = forms.CharField(max_length=255, required=False)
 
     class Meta:
         model = User
@@ -69,7 +66,6 @@ class CustomSignupForm(UserCreationForm):
         profile.postcode = self.cleaned_data['postcode']
         profile.town_or_city = self.cleaned_data['town_or_city']
         profile.street_address1 = self.cleaned_data['street_address1']
-        profile.street_address2 = self.cleaned_data['street_address2']
 
         # If a different delivery address is provided, save it
         if self.cleaned_data.get('use_different_delivery_address'):
@@ -79,8 +75,6 @@ class CustomSignupForm(UserCreationForm):
                 'delivery_town_or_city']
             profile.delivery_street_address1 = self.cleaned_data[
                 'delivery_street_address1']
-            profile.delivery_street_address2 = self.cleaned_data[
-                'delivery_street_address2']
 
         if commit:
             profile.save()
@@ -98,7 +92,6 @@ class OrderForm(forms.ModelForm):
     email = forms.EmailField(required=True)
     phone_number = forms.CharField(required=True)
     street_address1 = forms.CharField(required=True)
-    street_address2 = forms.CharField(required=False)
     town_or_city = forms.CharField(required=True)
     postcode = forms.CharField(required=True)
     country = forms.CharField(required=True)
@@ -106,8 +99,8 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ('name', 'email', 'phone_number',
-                  'street_address1', 'street_address2',
-                  'town_or_city', 'postcode', 'country')
+                  'street_address1', 'town_or_city',
+                  'postcode', 'country')
 
     def __init__(self, *args, **kwargs):
         """
@@ -124,7 +117,6 @@ class OrderForm(forms.ModelForm):
             'postcode': 'Postal Code',
             'town_or_city': 'Town or City',
             'street_address1': 'Street Address 1',
-            'street_address2': 'Street Address 2',
         }
 
 

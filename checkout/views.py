@@ -31,7 +31,7 @@ def get_cart_total(request):
 
     # Let's assume these methods are available on the cart object
     cart_total = cart.grand_price()
-    delivery_fee = cart.delivery_fee()
+    delivery_fee = cart.delivery_fee() if cart.items.exists() else Decimal('0.00')
     vat_amount = cart.vat_amount()
     grand_total = cart_total + delivery_fee + vat_amount
 
@@ -63,7 +63,7 @@ def checkout(request):
         'Standard Production': Decimal('5.00'),
     }
 
-    delivery_fee = delivery_prices.get(delivery_option, Decimal('0.00'))
+    delivery_fee = delivery_prices.get(delivery_option, Decimal('0.00')) if cart.items.exists() else Decimal('0.00')
 
     grand_total = cart_total + service_price + delivery_fee
     stripe_total = int(grand_total * 100)
@@ -149,7 +149,6 @@ def create_order(request, cart):
         postcode=request.POST.get('postcode', ''),
         town_or_city=request.POST.get('town_or_city', ''),
         street_address1=request.POST.get('street_address1', ''),
-        street_address2=request.POST.get('street_address2', ''),
         order_total=order_total,
         cart_total=cart_total,
         service_cost=service_total,
@@ -240,7 +239,6 @@ def signup_view(request):
                 postcode='',
                 town_or_city='',
                 street_address1='',
-                street_address2='',
             )
 
             return redirect('create_cart_order')

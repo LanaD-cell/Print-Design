@@ -23,7 +23,7 @@ class OrderAdmin(admin.ModelAdmin):
     fields = ('order_number', 'created_at', 'name',
               'email', 'phone_number', 'country',
               'postcode', 'town_or_city', 'street_address1',
-              'street_address2', 'service_cost', 'delivery_cost',
+              'service_cost', 'delivery_cost',
               'order_total', 'grand_total',)
 
     inlines = [OrderLineItemAdminInline]

@@ -48,7 +48,7 @@ class CreateOrderViewTestCase(TestCase):
             'postcode': '12345',
             'town_or_city': 'City',
             'street_address1': 'Address Line 1',
-            'street_address2': 'Address Line 2',
+
         })
 
         self.assertEqual(response.status_code, 302)  #

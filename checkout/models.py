@@ -19,7 +19,6 @@ class Order(models.Model):
 
     STATUS_CHOICES = [
         (PENDING, 'Pending'),
-        (PAID, 'Paid'),
         (SHIPPED, 'Shipped'),
         (DELIVERED, 'Delivered'),
     ]
@@ -37,7 +36,6 @@ class Order(models.Model):
     postcode = models.CharField(max_length=20, null=True, blank=True)
     town_or_city = models.CharField(max_length=40, null=False, blank=False)
     street_address1 = models.CharField(max_length=80, null=False, blank=False)
-    street_address2 = models.CharField(max_length=80, null=True, blank=True)
     delivery_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=5.00)
 
     save_info = models.BooleanField(default=False)
@@ -51,6 +49,7 @@ class Order(models.Model):
     service_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     delivery_price = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal('0.00'))
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default=PENDING)
+    session_id = models.CharField(max_length=255, null=True, blank=True)
 
     def get_grand_total(self):
         """Returns the grand total (sum of order total, service cost, and delivery cost)."""

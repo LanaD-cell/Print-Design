@@ -272,6 +272,7 @@ def payment_cancel(request):
 
 def process_cart_and_order(cart, order_number):
     try:
+        print(f"Processing cart for order {order_number}...")
         # Extract user and cart data
         user = cart.user
         order_number = order_number
@@ -282,14 +283,13 @@ def process_cart_and_order(cart, order_number):
         phone_number = user.profile.phone_number if hasattr(user, 'profile') else ''
         country = user.profile.country if hasattr(user, 'profile') else ''
         postcode = user.profile.postcode if hasattr(user, 'profile') else ''
-        town_or_city = user.profile.city if hasattr(user, 'profile') else ''
+        town_or_city = user.profile.town_or_city if hasattr(user, 'profile') else ''
         street_address1 = user.profile.street_address1 if hasattr(user, 'profile') else ''
-        street_address2 = user.profile.street_address2 if hasattr(user, 'profile') else ''
 
         # Calculate the cart totals (including VAT and delivery)
-        cart_total = cart.items_subtotal()
-        vat = cart.calculate_vat(cart_total)
-        delivery_cost = cart.get_delivery_price()
+        cart_total = Decimal(cart.items_subtotal())
+        vat = Decimal(cart.calculate_vat(cart_total))
+        delivery_cost = Decimal(cart.get_delivery_price())
         grand_total = cart_total + vat + delivery_cost
 
         # Create the order
@@ -318,8 +318,8 @@ def process_cart_and_order(cart, order_number):
                 product=cart_item.product,
                 product_size=cart_item.size,
                 quantity=cart_item.quantity,
-                lineitem_total=cart_item.total_price(),
-                service_price=cart_item.service_price,
+                lineitem_total=Decimal(cart_item.total_price()),
+                service_price=Decimal(cart_item.service_price),
                 additional_services=cart_item.services
             )
 
@@ -447,12 +447,12 @@ def create_order_from_cart(user, cart, order_data):
         postcode=order_data.get('postcode', ''),
         town_or_city=order_data.get('town_or_city', ''),
         street_address1=order_data.get('street_address1', ''),
-        street_address2=order_data.get('street_address2', ''),
         order_total=order_total,
         cart_total=cart_total,
         service_cost=service_total,
         delivery_cost=delivery_total,
-        grand_total=grand_total
+        grand_total=grand_total,
+        session_id=order_data.get('session_id', '')
     )
 
     for item in cart.items.all():
@@ -486,7 +486,6 @@ def create_order(request):
         'postcode': request.POST.get('postcode', ''),
         'town_or_city': request.POST.get('town_or_city', ''),
         'street_address1': request.POST.get('street_address1', ''),
-        'street_address2': request.POST.get('street_address2', ''),
     }
 
     order = create_order_from_cart(request.user, cart, order_data)
