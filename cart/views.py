@@ -208,7 +208,7 @@ def create_checkout_session(request):
             return JsonResponse({'error': 'Missing grand_total'}, status=400)
 
         # Convert the grand total to the correct format for Stripe
-        stripe_total = int(float(grand_total) * 100)
+        stripe_total = int(int(grand_total) * 100)
 
         order_number = uuid.uuid4().hex.upper()[:10]
         request.session['order_number'] = order_number

@@ -327,8 +327,8 @@ I have been using linter in the Terminal, but tested the following pages in the 
 <img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
 Product - View.py
 
-<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
-Product - View.py
+<img src="static/testing-docs/products-urls-py.png" width="50%"><br><br>
+Product - Urls.py
 
 <img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
 Product - View.py
