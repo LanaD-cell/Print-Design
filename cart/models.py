@@ -4,7 +4,7 @@ from products.models import Product
 from decimal import Decimal
 
 class Cart(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     delivery_option = models.CharField(max_length=255, null=True, blank=True)

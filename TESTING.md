@@ -318,48 +318,35 @@ The eCommerce store looks and functions as intended on different browsers.
 | iPad Air - Tablet |  <img src="readme/testing/rm-screen-ipad-air.png" alt="iPad" width="70%">   |
 | Mobile - Pixel 7  |  <img src="readme/testing/rm-screen-pixel7.png" alt="Mobile" width="50%">  |
 
-## Code Validation
+## PEP8 Testing
 
-I have been using linter and flake8 to test for code errors. Flake8 is installed and being used to ensure PEP8 python standard.
+I have been using linter in the Terminal, but tested the following pages in the CI Python Tool.
 
-<details>
+[Code Institute Python Tool](https://pep8ci.herokuapp.com/)
 
-Using the command python -m flake8 I was given a list of changes that needed to be made. I changed most of what was suggested however there are a few lines that remain over 79 characters because it broke the code when I added it to another line. I will continue working on removing as many of them as I can but a few may remain after project submission.
+<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
+Product - View.py
 
-<img src="readme/testing/rm-flake8-messages.png" width="50%"><br><br>
+<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
+Product - View.py
 
-I also used the Code Instiute [Python Linter](https://pep8ci.herokuapp.com/) to test the py files. Again, where lines of code were long and I didn't want to risk breaking the site by changing them e.g. see settings image below, I left the code intact.
+<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
+Product - View.py
 
-Settings.py
+<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
+Product - View.py
 
-<img src="readme/testing/rm-python-settings.png" width="70%"><br><br>
+<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
+Product - View.py
 
-Views.py - in main project
+<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
+Product - View.py
 
-<img src="readme/testing/rm-python-project-views.png" width="70%"><br><br>
+<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
+Product - View.py
 
-Url pages - all url pages were tested within ALL APPS and are without errors
-
-<img src="readme/testing/rm-python-url.png" width="70%"><br><br>
-
-The following were tested within each app
-
-- Admin
-- Forms
-- Models
-- Views - and all were without error. Code lines over the 79 characters were adjusted were possible and left if it caused additional errors to arise.
-
-Also tested were any
-
-- context.py
-- signal.py
-
-Even though using PEP8 and the CI Linter may seem like doubling up on work the linter did catch a few additional issues that using -m flak8 didn't, plus the CI linter is easier to work with rather than a long list of issues that need to be looked through.
-
-<img src="readme/testing/rm-python-apps.png" width="70%"><br><br>
-
-
-Once I had completed the store I used the [Black code formatter](https://pypi.org/project/black/) to ensure the code is formatted correctly.
+<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
+Product - View.py
 
 ## CSS Validation
 

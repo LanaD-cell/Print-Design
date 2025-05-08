@@ -4,7 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
-from django.db import transaction
+from checkout.views import get_or_create_cart
 from django.contrib import messages
 from checkout.models import Order, OrderLineItem
 from .models import Product, Cart, CartItem
@@ -280,7 +280,7 @@ def payment_success(request):
         # Process the order and clear the cart
         cart = Cart.objects.filter(user=request.user).first()
         if cart:
-            order = create_order(request, cart)
+            order = create_order(request)
 
             # Clear the cart
             clear_cart(cart)
