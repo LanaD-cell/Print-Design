@@ -148,176 +148,6 @@ Other manual tests have taken place.
 I went through the customer journey procedure myself and three other people tested the site and the checkout process as well as adding a review and using the wishlist. Below are the results
 
 
-#### Home Page Features
-
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   Click navigation bar log           |                             User is redirected to the home page.          | Pass    |
-| 02  |   Add term to search bar, e.g. abstract             |                               Products and images related to the term appear                                 | Pass    |
-| 03  |   Click on My Account in navbar              |                              Menu dropdown with page options                                 | Pass    |
-| 04  |   Click on shopping bag              |                        Taken to shopping bag page                               | Pass    |
-| 05  |   Shop Now button clicked              |                        Taken to all products page                                               | Pass    |
-| 06  |   Shop Now button clicked              |                        Taken to all products page                                               | Pass    |
-| 07  |   Images under "Featured Products" clicked            |                        Taken to all product display page for that image                                             | Pass    |
-| 08  |   Link in footer clicked           |                        Taken to approriate page on site and off site                                            | Pass    |
-
-
-#### Navigation Bar Features
-
-
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   Click register page under MY Account logo       |                            Taken to page to sign up        | Pass    |
-| 02  |   Click Contact Us link under My Account logo            |                   Taken to contact us form                                | Pass    |
-| 03  |   Click on Login under My Account logo            |                              Taken to sign in page                             | Pass    |
-| 04  |   Click on pages under MORE on navbar             |                        Taken to appropriate page                          | Pass    |
-| 05  |   Click on SORT POSTERS menu in navbar              |                       Products are sorted in order selected e.g. a-z, z-a etc                                           | Pass    |
-| 06  |   Click on category under Posters menu            |                        Taken to all appropriate category | Pass    |
-
-#### Authentication Pages
-
-
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   Click on pages to register, login or logout      |                            Appropriate page is shown along with success message     | Pass    |
-| 02  |   Click link for new password            |                   Taken to form to enter email and email sent out to user with password change link                               | Pass    |
-
-
-#### Products Page
-
-
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   Visit products page      |                            All products show up     | Pass    |
-| 02  |   Click on details button            |                   User taken to product display page | Pass    |
-| 03  |   Click on 'Buy Now' button            |                   User adds product to their bag and success message is displayed.  | Pass    |
-
-#### Product Detail Page
-
-
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   Visit product detail page      |                            All details are shown     | Pass    |
-| 02  |   Click on specific product            |                   Taken to product display page | Pass    |
-| 03  |   Click on add to wishlist           |                              Taken to signin if not registered or success message shows saying product added to wishlist                         | Pass    |
-| 04  |   Click on quantity             |                        Quantity number is increased and decreased                         | Pass    |
-| 05  |   Click on size             |                       Large or extra large size selected                                         | Pass    |
-| 06  |   Add to cart without size             |                      User can not add the product without selecting a size                                       | Fail. Customers can add product. Needs further investigation.    |
-| 07  |   Click on add review           |    Review can be added only if user is registered/logged in | Pass    |
-| 08  |   Click add to cart           |    Product added to cart, success message shows to confirm                                         | Pass    |
-| 09  |   Click go to secure checkout button          |                        Taken to checkout area                                            | Pass    |
-
-#### Checkout Page
-
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   Order summary available    |                            Order summary appears with thumbnail product image | Pass    |
-| 02  |   Cost of order is visible           |                   Order summary, total order, shipping and grand total all shown | Pass    |
-| 03  |   Full personal details         |                              Form to take full customer details is visible. Any errors made are shown to user via messages                        | Pass    |
-| 04  |   Credit card area visible            |       Area to add payment details is visible                       | Pass    |
-| 05  |   Guest Checkout message            |          Message for guests to register for an account                                     | Pass    |
-| 06  |   Adjust Bag Button          |    User can go back to bag - any details added are removed automatically | Pass    |
-| 07  |   Complete order       |    Payment is taken and spinner appears                                         | Pass    |
-| 08  |   Checkout Success          |                       Order summary appears on screen. Success message is shown. Email sent to customer. If logged in details saved to profile                                        | Pass    |
-
-#### Profile Page
-
-
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   User registers    |                            Profile is created | Pass    |
-| 02  |   User selects to save delivery details     |                   Delivery details and phone number shown on profile page | Pass    |
-| 03  |   Orders saved to profile     |                 Past orders made by customers are available on their profile                     | Pass    |
-| 04  |   Delivery details update           |      Delivery details can be updated in profile                     | Pass    |
-
-#### Contact Us Page
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   User taken to contact us page via footer link  |                            Footer links work | Pass    |
-| 02  |   User must select reason for contact    |                 Message shown if not selected                   | Pass    |
-| 03  |   Email or username automatically added if registered          |      Email and user name added in Admin area | Pass    |
-| 04  |   Thank you message       |    Thank you message appears after sending form. If user is registered their username and email appears in thank you message. If the user is not registered the username does not appear. | Pass    |
-| 05  |   Offer button on page      |    User taken to clearance and deals categories                                | Pass    |
-
-
-#### Wish List Page
-
-
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   Product Added to Wishlist    |                            Success message shows that item added | Pass    |
-| 02  |   User visits wishlist         |                   Product shown with thumbnail image and description | Pass    |
-| 03  |   Delete wish list item       |                              User can delete item. Success message shown that item will be deleted. Success message shows item has been removed.                     | Pass    |
-
-#### Newsletter Page
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   User taken to newsletter page via footer link  |                            Footer links work | Pass    |
-| 02  |   Register for newsletter     |                 User can sign up to newsletter via form on page                    | Pass    |
-| 03  |   Register for newsletter           |      User can sign up to newsletter via pop out form on homepage                   | Pass    |
-| 04  |   Thank you message       |    Thank you message appears after registering | Pass    |
-| 05  |   Start shopping button on newsletter page      |    User taken to all products                                    | Pass    |
-
-
-#### Events Page
-|     |                 TEST                 |                            EXPECTED ACTION                                                                                                                              |     RESULT        |
-| :-: | :----------------------------------: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :-----------------|
-| 01  |   User taken to events page via MORE menu in navbar   |                  Navbar link works | Pass    |
-| 02  |   User can register for newsletter        |       Sign up form on events page works                                | Pass    |
-| 03  |   Thank you message       |    Thank you message appears after registering | Pass    |
-| 04  |   User can view pdf          |                     Link to PDF of winners opens in new window                                    | Pass    |
-| 05  |   User can click on product images        |                     Product images take user to display page of relevant product                               | Pass    |
-
-
-#### Compliance Pages
-
-The links in the footer takes a user to the specific page as expected. This includes the shipping, terms & conditions, refund and privacy policy page - pass
-
-
-#### Footer
-
-All links lead to the correct pages. External links open in a new window.
-
-</details>
-
-## UI testing
-
-Bootstrap is a responsive language so the mobile-first design approach has been taken care of for the most part, however, tests were performed to ensure the following:
-
-| Test | Result |
-|:---|:---: |
-| Toggle navbar doesn’t convert to navbar until over 990px |  PASS  |
-| Search bar placeholder is always fully visible  |  PASS  |
-| Size of social button icons respond as space increases |  PASS  |
-| Product list scales from two columns to four at medium breakpoint  |  PASS  |
-| Footer scales according to screen size |  PASS  |
-| Search features remain visible on all screen sizes  |  PASS  |
-
-
-## Browser Compatibility
-
-Layout: The layout and appearance of the site has been tested for consistency throughout browsers. Browers tested include the main four:
-
-- Chrome
-- Firefox
-- Safari
-- Microsoft Edge
-
-All links were tested and working. All pages load as expected and all features work as expected.
-
-<p align="right">(<a href="#contents">back to top</a>)</p>
-
-## Responsiveness
-
-The eCommerce store looks and functions as intended on different browsers.
-
-| Test | Screenshot View |
-|:---|:---: |
-| 1700 px Desktop | <img src="readme/testing/rm-screen-1700.png" alt="Laptop" width="70%">  |
-| Laptop  |  <img src="readme/testing/rm-screen-1280.png" alt="Laptop" width="70%">   |
-| iPad Air - Tablet |  <img src="readme/testing/rm-screen-ipad-air.png" alt="iPad" width="70%">   |
-| Mobile - Pixel 7  |  <img src="readme/testing/rm-screen-pixel7.png" alt="Mobile" width="50%">  |
-
 ## PEP8 Testing
 
 I have been using linter in the Terminal, but tested the following pages in the CI Python Tool.
@@ -330,23 +160,53 @@ Product - View.py
 <img src="static/testing-docs/products-urls-py.png" width="50%"><br><br>
 Product - Urls.py
 
-<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
-Product - View.py
+<img src="static/testing-docs/products-models-py.png" width="50%"><br><br>
+Product - Models.py
 
-<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
-Product - View.py
+<img src="static/testing-docs/products-forms-py.png" width="50%"><br><br>
+Product - Forms.py
 
-<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
-Product - View.py
+<img src="static/testing-docs/products-app-py.png" width="50%"><br><br>
+Product - App.py
 
-<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
-Product - View.py
+<img src="static/testing-docs/products-admin-py.png" width="50%"><br><br>
+Product - Admin.py
 
-<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
-Product - View.py
+<img src="static/testing-docs/print_design-sitemaps-py.png" width="50%"><br><br>
+Printe_design - Sitemaps.py
 
-<img src="static/testing-docs/products-views-py.png" width="50%"><br><br>
-Product - View.py
+<img src="static/testing-docs/pring_design-urls-py.png" width="50%"><br><br>
+Print_design - Urls.py
+
+<img src="static/testing-docs/manage-py.png" width="50%"><br><br>
+Manage.py
+
+<img src="static/testing-docs/homepage-views-py.png" width="50%"><br><br>
+Homepage - View.py
+
+<img src="static/testing-docs/homepage-urls-py.png" width="50%"><br><br>
+Homepage - Urls.py
+
+<img src="static/testing-docs/homepage-signals-py.png" width="50%"><br><br>
+Homepage - Signals.py
+
+<img src="static/testing-docs/homepage-forms-py.png" width="50%"><br><br>
+Homepage - Forms.py
+
+<img src="static/testing-docs/homepage-model-py.png" width="50%"><br><br>
+Homepage - Model.py
+
+<img src="static/testing-docs/homepage-app-py.png" width="50%"><br><br>
+Homepage - App.py
+
+<img src="static/testing-docs/homepage-admin-py.png" width="50%"><br><br>
+Homepage - Admin.py
+
+<img src="static/testing-docs/checkout-webhook-py.png" width="50%"><br><br>
+Checkout - Webhooks.py
+
+<img src="static/testing-docs/checkout-webhook-handler-py.png" width="50%"><br><br>
+Checkout - Webhook-handler.py
 
 ## CSS Validation
 
@@ -494,8 +354,15 @@ Test results the same across all pages e.g. sort category price high to low, a-z
 ### Bugs
 
   #### Secret Key commited
-    - I added the SK to the Js in order_checkout js for testing purposes, as the payment was throuwing Invalid Client Secret errors.
-      Then I forgot to remove it before committing changes and opened a can of worms. I received a fatal error that Github piscked up that a SK was commit and refused access. I then proceeded to do a major rebate on all commits. After that I once again received the same error, as the commit was stuck in the history eventhough I did the rebate. After some restless sleep, I throught of just changing my SK in Stripe and allowing the old SK to be sent through as a test SK to Guthub. On the surface it seems to have worked.
+    - I added the SK to the Js in order_checkout js for testing purposes,
+      as the payment was throuwing Invalid Client Secret errors.
+      Then I forgot to remove it before committing changes and opened a can of worms.
+      I received a fatal error that Github piscked up that a SK was commit and
+      refused access. I then proceeded to do a major rebate on all commits. After
+      that I once again received the same error, as the commit was stuck in the
+      history eventhough I did the rebate. After some restless sleep, I throught
+      of just changing my SK in Stripe and allowing the old SK to be sent through
+      as a test SK to Guthub. On the surface it seems to have worked.
 
 </details>
 

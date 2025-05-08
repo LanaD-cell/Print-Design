@@ -263,16 +263,19 @@ def checkout_success_page(request, session_id):
         order_id = session.client_reference_id
         order = get_object_or_404(Order, id=order_id)
     except stripe.error.StripeError as e:
-        messages.error(
-            request, "An error occurred while processing the payment.")
+        messages.error(request, "An error occurred while processing the payment.")
         return redirect('cart:cart')
     except Exception as e:
-        messages.error(
-            request, "An unexpected error occurred.")
+        messages.error(request, "An unexpected error occurred.")
         return redirect('cart:cart')
 
-    return render(request, 'cart:cart', {'order': order})
+    context = {
+        'order': order,
+        'order_number': order.id,
+        'amount': order.grand_total,
+    }
 
+    return render(request, 'cart/success.html', context)
 
 def create_payment_intent(request):
     try:

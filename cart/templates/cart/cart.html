@@ -193,23 +193,6 @@
                                             {% endif %}
                                         </div>
 
-                                        <!-- Street Address 2 -->
-                                        <div class="form-group">
-                                            <label for="{{ order_form.address_line_2.id_for_label }}">
-                                                Street Address 2
-                                            </label>
-                                            <input type="text" id="address_line_2"
-                                                name="{{ order_form.address_line_2.name }}" value="{{ order_form.address_line_2.value|default:'' }}"
-                                                class="form-control" placeholder="Street Address 2">
-                                            {% if order_form.address_line_2.errors %}
-                                                <ul class="errorlist text-danger">
-                                                    {% for error in order_form.address_line_2.errors %}
-                                                        <li>{{ error }}</li>
-                                                    {% endfor %}
-                                                </ul>
-                                            {% endif %}
-                                        </div>
-
                                         <!-- Town or City -->
                                         <div class="form-group required">
                                             <label for="{{ order_form.town_or_city.id_for_label }}">
@@ -288,11 +271,6 @@
 
                                             <div class="form-group">
                                                 <label>Delivery Street Address 1</label>
-                                                <input type="text" class="form-control">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <label>Delivery Street Address 2</label>
                                                 <input type="text" class="form-control">
                                             </div>
 
@@ -382,82 +360,6 @@
 <!-- Pass the Stripe public key and client secret to JavaScript -->
 {{ stripe_public_key|json_script:"id_stripe_public_key" }}
 {{ client_secret|json_script:"id_client_secret" }}
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    // Function to get the CSRF token from the browser's cookies
-    function getCookie(name) {
-        let cookieValue = null;
-        if (document.cookie && document.cookie !== '') {
-            const cookies = document.cookie.split(';');
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i].trim();
-                if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                    break;
-                }
-            }
-        }
-        return cookieValue;
-    }
-
-    // Check if the payment form exists before adding the event listener
-    const submitButton = document.getElementById('submit-button');
-    const paymentForm = document.getElementById('payment-form');
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            submitButton.disabled = true;
-
-            try {
-                // Safely parse the grand total, removing any non-numeric characters and converting to a number
-                let grandTotal = document.getElementById('grand-total').value.replace('€', '').trim();
-            grandTotal = parseFloat(grandTotal).toFixed(2);
-
-                console.log("Grand total:", grandTotal);
-
-                // Ensure the delivery option is selected
-                const deliveryOption = document.querySelector('input[name="delivery_option"]:checked').value;
-
-                console.log("Delivery option selected:", deliveryOption);
-
-                // Send the data to the backend
-                const response = await fetch('/cart/create-checkout-session/', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRFToken': getCookie('csrftoken'),
-                    },
-                    body: JSON.stringify({
-                        grand_total: grandTotal.toFixed(2),
-                        delivery_option: deliveryOption,
-                    })
-                });
-
-                const res = await response.json();
-
-                if (res.error) {
-                    document.getElementById('error-message').textContent = res.error;
-                    return;
-                }
-
-                // Redirect to Stripe Checkout
-                const { sessionId } = res;
-                if (sessionId) {
-                    await stripe.redirectToCheckout({ sessionId: sessionId });
-                } else {
-                    document.getElementById('error-message').textContent = 'Error processing checkout session.';
-                }
-
-            } catch (err) {
-                submitButton.disabled = false;
-                document.getElementById('error-message').textContent = 'An unexpected error occurred.';
-                console.error(err);
-            }
-        });
-    }
-});
-</script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {

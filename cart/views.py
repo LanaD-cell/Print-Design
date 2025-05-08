@@ -12,8 +12,9 @@ from django.conf import settings
 import uuid
 import stripe
 import re
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 import json
+import threading  # For background task
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -37,17 +38,13 @@ def view_cart(request):
             except (json.JSONDecodeError, TypeError) as e:
                 item.services = []
 
-        # Calculate the subtotal: sum of prices + service prices for all items
         subtotal = sum(item.total_price() for item in cart_items)
 
-        # Retrieve delivery charge (this can come from the session or user input)
-        # Example: Default to 0 or retrieve from user session
         delivery = Decimal(request.session.get('delivery', 0))
 
         # Calculate VAT (19%)
         vat = subtotal * Decimal('0.19')
 
-        # Calculate grand total: subtotal + delivery charge + VAT
         grand_total = subtotal + delivery + vat
         grand_total = grand_total.quantize(Decimal('0.01'))
 
@@ -201,14 +198,26 @@ def create_checkout_session(request):
     try:
         # Parse the JSON body manually
         data = json.loads(request.body)
+
+        # Get personal and delivery details
+        name = data.get('name')
+        email = data.get('email')
+        phone = data.get('phone')
+        address_line_1 = data.get('address_line_1')
+        town_or_city = data.get('town_or_city')
+        postcode = data.get('postcode')
+        country = data.get('country')
+
         grand_total = data.get('grand_total')
 
         # Handle the case where 'grand_total' is not provided
         if not grand_total:
             return JsonResponse({'error': 'Missing grand_total'}, status=400)
 
-        # Convert the grand total to the correct format for Stripe
-        stripe_total = int(int(grand_total) * 100)
+        grand_total_decimal = Decimal(str(grand_total))
+        delivery_fee = Decimal('5.00')
+        final_total = grand_total_decimal + delivery_fee
+        stripe_total = int((final_total * 100).quantize(Decimal('1'), rounding=ROUND_HALF_UP))
 
         order_number = uuid.uuid4().hex.upper()[:10]
         request.session['order_number'] = order_number
@@ -236,6 +245,16 @@ def create_checkout_session(request):
             mode='payment',
             success_url=success_url,
             cancel_url=cancel_url,
+            metadata={
+                'name': name,
+                'email': email,
+                'phone': phone,
+                'address_line_1': address_line_1,
+                'town_or_city': town_or_city,
+                'postcode': postcode,
+                'country': country,
+                'order_number': order_number,
+            }
         )
 
         # Return the session ID to the frontend
@@ -251,54 +270,117 @@ def payment_cancel(request):
     return render(request, 'checkout/cancel.html')
 
 
+def process_cart_and_order(cart, order_number):
+    try:
+        # Extract user and cart data
+        user = cart.user
+        order_number = order_number
+        name = user.get_full_name() if user.get_full_name() else user.username
+        email = user.email
+
+        # Additional fields from user profile (if they exist)
+        phone_number = user.profile.phone_number if hasattr(user, 'profile') else ''
+        country = user.profile.country if hasattr(user, 'profile') else ''
+        postcode = user.profile.postcode if hasattr(user, 'profile') else ''
+        town_or_city = user.profile.city if hasattr(user, 'profile') else ''
+        street_address1 = user.profile.street_address1 if hasattr(user, 'profile') else ''
+        street_address2 = user.profile.street_address2 if hasattr(user, 'profile') else ''
+
+        # Calculate the cart totals (including VAT and delivery)
+        cart_total = cart.items_subtotal()
+        vat = cart.calculate_vat(cart_total)
+        delivery_cost = cart.get_delivery_price()
+        grand_total = cart_total + vat + delivery_cost
+
+        # Create the order
+        order = Order.objects.create(
+            user=user,
+            order_number=order_number,
+            name=name,
+            email=email,
+            phone_number=phone_number,
+            country=country,
+            postcode=postcode,
+            town_or_city=town_or_city,
+            street_address1=street_address1,
+            order_total=cart_total,
+            cart_total=cart_total,
+            grand_total=grand_total,
+            service_cost=0.00,
+            delivery_cost=delivery_cost,
+            status=Order.PAID
+        )
+
+        # Create OrderLineItems for each CartItem
+        for cart_item in cart.items.all():
+            OrderLineItem.objects.create(
+                order=order,
+                product=cart_item.product,
+                product_size=cart_item.size,
+                quantity=cart_item.quantity,
+                lineitem_total=cart_item.total_price(),
+                service_price=cart_item.service_price,
+                additional_services=cart_item.services
+            )
+
+        cart.items.clear()
+
+        print(f"Order created successfully for {order_number}")
+
+    except Exception as e:
+        print(f"Error while processing cart: {str(e)}")
+
 def payment_success(request):
     print("Payment success view started.")
 
-    # Validate session
+    # Validate session ID in URL
     session_id = validate_session(request)
     if not session_id:
+        print("Session validation failed.")
+        messages.error(request, "Missing session ID.")
         return redirect('cart:cart')
 
     try:
-        # Retrieve session and payment intent
+        # Get session and intent from Stripe
         session, intent = retrieve_session_and_intent(session_id)
+        print(f"Stripe session: {session}")
+        print(f"Stripe intent: {intent}")
+
         if not session or not intent:
-            messages.error(request, "Error retrieving session or payment intent.")
+            print("Session or intent retrieval failed.")
+            messages.error(request, "Stripe payment confirmation failed.")
             return redirect('cart:cart')
 
-        # Check if payment was successful
+        # Ensure payment was actually successful
         if not check_payment_success(intent):
+            print("Stripe reported payment failure.")
+            messages.error(request, "Payment was not successful.")
             return redirect('cart:cart')
 
-        # Retrieve order number
-        order_number = request.session.get('order_number')
-        if not order_number:
-            messages.error(request, "No order number found.")
-            print("No order number found.")
-            return redirect('cart:cart')
+        # Optional order number (not required for success display)
+        order_number = request.session.get('order_number', 'UNKNOWN')
+        print(f"Order number: {order_number}")
 
-        # Process the order and clear the cart
+        # Prepare success page response
+        response = render(request, 'cart/success.html', {
+            'order_number': order_number,
+            'amount': intent.amount / 100,
+            'currency': intent.currency.upper(),
+        })
+
+        # Optional: create order in background
         cart = Cart.objects.filter(user=request.user).first()
         if cart:
-            order = create_order(request)
+            threading.Thread(
+                target=process_cart_and_order,
+                args=(cart, order_number)
+            ).start()
 
-            # Clear the cart
-            clear_cart(cart)
-
-            # Clear session data
-            request.session.pop('cart_id', None)
-
-            return render(request, 'cart/success.html', {
-                'order_number': order_number,
-                'amount': intent.amount / 100,
-                'currency': intent.currency.upper(),
-            })
-
-        print("No cart found for the user.")
-        return redirect('cart:cart')
+        return response
 
     except Exception as e:
-        messages.error(request, f"Error: {str(e)}")
+        print(f"Exception occurred: {str(e)}")
+        messages.error(request, "An unexpected error occurred.")
         return redirect('cart:cart')
 
 

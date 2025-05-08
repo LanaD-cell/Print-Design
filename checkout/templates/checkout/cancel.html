@@ -6,9 +6,12 @@
 {% endblock %}
 
 {% block content %}
-  <head><title>Payment Cancelled</title></head>
-  <body>
-    <h1>Your payment was cancelled.</h1>
-    <p>Sorry to see you go. Feel free to <a href="/">try again</a>.</p>
-  </body>
-  {% endblock %}
+<div class="container d-flex justify-content-center align-items-center min-vh-100 p-3">
+  <section id="cancelled" class="text-center bg-white p-4 rounded shadow-sm w-100" style="max-width: 600px;">
+    <head><title>Payment Cancelled</title></head>
+    <body>
+      <h1>Your payment was cancelled.</h1>
+      <p>Sorry to see you go. Feel free to <a href="/">try again</a>.</p>
+    </body>
+</div>
+{% endblock %}
