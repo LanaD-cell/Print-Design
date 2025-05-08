@@ -15,15 +15,20 @@ class Order(models.Model):
     PENDING = 'pending'
     SHIPPED = 'shipped'
     DELIVERED = 'delivered'
+    PAID = 'paid'
 
     STATUS_CHOICES = [
         (PENDING, 'Pending'),
+        (PAID, 'Paid'),
         (SHIPPED, 'Shipped'),
         (DELIVERED, 'Delivered'),
     ]
 
     # Fields
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="orders")
+    created_at = models.DateTimeField(auto_now_add=True)
+    date_completed = models.DateTimeField(null = True, blank = True)
+    complete = models.BooleanField(default=False)
     order_number = models.CharField(max_length=32, null=False, editable=False)
     name = models.CharField(max_length=50, null=False, blank=False)
     email = models.EmailField(max_length=254, null=False, blank=False)
@@ -33,12 +38,10 @@ class Order(models.Model):
     town_or_city = models.CharField(max_length=40, null=False, blank=False)
     street_address1 = models.CharField(max_length=80, null=False, blank=False)
     street_address2 = models.CharField(max_length=80, null=True, blank=True)
-
-    # Delivery option simplified to just standard
-    delivery_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=5.00)  # Fixed cost of 5€
+    delivery_cost = models.DecimalField(max_digits=6, decimal_places=2, null=False, default=5.00)
 
     save_info = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+
     items = models.ManyToManyField('cart.CartItem', related_name='orders_items')
     order_total = models.DecimalField(max_digits=10, decimal_places=2, null=False, default=0)
     cart_total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -60,7 +63,7 @@ class Order(models.Model):
     def update_total(self):
         """Update totals for the order."""
         self.order_total = self.line_items.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
-        self.delivery_cost = 5.00  # Standard delivery cost
+        self.delivery_cost = 5.00
         self.grand_total = self.order_total + self.service_cost + self.delivery_cost
 
     def save(self, *args, **kwargs):

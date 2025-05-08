@@ -1,14 +1,17 @@
 from django import forms
-from .models import Subscriber
+from .models import Subscriber, Newsletter
 from django_summernote.widgets import SummernoteWidget
-from .models import Newsletter
+
 
 class SubscriberForm(forms.ModelForm):
     class Meta:
         model = Subscriber
         fields = ['email']
         widgets = {
-            'email': forms.EmailInput(attrs={'placeholder': 'Enter your email', 'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={
+                'placeholder': 'Enter your email',
+                'class': 'form-control'
+            }),
         }
 
 

@@ -1,3 +1,5 @@
+/* jshint esversion: 8 */
+/* global Stripe */
 const stripe = Stripe('pk_test_51REARw07B3iAgZ7iWDLVkGICKIihYRy4Qwkgp2xmVPq8wulwd3E2mszbQkvII5BLzpDrhiEr2e24vr9vyjwNYVpx00moQgnZMh');
 
 // Event listener for the payment form submit

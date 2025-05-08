@@ -39,7 +39,9 @@ class QuantityOption(models.Model):
     prices, associated with a product size.
     """
     product = models.ForeignKey(
-        'Product', related_name='quantity_options_set', on_delete=models.CASCADE)
+        'Product', related_name='quantity_options_set',
+        on_delete=models.CASCADE
+    )
     quantity = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -87,4 +89,3 @@ class Product(models.Model):
         """Returns a list of quantities and their
         corresponding prices from the JSON field."""
         return self.quantities if self.quantities else []
-

@@ -11,19 +11,20 @@ class Product(models.Model):
     image = CloudinaryField('image')
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
 
-# Product model
 class FAQ(models.Model):
     question = models.CharField(max_length=255)
     answer = models.TextField()
 
     def __str__(self):
-        return self.question
+        return str(self.question)
+
 
 class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    user = models.OneToOneField(
+        User, on_delete=models.CASCADE, related_name='profile')
     email = models.EmailField(default='default@example.com')
     phone_number = models.CharField(max_length=20)
     street_address1 = models.CharField(max_length=255)
@@ -32,7 +33,6 @@ class Profile(models.Model):
     town_or_city = models.CharField(max_length=100)
     country = models.CharField(max_length=100)
 
-
     # Optional delivery address fields
     delivery_country = models.CharField(max_length=100, blank=True)
     delivery_postcode = models.CharField(max_length=20, blank=True)
@@ -40,10 +40,11 @@ class Profile(models.Model):
     delivery_street_address1 = models.CharField(max_length=255, blank=True)
     delivery_street_address2 = models.CharField(max_length=255, blank=True)
 
-    purchased_products = models.ManyToManyField(Product, related_name='purchased_products', blank=True)
+    purchased_products = models.ManyToManyField(
+        Product, related_name='purchased_products', blank=True)
 
     def __str__(self):
-        return f"Profile for {self.user.username}"
+        return f"Profile for {self.user.username}"  # pylint: disable=no-member
 
 
 class Subscriber(models.Model):
@@ -51,7 +52,7 @@ class Subscriber(models.Model):
     subscribed_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.email
+        return str(self.email)
 
 
 class Newsletter(models.Model):
@@ -73,7 +74,7 @@ class Newsletter(models.Model):
     )
 
     def __str__(self):
-        return self.title
+        return str(self.title)
 
     def mark_as_sent(self):
         """ Mark the newsletter as sent """
@@ -83,4 +84,4 @@ class Newsletter(models.Model):
     @property
     def status_display(self):
         """ Return a human-readable status for display """
-        return self.get_status_display()
+        return (self.get_status_display())  # pylint: disable=no-member

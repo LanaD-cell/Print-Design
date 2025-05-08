@@ -1402,6 +1402,10 @@ p.card-text {
         padding-top: 150px !important;
     }
 
+    .container.about-section {
+        max-width: 320px;
+        margin: 0;
+    }
     .about-card {
         max-width: 100% !important;
         margin-top: 220px !important;

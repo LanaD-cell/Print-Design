@@ -1,7 +1,5 @@
 from django.http import HttpResponse
-import logging
-
-logger = logging.getLogger(__name__)
+from checkout.models import Order
 
 
 class StripeWH_Handler:
@@ -23,8 +21,6 @@ class StripeWH_Handler:
         payment_intent = event['data']['object']
         order_number = payment_intent.get('metadata', {}).get('order_number')
 
-        logger.info(f'PaymentIntent for order {order_number} succeeded.')
-
         return HttpResponse(status=200)
 
     def handle_payment_intent_payment_failed(self, event):
@@ -32,6 +28,28 @@ class StripeWH_Handler:
         payment_intent = event['data']['object']
         order_number = payment_intent.get('metadata', {}).get('order_number')
 
-        logger.warning(f'PaymentIntent for order {order_number} failed.')
+        return HttpResponse(status=200)
+
+    def handle_checkout_session_completed(self, event):
+        """Handle the checkout.session.completed webhook from Stripe"""
+        session = event['data']['object']
+        session_id = session.get('id')
+        order_id = session.get('client_reference_id')
+        payment_status = session.get('payment_status')
+
+        if not order_id:
+            return HttpResponse(status=400)
+
+        try:
+            order = Order.objects.get(id=order_id)
+            if payment_status == 'paid':
+                order.status = 'Paid'
+                order.save()
+
+            else:
+                pass
+
+        except Order.DoesNotExist:
+            return HttpResponse(status=404)
 
         return HttpResponse(status=200)

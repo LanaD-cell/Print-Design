@@ -1,5 +1,7 @@
 from django.contrib.sitemaps import Sitemap
-from products.models import Product, Category, ProductSize, QuantityOption
+from products.models import (
+    Product, Category, ProductSize, QuantityOption
+)
 from cart.models import Cart, CartItem
 from checkout.models import Order, OrderLineItem
 from homepage.models import FAQ, Profile, Subscriber, Newsletter
@@ -23,7 +25,6 @@ class GenericModelSitemap(Sitemap):
         self.model = model
 
 
-# Define the sitemaps for each model
 sitemaps = {
     'products': GenericModelSitemap(Product),
     'faqs': GenericModelSitemap(FAQ),

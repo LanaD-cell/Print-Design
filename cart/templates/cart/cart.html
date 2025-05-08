@@ -402,6 +402,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Check if the payment form exists before adding the event listener
+    const submitButton = document.getElementById('submit-button');
     const paymentForm = document.getElementById('payment-form');
     if (paymentForm) {
         paymentForm.addEventListener('submit', async (e) => {
@@ -409,8 +410,18 @@ document.addEventListener('DOMContentLoaded', function () {
             submitButton.disabled = true;
 
             try {
-                const grandTotal = document.getElementById('grand_total').innerText.replace('€', '').trim();
+                // Safely parse the grand total, removing any non-numeric characters and converting to a number
+                let grandTotal = document.getElementById('grand-total').value.replace('€', '').trim();
+            grandTotal = parseFloat(grandTotal).toFixed(2);
+
+                console.log("Grand total:", grandTotal);
+
+                // Ensure the delivery option is selected
                 const deliveryOption = document.querySelector('input[name="delivery_option"]:checked').value;
+
+                console.log("Delivery option selected:", deliveryOption);
+
+                // Send the data to the backend
                 const response = await fetch('/cart/create-checkout-session/', {
                     method: 'POST',
                     headers: {
@@ -418,9 +429,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         'X-CSRFToken': getCookie('csrftoken'),
                     },
                     body: JSON.stringify({
-                        grand_total: grandTotal,
+                        grand_total: grandTotal.toFixed(2),
                         delivery_option: deliveryOption,
-                        order_number: ""
                     })
                 });
 
@@ -447,7 +457,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 });
-
 </script>
 
 <script>

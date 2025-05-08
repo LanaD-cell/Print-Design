@@ -5,5 +5,4 @@ class HomepageConfig(AppConfig):
     name = 'homepage'
 
     def ready(self):
-        # Import the signals to connect them
         import homepage.signals

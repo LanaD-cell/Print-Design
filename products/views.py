@@ -1,27 +1,18 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
-from .models import (Product,
-                    Category,
-                    ProductSize,
-                    QuantityOption
-                    )
+from .models import Product, Category, ProductSize, QuantityOption
 from .forms import ProductForm
 import json
 from django.conf import settings
 
-# This view is for rendering a list of all products
+
 def all_products(request):
-    """ View to show all products, including search and filter by ID or category """
-
-    # Get the product ID from the request (if any)
+    """ View to show all products,
+    including search and filter by ID or category """
     product_id = request.GET.get('product_id', None)
-
-    # Get the category filter (if any)
     category_id = request.GET.get('category_id', None)
-
-    # Initialize the product query
-    products = Product.objects.all()  # Default to show all products
+    products = Product.objects.all()
 
     sort = None
     direction = None
@@ -39,23 +30,21 @@ def all_products(request):
                     sortkey = f'-{sortkey}'
             products = products.order_by(sortkey)
 
-        # Filter by product ID if provided
         if product_id:
             products = products.filter(id=product_id)
 
-        # Filter by category ID if provided
         if category_id:
             products = products.filter(category_id=category_id)
 
     if not products.exists():
-        messages.error(request, 'No products found matching your search criteria.')
+        messages.error(
+            request, 'No products found matching your search criteria.')
 
     current_sorting = f'{sort}_{direction}'
 
     context = {
         'products': products,
         'current_sorting': current_sorting,
-
     }
 
     return render(request, 'products/products.html', context)
@@ -63,49 +52,39 @@ def all_products(request):
 
 def category_detail(request, category_id):
     category = get_object_or_404(Category, id=category_id)
-    return render(request, 'products/product_detail.html', {'category': category})
+    return render(
+        request, 'products/product_detail.html', {'category': category})
 
 
-# This view is for displaying individual product details
 def product_detail(request, product_id):
     product = get_object_or_404(Product, id=product_id)
-
-    # Fetch all available sizes and quantity options
     sizes = product.product_sizes_set.all()
     quantity_options = product.quantity_options_set.all()
 
-    # Initialize default selected values (None)
     selected_size = None
     selected_quantity = None
     selected_services = []
     selected_delivery = None
     total_price = 0.00
 
-    # Check if the form is submitted
     if request.method == 'POST':
         selected_size = request.POST.get('size')
         selected_quantity = request.POST.get('quantity')
         selected_services = request.POST.getlist('additional_services')
         selected_delivery = request.POST.get('delivery_option')
 
-        # Get the price for the selected size and quantity
         size_obj = ProductSize.objects.filter(
             product=product, size=selected_size).first()
         quantity_obj = QuantityOption.objects.filter(
             product=product, quantity=int(selected_quantity)).first()
 
-        # Calculate the total price based on selected size and quantity
         if size_obj and quantity_obj:
             total_price = quantity_obj.price
 
-        # Optionally, add additional service prices to the total price
         for service in selected_services:
-            # For simplicity, let's assume we just add a fixed price per service.
             if service == "Design Service":
                 total_price += 40.00
 
-        # Add delivery cost to the total price
-        # based on the selected delivery option
         if selected_delivery == "Priority Delivery":
             total_price += 15.00
         elif selected_delivery == "Express Delivery":
@@ -126,26 +105,22 @@ def product_detail(request, product_id):
 
     return render(request, 'products/product_detail.html', context)
 
+
 def terms(request):
-    """
-    Renders the terms and conditions when radio
-    button is clicked on the contact form
-    """
+    """ Renders the terms and conditions when
+    radio button is clicked on the contact form """
     return render(request, 'terms.html')
 
+
 def calculate_price(request, product_id):
-    """
-    Calculate the total price, either as a
-    set price for quantity or unit price
-    """
+    """ Calculate the total price, either as
+    a set price for quantity or unit price """
     product = Product.objects.get(id=product_id)
     selected_size = request.POST.get('product_size')
     selected_quantity = int(request.POST.get('product_quantity'))
 
     quantity_option = product.quantity_options.filter(
-        product_size__size=selected_size,
-        quantity=selected_quantity
-    ).first()
+        product_size__size=selected_size, quantity=selected_quantity).first()
 
     if quantity_option:
         unit_price = quantity_option.price
@@ -155,6 +130,7 @@ def calculate_price(request, product_id):
 
     return total_price
 
+
 def main_nav(request):
     return render(request, 'main-nav.html')
 
@@ -162,7 +138,9 @@ def main_nav(request):
 @user_passes_test(lambda u: u.is_superuser)
 def manage_products(request):
     products = Product.objects.all()
-    return render(request, 'admin/manage_products.html', {'products': products})
+    return render(
+        request, 'admin/manage_products.html', {'products': products})
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def create_product(request):
@@ -174,6 +152,7 @@ def create_product(request):
     else:
         form = ProductForm()
     return render(request, 'admin/product_form.html', {'form': form})
+
 
 @user_passes_test(lambda u: u.is_superuser)
 def update_product(request, pk):
@@ -187,10 +166,12 @@ def update_product(request, pk):
         form = ProductForm(instance=product)
     return render(request, 'admin/product_form.html', {'form': form})
 
+
 @user_passes_test(lambda u: u.is_superuser)
 def delete_product(request, pk):
     product = get_object_or_404(Product, pk=pk)
     if request.method == 'POST':
         product.delete()
         return redirect('manage_products')
-    return render(request, 'products/admin/confirm_delete.html', {'product': product})
+    return render(
+        request, 'products/admin/confirm_delete.html', {'product': product})

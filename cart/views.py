@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.http import require_POST
+from django.db import transaction
 from django.contrib import messages
 from checkout.models import Order, OrderLineItem
 from .models import Product, Cart, CartItem
@@ -13,6 +14,8 @@ import stripe
 import re
 from decimal import Decimal
 import json
+
+stripe.api_key = settings.STRIPE_SECRET_KEY
 
 
 def view_cart(request):
@@ -108,16 +111,9 @@ def add_to_cart(request):
             'Own Print Data Upload': Decimal('0.00'),
             'Online Designer': Decimal('35.00'),
             'Design Service': Decimal('40.00'),
-            'Standard Production': Decimal('0.00'),
-            'Priority Production': Decimal('15.00'),
-            '48h Express Production': Decimal('25.00'),
-            '24h Express Production': Decimal('35.00'),
+            'Standard Production': Decimal('5.00'),
         }
 
-        # Debugging purpose
-        print(request.POST)
-
-        # Map the selected services to their corresponding price values
         service_price = sum(
             servicePrices.get(
                 service, Decimal('0.00')) for service in selected_services)
@@ -190,7 +186,14 @@ def remove_item(request, item_id):
     return redirect('cart:cart')
 
 
-stripe.api_key = settings.STRIPE_SECRET_KEY
+def clear_cart(cart):
+    """Clear the cart and reset its total."""
+    cart.items.all().delete()
+    cart.refresh_from_db()
+    print(f"After delete: {cart.items.count()}")
+    cart.grand_total = 0
+    cart.save()
+
 
 @csrf_exempt
 @require_POST
@@ -211,7 +214,8 @@ def create_checkout_session(request):
         request.session['order_number'] = order_number
 
         # Create the Checkout Session
-        success_url = f"{request.build_absolute_uri(reverse('cart:payment_success'))}?session_id={{CHECKOUT_SESSION_ID}}"
+        success_url = f"{request.build_absolute_uri(
+            reverse('cart:payment_success'))}?session_id={{CHECKOUT_SESSION_ID}}"
         print("Stripe success URL:", success_url)
         cancel_url = request.build_absolute_uri(
             reverse('cart:payment_cancel')
@@ -245,79 +249,6 @@ def create_checkout_session(request):
 
 def payment_cancel(request):
     return render(request, 'checkout/cancel.html')
-
-
-def validate_session(request):
-    """Validate and retrieve session ID from request."""
-    session_id = request.GET.get('session_id')
-    if not session_id:
-        messages.error(request, "No session ID provided.")
-        print("No session ID provided.")
-        return None
-    return session_id
-
-
-def retrieve_session_and_intent(session_id):
-    """Retrieve Stripe session and payment intent."""
-    try:
-        print(f"Retrieving session for session_id: {session_id}")
-        session = stripe.checkout.Session.retrieve(session_id)
-        payment_intent_id = session.get('payment_intent')
-        print(f"Retrieving payment intent for {payment_intent_id}")
-        intent = stripe.PaymentIntent.retrieve(payment_intent_id)
-        return session, intent
-    except stripe.error.StripeError as e:
-        print(f"Stripe error: {e}")
-        return None, None
-
-
-def check_payment_success(intent):
-    """Check if payment was successful."""
-    if intent.status != 'succeeded':
-        messages.error(request, "Payment was not successful.")
-        print(f"Payment failed with status: {intent.status}")
-        return False
-    return True
-
-
-def create_order(request, cart):
-    """Create the order and process order line items."""
-    order = Order.objects.create(
-        user=request.user,
-        email=request.user.email,
-        phone_number=request.user.profile.phone_number,
-        country=request.user.profile.country,
-        postcode=request.user.profile.postcode,
-        town_or_city=request.user.profile.town_or_city,
-        street_address1=request.user.profile.street_address1,
-        street_address2=request.user.profile.street_address2,
-    )
-
-    print(f"Creating OrderLineItem for {item.product.name}")
-
-    for item in cart.items.all():
-        print(f"Creating OrderLineItem for {item.product.name}")
-        OrderLineItem.objects.create(
-            order=order,
-            product=item.product,
-            product_size=item.size,
-            quantity=item.quantity,
-            service_price=item.service_price,
-            delivery_price=item.service_price,
-        )
-
-    order.update_total()
-    print(f"Order {order.id} created and total updated.")
-    return order
-
-
-def clear_cart(cart):
-    """Clear the cart and reset its total."""
-    cart.items.all().delete()
-    cart.refresh_from_db()
-    print(f"After delete: {cart.items.count()}")
-    cart.grand_total = 0
-    cart.save()
 
 
 def payment_success(request):
@@ -371,39 +302,114 @@ def payment_success(request):
         return redirect('cart:cart')
 
 
-@csrf_exempt
-def payment_confirm(request):
-    if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
+def validate_session(request):
+    """Validate and retrieve session ID from request."""
+    session_id = request.GET.get('session_id')
+    if not session_id:
+        messages.error(request, "No session ID provided.")
+        print("No session ID provided.")
+        return None
+    return session_id
 
-            payment_method = data.get('payment_method')
-            client_secret = data.get('client_secret')
 
-            # Log the data to ensure client_secret is passed correctly
-            logger.debug(f"Received payment_method: {payment_method}, client_secret: {client_secret}")
+def retrieve_session_and_intent(session_id):
+    """Retrieve Stripe session and payment intent."""
+    try:
+        print(f"Retrieving session for session_id: {session_id}")
+        session = stripe.checkout.Session.retrieve(session_id)
+        payment_intent_id = session.get('payment_intent')
+        print(f"Retrieving payment intent for {payment_intent_id}")
+        intent = stripe.PaymentIntent.retrieve(payment_intent_id)
+        return session, intent
+    except stripe.error.StripeError as e:
+        print(f"Stripe error: {e}")
+        return None, None
 
-            # Extract the PaymentIntent ID from the client_secret
-            match = re.match(r'^(pi_[^_]+)', client_secret or '')
-            if not match:
-                return JsonResponse({'success': False, 'error': 'Invalid client secret'})
 
-            payment_intent_id = match.group(1)
+def check_payment_success(intent):
+    """Check if payment was successful."""
+    if intent.status != 'succeeded':
+        messages.error(request, "Payment was not successful.")
+        print(f"Payment failed with status: {intent.status}")
+        return False
+    return True
 
-            intent = stripe.PaymentIntent.confirm(
-                payment_intent_id,
-                payment_method=payment_method
-            )
 
-            if intent.status == 'succeeded':
-                return JsonResponse({'success': True})
-            else:
-                return JsonResponse({'success': False, 'error': 'Payment failed'})
+def create_order_from_cart(user, cart, order_data):
+    """Creates an order from the given cart and user"""
+    if not cart or not cart.items.exists():
+        raise ValueError("Cart is empty or missing.")
 
-        except stripe.error.StripeError as e:
-            return JsonResponse({'success': False, 'error': str(e)})
+    order_total = Decimal(0)
+    service_total = Decimal(0)
+    delivery_total = Decimal(0)
+    cart_total = Decimal(0)
 
-        except Exception as e:
-            return JsonResponse({'success': False, 'error': 'An error occurred: ' + str(e)})
+    for item in cart.items.all():
+        quantity_info = next(
+            (q for q in item.product.quantities if q['quantity'] == item.quantity), None
+        )
+        item_price = Decimal(quantity_info['price']) if quantity_info else Decimal(0)
+        cart_total += item_price
+        service_total += Decimal(item.service_price)
+        delivery_total += Decimal(item.delivery_price)
 
-    return JsonResponse({'success': False, 'error': 'Invalid request method'})
+    grand_total = cart_total + service_total + delivery_total
+
+    order = Order.objects.create(
+        user=user,
+        name=order_data.get('name', ''),
+        email=order_data.get('email', ''),
+        phone_number=order_data.get('phone_number', ''),
+        country=order_data.get('country', ''),
+        postcode=order_data.get('postcode', ''),
+        town_or_city=order_data.get('town_or_city', ''),
+        street_address1=order_data.get('street_address1', ''),
+        street_address2=order_data.get('street_address2', ''),
+        order_total=order_total,
+        cart_total=cart_total,
+        service_cost=service_total,
+        delivery_cost=delivery_total,
+        grand_total=grand_total
+    )
+
+    for item in cart.items.all():
+        quantity_info = next(
+            (q for q in item.product.quantities if q['quantity'] == item.quantity), None
+        )
+        item_price = Decimal(quantity_info['price']) if quantity_info else Decimal(0)
+        OrderLineItem.objects.create(
+            order=order,
+            product=item.product,
+            quantity=item.quantity,
+            lineitem_total=item_price,
+            service_price=item.service_price,
+            delivery_price=item.delivery_price
+        )
+
+    return order
+
+def create_order(request):
+    if not request.user.is_authenticated:
+        return None
+
+    cart = get_or_create_cart(request)
+
+    # Get order data from POST
+    order_data = {
+        'name': request.POST.get('name', ''),
+        'email': request.POST.get('email', ''),
+        'phone_number': request.POST.get('phone_number', ''),
+        'country': request.POST.get('country', ''),
+        'postcode': request.POST.get('postcode', ''),
+        'town_or_city': request.POST.get('town_or_city', ''),
+        'street_address1': request.POST.get('street_address1', ''),
+        'street_address2': request.POST.get('street_address2', ''),
+    }
+
+    order = create_order_from_cart(request.user, cart, order_data)
+
+    # Clear cart after order is placed
+    cart.items.all().delete()
+
+    return order

@@ -1,10 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django_summernote.admin import SummernoteModelAdmin
-from .models import FAQ
-from .models import Profile
-from .models import Newsletter
-from .models import Subscriber
+from .models import FAQ, Profile, Newsletter, Subscriber
 from django.core.mail import send_mail
 from django.utils.timezone import now
 
@@ -17,6 +14,7 @@ class FAQForm(forms.ModelForm):
 
     # Make sure 'answer' is a CharField and will use Summernote
     answer = forms.CharField(widget=forms.Textarea)
+
 
 # Use Summernote for the FAQ admin
 class FAQAdmin(SummernoteModelAdmin):
@@ -38,13 +36,12 @@ class ProfileAdmin(admin.ModelAdmin):
     )
 
     search_fields = ('user__username', 'user__email', 'phone_number')
-
     list_filter = ('user', 'country')
 
     def get_email(self, obj):
         return obj.user.email
-    get_email.short_description = 'Email'
 
+    get_email.short_description = 'Email'
     ordering = ('user__username',)
 
 
@@ -54,14 +51,21 @@ class NewsletterAdmin(admin.ModelAdmin):
     actions = ['send_newsletter']
 
     def send_newsletter(self, request, queryset):
-        """ Custom admin action to send the selected newsletters to subscribers """
+        """ Custom admin action to send
+        selected newsletters to subscribers. """
         for newsletter in queryset:
             if newsletter.send_at and newsletter.send_at > now():
-                self.message_user(request, f"Newsletter '{newsletter.title}' is scheduled to send at {newsletter.send_at}.")
+                message = (
+                    f"Newsletter '{newsletter.title}' is scheduled to send "
+                    f"at {newsletter.send_at}."
+                )
+                self.message_user(request, message)
                 continue
 
-            # If send_at is in the past or None, proceed with sending the newsletter.
-            recipients = [subscriber.email for subscriber in Subscriber.objects.all()]
+            # If send_at is in the past or None,
+            # proceed with sending the newsletter.
+            recipients = [
+                subscriber.email for subscriber in Subscriber.objects.all()]
 
             send_mail(
                 subject=newsletter.title,
@@ -75,9 +79,14 @@ class NewsletterAdmin(admin.ModelAdmin):
             newsletter.send_at = now()
             newsletter.save()
 
-            self.message_user(request, f"Newsletter '{newsletter.title}' sent to all subscribers!")
+            message = (
+                f"Newsletter '{newsletter.title}' sent to all subscribers!"
+            )
+            self.message_user(request, message)
 
-    send_newsletter.short_description = "Send selected newsletters to subscribers"
+    send_newsletter.short_description = (
+        "Send selected newsletters to subscribers"
+    )
 
 
 # Register the Profile model in the admin interface
@@ -86,5 +95,5 @@ admin.site.register(Profile, ProfileAdmin)
 admin.site.register(FAQ, FAQAdmin)
 # Register Subscriber
 admin.site.register(Subscriber)
-# Register Newsletter, Newsletteradmin
+# Register Newsletter, NewsletterAdmin
 admin.site.register(Newsletter, NewsletterAdmin)
