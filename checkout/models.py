@@ -61,8 +61,9 @@ class Order(models.Model):
 
     def update_total(self):
         """Update totals for the order."""
-        self.order_total = self.line_items.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or 0
-        self.delivery_cost = 5.00
+        self.order_total = self.line_items.aggregate(Sum('lineitem_total'))['lineitem_total__sum'] or Decimal('0.00')
+        self.delivery_cost = Decimal(self.delivery_cost or 0)
+        self.service_cost = Decimal(self.service_cost or 0)
         self.grand_total = self.order_total + self.service_cost + self.delivery_cost
 
     def save(self, *args, **kwargs):

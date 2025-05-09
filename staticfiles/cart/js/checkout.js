@@ -3,7 +3,7 @@
 const stripe = Stripe('pk_test_51REARw07B3iAgZ7iWDLVkGICKIihYRy4Qwkgp2xmVPq8wulwd3E2mszbQkvII5BLzpDrhiEr2e24vr9vyjwNYVpx00moQgnZMh');
 
 // Event listener for the payment form submit
-document.getElementById('payment-form').addEventListener('submit', async (e) => {
+document.getElementById('payment-form')?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // Function to get CSRF token from cookies
@@ -24,8 +24,15 @@ document.getElementById('payment-form').addEventListener('submit', async (e) => 
 
     try {
         // Gather the data needed to send to the backend
+        const name = document.getElementById('id_name').value;
+        const email = document.getElementById('email').value;
+        const phone = document.getElementById('phone_number').value;
+        const address_line_1 = document.getElementById('address_line_1').value;
+        const town_or_city = document.getElementById('town_or_city').value;
+        const postcode = document.getElementById('postcode').value;
+        const country = document.getElementById('country').value;
         const grandTotal = parseFloat(document.getElementById('grand-total').value);
-        const deliveryOption = document.querySelector('input[name="delivery_option"]:checked').value;  // Assuming you have a delivery option field
+        const deliveryOption = document.querySelector('input[name="delivery_option"]:checked')?.value || '';
 
         // Send a request to your server to create a checkout session
         const response = await fetch('/cart/create-checkout-session/', {
@@ -35,8 +42,15 @@ document.getElementById('payment-form').addEventListener('submit', async (e) => 
                 'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify({
-                grand_total: grandTotal,
-                delivery_option: deliveryOption
+                name,
+                email,
+                phone,
+                address_line_1,
+                town_or_city,
+                postcode,
+                country,
+                delivery_option: deliveryOption,
+                grand_total: grandTotal
             })
         });
 

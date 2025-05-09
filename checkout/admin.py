@@ -12,6 +12,7 @@ class OrderAdmin(admin.ModelAdmin):
 
     # Display fields for the Order model, not OrderItem
     list_display = ('order_number', 'created_at', 'name',
+                    'status',
                     'order_total', 'delivery_cost', 'service_cost',
                     'grand_total',)
 
@@ -20,7 +21,8 @@ class OrderAdmin(admin.ModelAdmin):
                        'delivery_cost', 'order_total',
                        'grand_total',)
 
-    fields = ('order_number', 'created_at', 'name',
+    fields = ('order_number', 'created_at',
+              'status', 'name',
               'email', 'phone_number', 'country',
               'postcode', 'town_or_city', 'street_address1',
               'service_cost', 'delivery_cost',

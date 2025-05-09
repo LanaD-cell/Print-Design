@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card p-4">
+    <h2 class="mb-3">Order #{{ order.order_number }}</h2>
+    <p><strong style="color: white;">Date:</strong> {{ order.created_at }}</p>
+    <p><strong style="color: white;">Total Paid:</strong> €{{ amount }}</p>
+
+    <h4 class="mt-4">Items</h4>
+    {% for item in order.line_items.all %}
+      <div class="mb-3 border p-3 rounded">
+        <h5>{{ item.product.name }}</h5>
+        <p>Size: {{ item.product_size }}</p>
+        <p>Quantity: {{ item.quantity }}</p>
+        <p>Price: €{{ item.product.price }}</p>
+        <p>Service Price: €{{ item.service_price }}</p>
+        <p>Total: €{{ item.lineitem_total }}</p>
+      </div>
+    {% endfor %}
+
+    <a href="{% url 'products' %}" class="btn btn-primary mt-4">Order Again</a>
+  </div>
+</div>
+{% endblock %}

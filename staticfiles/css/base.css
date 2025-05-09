@@ -81,25 +81,28 @@ strong {
 
 #carousel-hp .carousel-inner .carousel-item img {
     max-height: 400px;
-    object-fit: cover;
 }
 
 .carousel-caption p {
     font-size: 1rem;
 }
+
+#seals-section {
+    margin-top: 70px;
+}
 .welcome-robot {
     position: relative;
-    margin-top: -80px;
+    margin-top: -30px;
     height: 500px;
     z-index: 9999;
-    margin-left: 240px;
+    margin-left: 20px;
 }
 
 .homepage-text {
     color: white;
     background-color: rgba(11, 82, 91, 0.8);
+    margin-left: 20px;
     font-weight: bold;
-    margin-left: 350px;
     border-radius: 10px;
     padding: 3px;
 }
@@ -596,11 +599,40 @@ footer .social-icons a:hover {
     width: auto;
 }
 
+/* Base Badge Style */
+.badge {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    display: inline-block;
+    font-weight: bold;
+}
+
+/* Status-specific Badge Styles */
+.status-pending {
+    background-color: #f1c40f;
+    color: #212f45;
+}
+
+.status-processing {
+    background-color: #3498db;
+    color: #ffffff;
+}
+
+.status-delivered {
+    background-color: #28b463;
+    color: #ffffff;
+}
+
+.status-cancelled {
+    background-color: #c0392b;
+    color: #ffffff;
+}
+
 /* ---- About ---- */
 .container.about-section {
     max-width: 1200px;
-    margin: 90px 30px;
-    background: #fff;
+    background: white;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
@@ -1172,6 +1204,13 @@ p.card-text {
     .nav-icon {
         font-size: 18px;
     }
+    .welcome-robot {
+    height: 400px;
+    }
+    .container.about-section {
+        max-width: 100%;
+        margin: 5px;
+    }
 
     .shop-now-button, .btn-dark {
         font-size: 20px;
@@ -1213,6 +1252,10 @@ p.card-text {
 
     .navbar-search {
         width: 60%;
+    }
+
+    .welcome-robot {
+    height: 300px;
     }
 
     .icon-ul {
@@ -1305,6 +1348,23 @@ p.card-text {
         font-size: 14px;
     }
 
+    .homepage-text {
+        margin: 5px;
+    }
+
+    #carousel-hp {
+        max-width: 100%;
+        margin: 20px;
+        height: 100px;
+    }
+
+    #seals-section {
+        margin-top: 150px;
+    }
+
+    .container.about-section {
+        margin: 0;
+    }
     #site-links {
         padding-top: 180px;
     }
@@ -1408,7 +1468,6 @@ p.card-text {
     }
     .about-card {
         max-width: 100% !important;
-        margin-top: 220px !important;
         padding: 15px !important;
     }
 
@@ -1508,7 +1567,11 @@ p.card-text {
     }
     .delivery-banner {
         max-width: 100%;
+    }
 
+    #carousel-hp {
+        margin-left: 30px;
+        height: 100px;
     }
 
     .cart-item-details {

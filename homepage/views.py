@@ -31,6 +31,7 @@ def homepage(request):
 def profile_view(request):
     if request.user.is_authenticated:
         user = request.user
+
         user_orders = Order.objects.filter(
             user=user
         ).order_by('-created_at')
@@ -41,6 +42,10 @@ def profile_view(request):
         previous_orders = user_orders.filter(
             status__in=['Delivered', 'Cancelled']
         )
+
+        # Debugging output
+        print("Current Orders:", current_orders)
+        print("Previous Orders:", previous_orders)
 
         return render(request, 'profile/profile.html', {
             'current_orders': current_orders,

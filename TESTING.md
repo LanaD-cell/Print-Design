@@ -346,7 +346,6 @@ Test results the same across all pages e.g. sort category price high to low, a-z
 
 <img src="readme/testing/rm-lighthouse-eventpage.png" width="70%"><br><br>
 
-</details>
 
 ## Automated Testing
 
@@ -354,7 +353,7 @@ Test results the same across all pages e.g. sort category price high to low, a-z
 ### Bugs
 
   #### Secret Key commited
-    - I added the SK to the Js in order_checkout js for testing purposes,
+  - I added the SK to the Js in order_checkout js for testing purposes,
       as the payment was throuwing Invalid Client Secret errors.
       Then I forgot to remove it before committing changes and opened a can of worms.
       I received a fatal error that Github piscked up that a SK was commit and
@@ -364,7 +363,12 @@ Test results the same across all pages e.g. sort category price high to low, a-z
       of just changing my SK in Stripe and allowing the old SK to be sent through
       as a test SK to Guthub. On the surface it seems to have worked.
 
-</details>
+  #### order dynamically move from current to previous order on status change
+  - I am sure this is not a difficult fix, but due to time constraint I will need
+    to complete this in future rollouts. The order status shows in the profile, can
+    be changed in the admin Order model. But the update does not trigger the switch.
+
+  <img src="static/images/documentation/bug-previous-orders.png" width="70%"><br><br>
 
 ## Resources
 

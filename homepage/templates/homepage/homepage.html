@@ -57,9 +57,10 @@
       </div>
       {% endblock %}
 
+      {% block ceals %}
       <!-- Seals and Text Side-by-Side -->
-      <div class="col-12 mt-4">
-        <div class="row align-items-center justify-content-center">
+      <div class="col-12">
+        <div class="row align-items-center justify-content-center" id="seals-section">
           <!-- Paragraph Column -->
           <div class="col-12 col-md-4 order-2 order-md-1">
             <p class="homepage-text text-center">
@@ -70,35 +71,46 @@
             </p>
           </div>
           <!-- Seals Column -->
-          <div class="col-12 col-md-8 order-1 order-md-2 d-flex justify-content-center gap-4 flex-wrap mb-3 mb-md-0">
-            <a href="">
-              <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal3_c49pnq.webp"
-                   alt="Seal Image 3"
-                   title="Seal 3"
-                   class="img-fluid"
-                   style="width: 120px; height: 120px;"
-                   onError="this.onerror=null; this.src='/static/images/seal3.webp';">
-            </a>
-            <a href="">
-              <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal2_yh205p.webp"
-                   alt="Seal Image 2"
-                   title="Seal 2"
-                   class="img-fluid"
-                   style="width: 120px; height: 120px;"
-                   onError="this.onerror=null; this.src='/static/images/seal2.webp';">
-            </a>
-            <a href="">
-              <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal1_faqxth.webp"
-                   alt="Seal Image 1"
-                   title="Seal 1"
-                   class="img-fluid"
-                   style="width: 120px; height: 120px;"
-                   onError="this.onerror=null; this.src='/static/images/seal1.webp';">
-            </a>
+          <div class="col-12 col-md-8 order-1 order-md-2 d-flex justify-content-center gap-4 flex-wrap mb-3 mb-md-0" id="seal-section">
+            <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal3_c49pnq.webp"
+                alt="Seal Image 3"
+                title="Seal 3"
+                class="img-fluid"
+                style="width: 120px; height: 120px; object-fit: cover;"
+                loading="lazy"
+                onerror="this.onerror=null; this.src='/static/images/seal3.webp';">
+
+            <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal2_yh205p.webp"
+                alt="Seal Image 2"
+                title="Seal 2"
+                class="img-fluid"
+                style="width: 120px; height: 120px; object-fit: cover;"
+                loading="lazy"
+                onerror="this.onerror=null; this.src='/static/images/seal2.webp';">
+
+            <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1743676161/seal1_faqxth.webp"
+                alt="Seal Image 1"
+                title="Seal 1"
+                class="img-fluid"
+                style="width: 120px; height: 120px; object-fit: cover;"
+                loading="lazy"
+                onerror="this.onerror=null; this.src='/static/images/seal1.webp';">
+
+            <img src="https://res.cloudinary.com/dvs5uituk/image/upload/v1746772275/freepik__background__6457_fgyq19.webp"
+                alt="Seal Image 4"
+                title="Seal 4"
+                class="img-fluid"
+                style="width: 120px; height: 120px; object-fit: cover;"
+                loading="lazy"
+                onerror="this.onerror=null; this.src='/static/images/seal1.webp';">
+          </div>
+
           </div>
         </div>
       </div>
     </div>
+
+    {% endblock %}
 
   <div class="row">
     <div class="col-12">
@@ -106,7 +118,7 @@
       <!-- About Section -->
       <div class="container about-section">
         <div class="row">
-          <div class="col-md-4 text-center">
+          <div class="col-md-4 text-center" id="about-logo-text">
             <div class="about-image">
               <img src="/static/images/about-logo.png" alt="About Photo"
                    class="img-fluid mb-3" style="width: 180px; height: 180px; border: 5px solid #fff;">

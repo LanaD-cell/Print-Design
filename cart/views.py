@@ -23,8 +23,6 @@ def view_cart(request):
     try:
         # Get the user's cart, raise an exception if not found
         cart = Cart.objects.get(user=request.user)
-
-        # Get the related CartItems
         cart_items = cart.items.all()
 
         if not cart_items.exists():
@@ -494,3 +492,13 @@ def create_order(request):
     cart.items.all().delete()
 
     return order
+
+
+def order_detail(request, order_number):
+    order = get_object_or_404(Order, order_number=order_number, user=request.user)
+    return render(request, 'cart/order_detail.html', {
+        'order': order,
+        'order_number': order.order_number,
+        'amount': order.grand_total,
+        'user': request.user,
+    })
