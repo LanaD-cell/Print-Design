@@ -11,7 +11,7 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/v1746791068/bg-img_1_cpykti.webp') no-repeat,
+    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/v1746815948/bg-img_2_afdcyi.jpg') no-repeat,
                 url('/static/images/bgimg.png') no-repeat center center;
     background-size: cover;
     background-position: center center;
