@@ -321,10 +321,9 @@ def process_cart_and_order(cart, order_number):
                 additional_services=cart_item.services
             )
 
-        cart.items.all().delete()
-        print(f"Cart cleared. Remaining items: {cart.items.count()}")
-
-        print(f"Order created successfully for {order_number}")
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart:
+            clear_cart(cart)
 
     except Exception as e:
         print(f"Error while processing cart: {str(e)}")
@@ -359,16 +358,6 @@ def payment_success(request):
         # Optional order number (not required for success display)
         order_number = request.session.get('order_number', 'UNKNOWN')
         print(f"Order number: {order_number}")
-
-        if "cart" in request.session:
-            print("Cart in session:", request.session["cart"])
-
-            del request.session["cart"]
-            request.session.modified = True
-            request.session.save()
-            print("Cart deleted from session")
-        else:
-            print("No cart found in session")
 
         # Prepare success page response
         response = render(request, 'cart/success.html', {

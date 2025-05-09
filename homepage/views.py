@@ -97,7 +97,7 @@ def subscribe(request):
                 extra_tags="subscription"
             )
             form = SubscriberForm()
-            return redirect('subscribe')
+            return redirect('homepage:subscribe')
     else:
         form = SubscriberForm()
 
