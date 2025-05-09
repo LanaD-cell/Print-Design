@@ -35,13 +35,14 @@ class Cart(models.Model):
 
     def grand_total(self):
         """Final total: items + VAT + delivery."""
-        subtotal = self.items_subtotal()
-        vat = self.calculate_vat(subtotal)
-        delivery = self.get_delivery_price()
+        subtotal = Decimal(self.items_subtotal() or 0)
+        vat = Decimal(self.calculate_vat(subtotal) or 0)
+        delivery = Decimal(self.get_delivery_price() or 0)
+
         return subtotal + vat + delivery
 
     def __str__(self):
-        return f"Cart for {self.user.username}"
+        return f"Cart for {self.user.username if self.user else 'Anonymous'}"
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)

@@ -12,17 +12,17 @@ class OrderAdmin(admin.ModelAdmin):
 
     # Display fields for the Order model, not OrderItem
     list_display = ('order_number', 'created_at', 'name',
-                    'status',
+                    'status', 'session_id',
                     'order_total', 'delivery_cost', 'service_cost',
                     'grand_total',)
 
     # Fields to be displayed as read-only in the Order admin
     readonly_fields = ('order_number', 'created_at',
                        'delivery_cost', 'order_total',
-                       'grand_total',)
+                       'grand_total', 'session_id',)
 
     fields = ('order_number', 'created_at',
-              'status', 'name',
+              'status', 'name', 'session_id',
               'email', 'phone_number', 'country',
               'postcode', 'town_or_city', 'street_address1',
               'service_cost', 'delivery_cost',

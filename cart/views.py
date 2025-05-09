@@ -360,6 +360,16 @@ def payment_success(request):
         order_number = request.session.get('order_number', 'UNKNOWN')
         print(f"Order number: {order_number}")
 
+        if "cart" in request.session:
+            print("Cart in session:", request.session["cart"])
+
+            del request.session["cart"]
+            request.session.modified = True
+            request.session.save()
+            print("Cart deleted from session")
+        else:
+            print("No cart found in session")
+
         # Prepare success page response
         response = render(request, 'cart/success.html', {
             'order_number': order_number,
@@ -498,7 +508,7 @@ def create_order(request):
 def order_detail(request, order_number):
     print(f"Requested order number: {order_number}")
     order = get_object_or_404(Order, order_number=order_number, user=request.user)
-    order_line_items = order.orderitem_set.all()
+    order_line_items = order.line_items.all()
     return render(request, 'cart/order_detail.html', {
         'order': order,
         'order_number': order.order_number,

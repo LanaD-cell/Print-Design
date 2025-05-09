@@ -16,3 +16,9 @@ def create_user_profile(sender, instance, created, **kwargs):
 def save_user_profile(sender, instance, **kwargs):
     instance.profile.save()
     print(f"Profile saved for {instance.username}")
+
+@receiver(post_save, sender=User)
+def ensure_profile_exists(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+

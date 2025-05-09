@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container d-flex justify-content-start align-items-start min-vh-100 p-3">
+  <section id="success" class="p-4 rounded shadow-sm w-100"
+          style="max-width: 600px; background-color: #0b525b;">
+    <h1 class="mb-4" style="color: white;">Contact Us</h1>
+
+    <form id="contact-form" method="POST" style="color: white;">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <button type="button" class="btn btn-primary" id="contact-submit">Submit</button>
+    </form>
+  </section>
+</div>
+
+<script>
+  document.getElementById('contact-submit').addEventListener('click', function(event) {
+    event.preventDefault(); // Prevent any other form submission logic from interfering
+
+    // Submit the form manually
+    document.getElementById('contact-form').submit();
+  });
+</script>
+{% endblock %}

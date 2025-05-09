@@ -9,47 +9,41 @@
         <div class="order-summary">
           <h4>Order Information</h4>
           <p><strong>Order Number:</strong> {{ order_number }}</p>
-          <p><strong>Order Total:</strong> €{{ amount }}</p>
-          <p><strong>Shipping Address:</strong> {{ order.street_address1 }}, {{ order.town_or_city }}, {{ order.country }}</p>
           <p><strong>Email:</strong> {{ order.email }}</p>
-          <p><strong>Phone:</strong> {{ order.phone_number }}</p>
         </div>
 
-        <div class="order-line-items">
-          <h4>Order Items</h4>
-            <table class="table">
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Size</th>
-                  <th>Quantity</th>
-                  <th>Price</th>
-                  <th>Service Price</th>
-                  <th>Total Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for item in order_line_items %}
-                  <tr>
-                    <td>{{ item.product.name }}</td>
-                    <td>{{ item.product_size }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>€{{ item.lineitem_total }}</td>
-                    <td>€{{ item.service_price }}</td>
-                    <td>€{{ item.lineitem_total + item.service_price }}</td>
-                  </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-        </div>
+         <div class="order-line-items">
+        <h4>Order Items</h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Size</th>
+              <th>Quantity</th>
+              <th>Price</th>
+              <th>Service Price</th>
+              <th>Total Price</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in order_line_items %}
+              <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.product_size }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>{{ item.lineitem_total }}</td>
+                <td>{{ item.service_price }}</td>
+                <td>{{ item.lineitem_total|add:item.service_price }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="6">No items in this order.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
 
-        <div class="order-totals">
-          <h4>Totals</h4>
-          <p><strong>Order Total:</strong> €{{ amount }}</p>
-          <p><strong>VAT (19%):</strong> €{{ order.grand_total|floatformat:2|multiply:0.19 }}</p>
-          <p><strong>Delivery:</strong> €{{ order.delivery_cost }}</p>
-          <p><strong>Grand Total:</strong> €{{ order.grand_total }}</p>
-        </div>
     </section>
   </div>
 {% endblock %}

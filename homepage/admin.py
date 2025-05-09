@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django import forms
 from django_summernote.admin import SummernoteModelAdmin
-from .models import FAQ, Profile, Newsletter, Subscriber
+from .models import FAQ, Profile, Newsletter, Subscriber, ContactRequest
 from django.core.mail import send_mail
 from django.utils.timezone import now
 
@@ -88,6 +88,10 @@ class NewsletterAdmin(admin.ModelAdmin):
         "Send selected newsletters to subscribers"
     )
 
+class ContactRequestAdmin(admin.ModelAdmin):
+    list_display = ('first_name', 'last_name', 'email', 'created_at')
+    search_fields = ('first_name', 'last_name', 'email')
+
 
 # Register the Profile model in the admin interface
 admin.site.register(Profile, ProfileAdmin)
@@ -97,3 +101,4 @@ admin.site.register(FAQ, FAQAdmin)
 admin.site.register(Subscriber)
 # Register Newsletter, NewsletterAdmin
 admin.site.register(Newsletter, NewsletterAdmin)
+admin.site.register(ContactRequest, ContactRequestAdmin)

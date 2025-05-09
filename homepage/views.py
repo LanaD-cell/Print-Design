@@ -1,5 +1,7 @@
 from .models import FAQ
+from django.views.decorators.csrf import csrf_exempt
 from allauth.account.models import EmailConfirmation
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -7,8 +9,8 @@ from checkout.models import Order
 from django.contrib.auth.views import LoginView
 from django.contrib.auth import logout
 from django.core.mail import send_mail
-from .forms import SubscriberForm
-from .models import Subscriber, FAQ
+from .forms import SubscriberForm, ContactRequestForm
+from .models import Subscriber, FAQ, ContactRequest
 from cart.models import Cart
 
 
@@ -109,3 +111,33 @@ def send_newsletter(subject, message):
 
 def facebook_mockup(request):
     return render(request, 'mockups/facebook_mockup.html')
+
+
+def contact_view(request):
+    if request.method == 'POST':
+        form = ContactRequestForm(request.POST)
+        if form.is_valid():
+            contact = ContactRequest(
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                email=form.cleaned_data['email'],
+                message=form.cleaned_data['message'],
+            )
+            contact.save()
+
+            send_mail(
+                'New contact form message',
+                f"Message from {form.cleaned_data['first_name']} {form.cleaned_data['last_name']}:\n\n{form.cleaned_data['message']}",
+                form.cleaned_data['email'],
+                [settings.DEFAULT_FROM_EMAIL],
+            )
+
+            return redirect('homepage:contact_success')
+        else:
+            return render(request, 'contact/contact.html', {'form': form})
+    else:
+        form = ContactRequestForm()
+        return render(request, 'contact/contact.html', {'form': form})
+
+def contact_success_view(request):
+    return render(request, 'contact/contact_success.html')

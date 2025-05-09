@@ -347,9 +347,6 @@ Test results the same across all pages e.g. sort category price high to low, a-z
 <img src="readme/testing/rm-lighthouse-eventpage.png" width="70%"><br><br>
 
 
-## Automated Testing
-
-
 ### Bugs
 
   #### Secret Key commited
@@ -363,12 +360,39 @@ Test results the same across all pages e.g. sort category price high to low, a-z
       of just changing my SK in Stripe and allowing the old SK to be sent through
       as a test SK to Guthub. On the surface it seems to have worked.
 
-  #### order dynamically move from current to previous order on status change
+  #### Order dynamically move from current to previous order on status change
   - I am sure this is not a difficult fix, but due to time constraint I will need
     to complete this in future rollouts. The order status shows in the profile, can
     be changed in the admin Order model. But the update does not trigger the switch.
 
   <img src="static/images/documentation/bug-previous-orders.png" width="70%"><br><br>
+
+  #### Account Signup bug
+
+  - If a user attempts to register with a common password and receives a validation error,
+   but then resubmits the form with a new password, Django may process the account creation
+   without successfully creating a related Profile object due to the existing unique
+   constraint on user_id in the homepage_profile table.
+   This results in a server error when the application tries to create a duplicate profile for the same user.
+
+   The Profile model has a one-to-one relationship with the User model, enforced by
+   a unique constraint on user_id. Currently,
+   the profile is created manually after user creation,
+   and there's no safeguard to ensure the profile is only
+   created once or automatically tied to the user during all registration flows.
+
+  After extensive searching it was suggested to me to implement a signal (Homapage.signals.py) to automatically
+  create a Profile whenever a new User is successfully created.
+
+  <img src="static/testing-docs/account-signup-bug.png" width="70%"><br><br>
+
+ #### Order_detail bug
+
+  - The Page as seen is connected to the order success page, that when clicked is supposed to open
+    this page. The page opens successfully, but no product information is being pulled dynamically.
+    As this is not a system failure, rasther just a nice to have, I will refer this to future fixes.
+
+  <img src="static/testing-docs/order-detail.bug.png" width="70%"><br><br>
 
 ## Resources
 
@@ -383,6 +407,8 @@ Test results the same across all pages e.g. sort category price high to low, a-z
 
 ## Retrospective
 
-At the end of this process, I feel pretty dissatisfied. With the previous 4 projects I had ample time to give it my best, learn some additional things on the side etc. This, the last and most important project, the time  limit was simply inadequate. I had major problems along the way that caused me immense time wastage (the error in accidentally commiting the secret key) and then also made the initial error in choosing products that have a fixed quantity to price combinations. that was not at all straight forward to figure out for correct pricing.
+At the end of this process, I feel pretty dissatisfied. With the previous 4 projects I had ample time to give it my best, learn some additional things on the side etc. This, the last and most important project, the time  limit was simply inadequate. I had major problems along the way that caused me immense time wastage (the error in accidentally commiting the secret key) and then also made the initial error in choosing products that have a fixed quantity to price combinations. That was not at all straight forward to figure out for correct pricing. Ontop of that I feel I folded a bit under the perceived timecontraints, causing me to make unnecesary mistakes and wasting further time.
+
+That said, I am super proud of the progress I have made in a very short time and the projects I have put out... this one included. This project will become the jumping board for a realworld site we want to run.
 
 <p align="right">(<a href="#contents">back to top</a>)</p>
