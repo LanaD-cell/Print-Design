@@ -321,7 +321,8 @@ def process_cart_and_order(cart, order_number):
                 additional_services=cart_item.services
             )
 
-        cart.items.clear()
+        cart.items.all().delete()
+        print(f"Cart cleared. Remaining items: {cart.items.count()}")
 
         print(f"Order created successfully for {order_number}")
 
