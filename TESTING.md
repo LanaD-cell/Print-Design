@@ -6,146 +6,59 @@ This is the testing information for my project 5 eCommerce store Print & Design
 
 <br>
 
-## CONTENTS
+# Table of Contents
 
-[Features Testing](#features-testing)
+1. [PEP8 Testing](#pep8-testing)
+   - [Product - View.py](#product---viewpy)
+   - [Product - Urls.py](#product---urlspy)
+   - [Product - Models.py](#product---modelspy)
+   - [Product - Forms.py](#product---formspy)
+   - [Product - App.py](#product---app-py)
+   - [Product - Admin.py](#product---admin-py)
+   - [Print Design - Sitemaps.py](#print-design---sitemaps-py)
+   - [Print Design - Urls.py](#print-design---urlspy)
+   - [Manage.py](#managepy)
+   - [Homepage - View.py](#homepage---viewpy)
+   - [Homepage - Urls.py](#homepage---urlspy)
+   - [Homepage - Signals.py](#homepage---signalspy)
+   - [Homepage - Forms.py](#homepage---formspy)
+   - [Homepage - Model.py](#homepage---modelpy)
+   - [Homepage - App.py](#homepage---app-py)
+   - [Homepage - Admin.py](#homepage---admin-py)
+   - [Checkout - Webhooks.py](#checkout---webhookspy)
+   - [Checkout - Webhook-handler.py](#checkout---webhook-handlerpy)
 
-[Admin Features](#admin-features)
+2. [CSS Validation](#css-validation)
 
+3. [JavaScript Validation](#javascript-validation)
 
-[Store Features](#store-features)
-- [Home Page Features](#home-page-features)
-- [Navigation Bar Features](#navigation-bar-features)
-- [Authentication Pages](#authentication-pages)
-- [Products Page](#products-page)
-- [Product Detail & Reviews](#product-detail-page)
-- [Checkout Page](#checkout-page)
-- [Profile Page](#profile-page)
-- [Contact Us Page](#contact-us-page)
-- [Wish List Page](#wish-list-page)
-- [Newsletter Page](#newsletter-page)
-- [Events Page](#events-page)
-- [Compliance Pages](#compliance-pages)
-- [Footer](#footer)
+4. [HTML Validation](#html-validation)
 
-[UI Testing](#ui-testing)
+5. [Lighthouse Validation](#lighthouse-validation)
+   - [Homepage](#homepage)
+   - [Products](#products)
+   - [Signup](#signup)
+   - [Login](#login)
+   - [Cart](#cart)
+   - [Payment Success](#payment-success)
+   - [Profile](#profile)
+   - [Order Details](#order-details)
+   - [Newsletter](#newsletter)
+   - [Product Management](#product-management)
+   - [Admin](#admin)
 
-[Browser Compatibility](#browser-compatibility)
+6. [Bug Testing & Known Issues Report](#bug-testing--known-issues-report)
+   - [Cart and Order](#cart-and-order)
+   - [Secret Key Committed](#secret-key-committed)
+   - [Order dynamically move from current to previous order on status change](#order-dynamically-move-from-current-to-previous-order-on-status-change)
+   - [Account Signup bug](#account-signup-bug)
+   - [Order_detail bug](#order-detail-bug)
 
-[Responsiveness](#responsiveness)
+7. [Resources](#resources)
 
-[Code Validation](#code-validation)
-
-- [CSS Validation](#css-validation)
-
-- [JavaScript Validation](#javascript-validation)
-
-- [HTML Validation](#html-validation)
-
-<br>
-
-[Lighthouse Validation](#lighthouse-validation)
-
-- [index](#index-page)
-- [registration](#registration-page )
-- [login](#login-page)
-- [forgotten password](#forgotten-password-page)
-- [products page](#products-page-1)
-- [checkout page](#checkout-page-1)
-- [checkout success page](#checkout-success-page)
-- [contact us page](#contact-us-page-1)
-- [newsletter page](#newsletter-page-1)
-- [event page](#event-page)
-
-[Behaviour Driven Testing](#behaviour-driven-testing)
-
-[Automated Testing](#automated-testing)
-
-[Bugs](#bugs)
-
-[Resources](#resources)
-
-[Retrospective](#retrospective)
-
-<br>
-
-### Validator Testing
-
-- HTML
-  - No errors were returned when passing through the official [W3C validator](https://validator.w3.org/nu/?doc=https%3A%2F%2Fcode-institute-org.github.io%2Flove-running-2.0%2Findex.html)
-- CSS
-  - No errors were found when passing through the official [(Jigsaw) validator](https://jigsaw.w3.org/css-validator/validator?uri=https%3A%2F%2Fvalidator.w3.org%2Fnu%2F%3Fdoc%3Dhttps%253A%252F%252Fcode-institute-org.github.io%252Flove-running-2.0%252Findex.html&profile=css3svg&usermedium=all&warning=1&vextwarning=&lang=en#css)
+8. [Retrospective](#retrospective)
 
 
-
-
-## Features Testing
-
-A thorough manual testing process was undertaken to ensure all parts of the store worked as it should. Both the admin area and the main store were tested.
-
-<details>
-
-### Admin Features:
-
-Manual tests were conducted in the admin area to ensure everything is working. There was an error when deleting orders and the necessary refactoring of code took place to remove that error.
-
-Admin Area - Role based access control successful - users are unable to log into the admin area
-
-<img src="readme/testing/rm-testing-admin.png" width="80%"><br><br>
-
-In the admin area products/categories/reviews can be added, edited and deleted. The following manual tests took place to ensure they all worked.
-
-Reviews area:
-
-<img src="readme/testing/rm-admin-reviews.png" width="80%"><br><br>
-
-Review selected and ready to delete - PASSED
-
-<img src="readme/testing/rm-admin-reviews-delete.png" width="80%"><br><br>
-
-Confirm deletion of review - PASSED
-
-<img src="readme/testing/rm-admin-reviews-delete-confirm.png" width="80%"><br><br>
-
-Success message to show review has been deleted - PASSED
-
-<img src="readme/testing/rm-admin-reviews-delete-success.png" width="80%"><br><br>
-
-Highlight orders to be deleted - PASSED
-
-<img src="readme/testing/rm-admin-delete-orders.png" width="80%"><br><br>
-
-Confirmation of order deletion - PASSED
-
-<img src="readme/testing/rm-admin-delete-orders-confirm.png" width="80%"><br><br>
-
-Adding new categories - PASSED
-<img src="readme/testing/rm-admin-category.png" width="80%"><br><br>
-
-Adding new products - PASSED
-<img src="readme/testing/rm-admin-add-product.png" width="80%"><br><br>
-
-**Emails via gmail:**
-Emails are received (to the gmail account being used to send emails to customers) when a new order is placed. If an email is incorrect admin is also told about that too. These emails are just test@test.com emails used when testing checkout.
-
-<img src="readme/testing/rm-testing-email.png" width="90%"><br><br>
-
-</details>
-
-<p align="right">(<a href="#contents">back to top</a>)</p>
-
-### Store Features
-
-Tests have been undertaken to ensure the registration, email confirmation, confirming email, log-in, log out and password request all work.
-Also tested has been the shopping journey from adding to wishlist, adding and removing products to shopping cart and checking out as an anonymous buyer as well as a registered buyer.
-The process of adding a review has been tested for buyers and also for unregistered users.
-This has all been documented on the [READ ME HERE](https://github.com/todiane/poster-palace)
-
-<details>
-
-Other manual tests have taken place.
-
-I went through the customer journey procedure myself and three other people tested the site and the checkout process as well as adding a review and using the wishlist. Below are the results
 
 
 ## PEP8 Testing
@@ -245,39 +158,6 @@ success.html.js
 
 ## HTML Validation
 
-<details>
-
-| Page | Validation Image |
-|:---|:---: |
-| Base.html  |  <img src="readme/testing/rm-html-checker-success.png" width="90%">  |
-| Index  |  <img src="readme/testing/rm-html-checker-success.png" width="90%">  |
-| Main Navbar |  <img src="readme/testing/rm-html-checker-success.png" width="90%">  |
-| Mobile Navbar |  <img src="readme/testing/rm-html-checker-success.png" width="90%">  |
-| Register |  <img src="readme/testing/rm-html-checker-success.png" width="90%"> |
-| Log In |  <img src="readme/testing/rm-html-checker-success.png" width="90%"> |
-| Log Out | <img src="readme/testing/rm-html-checker-success.png" width="90%">  |
-| Product | <img src="readme/testing/rm-html-checker-success.png" width="90%">    |
-| Product Details | <img src="readme/testing/rm-html-checker-success.png" width="90%">    |
-| Checkout |  <img src="readme/testing/rm-html-checker-success.png" width="90%">  |
-| Checkout Success | <img src="readme/testing/rm-html-checker-success.png" width="90%">   |
-| Profile |  <img src="readme/testing/rm-html-checker-success.png" width="90%"> |
-| About Us |<img src="readme/testing/rm-html-checker-success.png" width="90%">   |
-| Contact Us | <img src="readme/testing/rm-html-checker-success.png" width="90%">  |
-| Contact Us Success | <img src="readme/testing/rm-html-checker-success.png" width="90%">  |
-| Contact Us FAQ| <img src="readme/testing/rm-html-checker-success.png" width="90%">   |
-| Events | <img src="readme/testing/rm-html-checker-success.png" width="90%">   |
-| Newsletter | <img src="readme/testing/rm-html-checker-newsletter-page.png" width="90%">  |
-| Wish List | <img src="readme/testing/rm-html-checker-success.png" width="90%">  |
-| Choosing Poster Article | <img src="readme/testing/rm-html-checker-success.png" width="90%"> |
-| All Compliance Pages | <img src="readme/testing/rm-html-checker-success.png" width="90%"> |
-| Footer | <img src="readme/testing/rm-html-checker-success.png" width="90%">   |
-
-
-
-</details>
-
-
-<p align="right">(<a href="#contents">back to top</a>)</p>
 
 ## Lighthouse Validation
 
@@ -411,4 +291,3 @@ At the end of this process, I feel pretty dissatisfied. With the previous 4 proj
 
 That said, I am super proud of the progress I have made in a very short time and the projects I have put out... this one included. This project will become the jumping board for a realworld site we want to run.
 
-<p align="right">(<a href="#contents">back to top</a>)</p>
