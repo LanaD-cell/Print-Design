@@ -281,116 +281,117 @@ success.html.js
 
 ## Lighthouse Validation
 
+#### Homepage
 
+<img src="static/testing-docs/lighthouse/lighthouse-homepage-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-homepage-mobile.png" width="70%"><br><br>
 
-<details>
+#### Products
 
-The scripts being in the header also caused lower scores and I added defer in some, defer in the Stripes linked caused it to stop working so I removed it.
+<img src="static/testing-docs/lighthouse/lighthouse-products-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-products-mobil.png" width="70%"><br><br>
 
-***All pages scored 90% or above for accessibility.***
+#### Signup
 
-#### Index Page:
-Accessibility was given a score of 90% first time around because of a missing ```<ul>``` element in the mobile header. Once that was added the score increased to 100% but the navbar stopped working on larger screens so I removed it.
+<img src="static/testing-docs/lighthouse/lighthouse-register-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-register-mobile.png" width="70%"><br><br>
 
-<img src="readme/testing/rm-lighthouse-accessibility.png" width="70%"><br>
+#### Login
 
-<img src="readme/testing/rm-lighthouse.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-login-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-login-mobile.png" width="70%"><br><br>
 
-SEO was given a 100% score overall
+#### Cart
 
-<img src="readme/testing/rm-lighthouse-seo.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-cart-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-cart-mobile.png" width="70%"><br><br>
 
-#### Registration Page:
+#### Payment Success
 
-<img src="readme/testing/rm-lighthouse-signup.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-pay-success-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-pay-success-mobile.png" width="70%"><br><br>
 
-#### Login Page:
+#### Profile
 
-<img src="readme/testing/rm-lighthouse-login.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-profile-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-profile-mobile.png" width="70%"><br><br>
 
-#### Forgotten Password Page:
+#### Order Details
 
-<img src="readme/testing/rm-lighthouse-password-forgot.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-orderdetails.desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-orderdetails-mobile.png" width="70%"><br><br>
 
-#### Products Page:
-PNG images reduced score and can be changed to webp
-Test results the same across all pages e.g. sort category price high to low, a-z, z-a, low to high price.
+#### Newsletter
 
-<img src="readme/testing/rm-lighthouse-products.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-newsletter-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-newsletter-mobile.png" width="70%"><br><br>
 
-#### Checkout Page:
+#### Product Management
 
-<img src="readme/testing/rm-lighthouse-checkout.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-prodmanagement-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-prodmanagement-mobile.png" width="70%"><br><br>
 
-#### Checkout Success Page:
+#### Admin
 
-<img src="readme/testing/rm-lighthouse-checkout-success.png" width="70%" height="auto"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-admin-desktop.png" width="70%"><br><br>
+<img src="static/testing-docs/lighthouse/lighthouse-admin-mobile.png" width="70%"><br><br>
 
-#### Profile Page:
+## Bug Testing & Known Issues Report
 
-<img src="readme/testing/rm-lighthouse-profile.png" width="70%"><br><br>
+####  Cart and Order
+    What Works
+    Cart Functionality:
+    The cart is created successfully, and all totals (subtotal, tax, grand total) are calculated and displayed correctly.
 
-#### About Page:
+    Stripe Payment Integration:
+    Payments via Stripe are processed without issues, and transactions are successful.
 
-<img src="readme/testing/rm-lighthouse-about.png" width="70%" height="auto"><br><br>
+    Admin Tracking:
+    Both the Cart and Order are saved in the admin dashboard after checkout.
 
-#### Contact Us Page:
+    What Does Not Work
+    Cart Reset in Navbar:
+    After a successful order, the cart does not reset in the navbar. It still displays the previous item count instead of clearing out.
 
-<img src="readme/testing/rm-lighthouse-contact-us.png" width="70%"><br><br>
+    Cart ID Missing in Admin:
+    The cart is saved in the admin, but no associated cart_id is shown, making it difficult to track specific carts.
 
-#### Newsletter Page:
+    Order Missing Product Details:
+    While the order is created and the user information is recorded in the admin panel, no product line items (name, quantity, price, etc.) are attached to the order.
 
-<img src="readme/testing/rm-lighthouse-newsletter.png" width="70%"><br><br>
-
-#### Event Page:
-
-<img src="readme/testing/rm-lighthouse-eventpage.png" width="70%"><br><br>
-
-
-### Bugs
+    Notes
+    These issues may stem from missing signals or incomplete save logic in the post-checkout process. Investigating the order and cart save functions and how cart data is transferred into the order model may help identify the root causes.
 
   #### Secret Key commited
-  - I added the SK to the Js in order_checkout js for testing purposes,
-      as the payment was throuwing Invalid Client Secret errors.
-      Then I forgot to remove it before committing changes and opened a can of worms.
-      I received a fatal error that Github piscked up that a SK was commit and
-      refused access. I then proceeded to do a major rebate on all commits. After
-      that I once again received the same error, as the commit was stuck in the
-      history eventhough I did the rebate. After some restless sleep, I throught
-      of just changing my SK in Stripe and allowing the old SK to be sent through
-      as a test SK to Guthub. On the surface it seems to have worked.
+    Secret Key Committed
+    For testing purposes, the Stripe Secret Key (SK) was added directly to order_checkout.js.
+    This triggered a fatal GitHub error due to detection of a sensitive credential.
+    Even after rebasing and removing commits, the key remained in the commit history, causing repeated access denial.
+    Resolution: The Stripe SK was regenerated, and the old SK is now treated as a test key, mitigating the issue on the surface.
 
   #### Order dynamically move from current to previous order on status change
-  - I am sure this is not a difficult fix, but due to time constraint I will need
-    to complete this in future rollouts. The order status shows in the profile, can
-    be changed in the admin Order model. But the update does not trigger the switch.
+  While order statuses can be updated in the Django admin panel, the order does not automatically move from "Current Orders" to "Previous Orders" in the user's profile.
+  This appears to be a simple logic/update trigger issue but remains unresolved due to time constraints.
+  Future Fix: Implement a dynamic check or post-save signal to update the order listing based on status.
 
   <img src="static/images/documentation/bug-previous-orders.png" width="70%"><br><br>
 
   #### Account Signup bug
 
-  - If a user attempts to register with a common password and receives a validation error,
-   but then resubmits the form with a new password, Django may process the account creation
-   without successfully creating a related Profile object due to the existing unique
-   constraint on user_id in the homepage_profile table.
-   This results in a server error when the application tries to create a duplicate profile for the same user.
-
-   The Profile model has a one-to-one relationship with the User model, enforced by
-   a unique constraint on user_id. Currently,
-   the profile is created manually after user creation,
-   and there's no safeguard to ensure the profile is only
-   created once or automatically tied to the user during all registration flows.
-
-  After extensive searching it was suggested to me to implement a signal (Homapage.signals.py) to automatically
-  create a Profile whenever a new User is successfully created.
+  When users submit a weak password and encounter a validation error, then resubmit with a valid password:
+  Django may create a User account but fail to attach a Profile due to a one-to-one constraint violation.
+  This causes a server error due to a duplicate or missing homepage_profile object.
+  Root Cause: The Profile creation is manually handled post-registration, without guarantees it only runs once per user.
+  Recommended Fix: Implement a post_save signal (e.g., in homepage/signals.py) to automatically create a Profile instance whenever a User is successfully registered.
 
   <img src="static/testing-docs/account-signup-bug.png" width="70%"><br><br>
 
  #### Order_detail bug
 
-  - The Page as seen is connected to the order success page, that when clicked is supposed to open
-    this page. The page opens successfully, but no product information is being pulled dynamically.
-    As this is not a system failure, rasther just a nice to have, I will refer this to future fixes.
+  The Order Detail page is accessible via the Order Success screen.
+  However, no product information is dynamically displayed.
+  While not a system-breaking bug, it significantly impacts user clarity post-purchase.
+  Deferred Fix: Consider enhancing the template or context logic in future sprints.
 
   <img src="static/testing-docs/order-detail.bug.png" width="70%"><br><br>
 
@@ -403,7 +404,6 @@ Test results the same across all pages e.g. sort category price high to low, a-z
 - [HTML validator](https://validator.w3.org/nu/#textarea)
 - [CSS validator](https://jigsaw.w3.org/css-validator/)
 - [Google Lighthouse](https://chromewebstore.google.com/detail/lighthouse/blipmdconlkpinefehnmjammfjpmpbjk)
-- [Django Testing](https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Testing)
 
 ## Retrospective
 
