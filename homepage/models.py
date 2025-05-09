@@ -84,14 +84,3 @@ class Newsletter(models.Model):
     def status_display(self):
         """ Return a human-readable status for display """
         return (self.get_status_display())  # pylint: disable=no-member
-
-
-class ContactRequest(models.Model):
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.EmailField()
-    message = models.TextField()
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Contact Request from {self.first_name} {self.last_name} ({self.email})"

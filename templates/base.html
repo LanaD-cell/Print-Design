@@ -40,8 +40,8 @@
 
     {% block corecss %}
       <!-- Preload Bootstrap for fast rendering -->
-      <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style">
-      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossorigin="anonymous">
+      <link rel="preload" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" as="style" async>
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" crossorigin="anonymous"async>
       <link rel="stylesheet" href="{% static 'bootstrap-icons/bootstrap-icons.css' %}" media="print" onload="this.media='all'">
       <link rel="stylesheet" href="{% static 'css/base.css' %}">
     {% endblock %}
@@ -135,36 +135,61 @@
                                 </ul>
                             </li>
 
+                            <!-- Contact Links -->
+                            <li class="nav-item">
+                                <a class="font-weight-bold nav-link"
+                                href="#"
+                                data-bs-toggle="modal"
+                                data-bs-target="#contactModal"
+                                id="contact-link"
+                                style="color: #272640">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <span style="font-weight: normal;">Contact</span>
+                                </a>
+                            </li>
 
-                        <!-- Contact Links -->
-                        <li class="nav-link">
-                            <a class="font-weight-bold nav-link"
-                              href="{% url 'homepage:contact' %}"
-                              id="contact-link"
-                              style="color: #272640">
-                              <i class="fa-solid fa-phone"></i>
-                              <span style="font-weight: normal;">Contact</span>
-                            </a>
-                        </li>
-
-                        <!-- Cart Icon -->
-                        <li class="nav-link mx-2 text-center">
-                            <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="{% url 'cart:cart' %}">
-                                <div class="text-center">
-                                    <i class="fa-solid fa-cart-shopping"></i>
-                                    <p class="my-0">
-                                      €<span id="navbar-cart-total">
-                                        {% if grand_total %}
-                                            {{ grand_total|floatformat:2 }}
-                                        {% else %}
-                                            0.00
-                                        {% endif %}
-                                      </span>
-                                    </p>
+                            <!-- Modal without fade and without backdrop -->
+                            <div class="modal" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true" data-bs-backdrop="false"> <!-- Disabled the backdrop -->
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="contactModalLabel">Contact Information</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <!-- Card Content -->
+                                            <div class="card">
+                                                <div class="card-header">
+                                                    Contact Us!
+                                                </div>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">We are here, for any extra information or Feedback.</h5>
+                                                    <p class="contact-text" style="color: white;">Feel free to send us an email at contact@example.com</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </a>
-                        </li>
-                    </ul>
+                            </div>
+
+                            <!-- Cart Icon -->
+                            <li class="nav-link mx-2 text-center">
+                                <a class="{% if grand_total %}text-info font-weight-bold{% else %}text-black{% endif %} nav-link" href="{% url 'cart:cart' %}">
+                                    <div class="text-center">
+                                        <i class="fa-solid fa-cart-shopping"></i>
+                                        <p class="my-0">
+                                        €<span id="navbar-cart-total">
+                                            {% if grand_total %}
+                                                {{ grand_total|floatformat:2 }}
+                                            {% else %}
+                                                0.00
+                                            {% endif %}
+                                        </span>
+                                        </p>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
                 </div>
             </nav>
         </div>
