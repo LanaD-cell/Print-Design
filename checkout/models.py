@@ -13,12 +13,14 @@ def get_superuser():
 
 class Order(models.Model):
     PENDING = 'pending'
+    PROCESSING = 'processing'
     SHIPPED = 'shipped'
     DELIVERED = 'delivered'
     PAID = 'paid'
 
     STATUS_CHOICES = [
         (PENDING, 'Pending'),
+        (PROCESSING,'Processing'),
         (SHIPPED, 'Shipped'),
         (DELIVERED, 'Delivered'),
     ]

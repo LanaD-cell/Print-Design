@@ -1,24 +1,55 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<div class="container mt-5">
-  <div class="card p-4">
-    <h2 class="mb-3">Order #{{ order.order_number }}</h2>
-    <p><strong style="color: white;">Date:</strong> {{ order.created_at }}</p>
-    <p><strong style="color: white;">Total Paid:</strong> €{{ amount }}</p>
+  <div class="container d-flex justify-content-center align-items-center min-vh-100 p-3">
+    <section id="success" class="text-center bg-white p-4 rounded shadow-sm w-100" style="max-width: 600px;">
+      <h1>Order Details</h1>
+      <h3>Order Number: {{ order_number }}</h3>
+        <div class="order-summary">
+          <h4>Order Information</h4>
+          <p><strong>Order Number:</strong> {{ order_number }}</p>
+          <p><strong>Order Total:</strong> €{{ amount }}</p>
+          <p><strong>Shipping Address:</strong> {{ order.street_address1 }}, {{ order.town_or_city }}, {{ order.country }}</p>
+          <p><strong>Email:</strong> {{ order.email }}</p>
+          <p><strong>Phone:</strong> {{ order.phone_number }}</p>
+        </div>
 
-    <h4 class="mt-4">Items</h4>
-    {% for item in order.line_items.all %}
-      <div class="mb-3 border p-3 rounded">
-        <h5>{{ item.product.name }}</h5>
-        <p>Size: {{ item.product_size }}</p>
-        <p>Quantity: {{ item.quantity }}</p>
-        <p>Price: €{{ item.product.price }}</p>
-        <p>Service Price: €{{ item.service_price }}</p>
-        <p>Total: €{{ item.lineitem_total }}</p>
-      </div>
-    {% endfor %}
+        <div class="order-line-items">
+          <h4>Order Items</h4>
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Size</th>
+                  <th>Quantity</th>
+                  <th>Price</th>
+                  <th>Service Price</th>
+                  <th>Total Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in order_line_items %}
+                  <tr>
+                    <td>{{ item.product.name }}</td>
+                    <td>{{ item.product_size }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>€{{ item.lineitem_total }}</td>
+                    <td>€{{ item.service_price }}</td>
+                    <td>€{{ item.lineitem_total + item.service_price }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+        </div>
 
-    <a href="{% url 'products' %}" class="btn btn-primary mt-4">Order Again</a>
+        <div class="order-totals">
+          <h4>Totals</h4>
+          <p><strong>Order Total:</strong> €{{ amount }}</p>
+          <p><strong>VAT (19%):</strong> €{{ order.grand_total|floatformat:2|multiply:0.19 }}</p>
+          <p><strong>Delivery:</strong> €{{ order.delivery_cost }}</p>
+          <p><strong>Grand Total:</strong> €{{ order.grand_total }}</p>
+        </div>
+    </section>
   </div>
-</div>
 {% endblock %}

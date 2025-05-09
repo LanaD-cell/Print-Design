@@ -494,12 +494,15 @@ def create_order(request):
 
     return order
 
-
+@login_required
 def order_detail(request, order_number):
+    print(f"Requested order number: {order_number}")
     order = get_object_or_404(Order, order_number=order_number, user=request.user)
+    order_line_items = order.orderitem_set.all()
     return render(request, 'cart/order_detail.html', {
         'order': order,
         'order_number': order.order_number,
         'amount': order.grand_total,
+        'order_line_items': order_line_items,
         'user': request.user,
     })
