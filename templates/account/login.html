@@ -7,32 +7,41 @@
 
 {% block content %}
 <div class="login-card">
-  <h1>{% block login_title %}{% trans "Sign In" %}{% endblock %}
+  <h1>{% block login_title %}{% trans "Sign In" %}{% endblock %}</h1>
 
   {% get_providers as socialaccount_providers %}
   {% if socialaccount_providers %}
-  <p>{% blocktrans with site.name as site_name %}Please sign in with one
-  of your existing third party accounts. Or, <a href="{{ signup_url }}">sign up</a>
-  for a {{ site_name }} account and sign in below:{% endblocktrans %}</p>
+    <p>
+      {% blocktrans with site.name as site_name %}
+        Please sign in with one of your existing third party accounts. Or,
+      {% endblocktrans %}
+      <a href="{% url 'signup' %}">{% trans "sign up" %}</a>
+      {% blocktrans with site.name as site_name %}
+        for a {{ site_name }} account and sign in below:
+      {% endblocktrans %}
+    </p>
 
-  <div class="socialaccount_ballot">
-    <ul class="socialaccount_providers">
-      {% include "socialaccount/snippets/provider_list.html" with process="login" %}
-    </ul>
-    <div class="login-or">{% trans 'or' %}</div>
-  </div>
+    <div class="socialaccount_ballot">
+      <ul class="socialaccount_providers">
+        {% include "socialaccount/snippets/provider_list.html" with process="login" %}
+      </ul>
+      <div class="login-or">{% trans 'or' %}</div>
+    </div>
 
-  {% include "socialaccount/snippets/login_extra.html" %}
+    {% include "socialaccount/snippets/login_extra.html" %}
   {% else %}
-  <p>{% blocktrans %}If you have not created an account yet, then please
-  <a href="{{ signup_url }}">sign up</a> first.{% endblocktrans %}</p>
+    <p>
+      {% blocktrans %}If you have not created an account yet, then please{% endblocktrans %}
+      <a href="{% url 'signup' %}">{% trans "sign up" %}</a>
+      {% blocktrans %}first.{% endblocktrans %}
+    </p>
   {% endif %}
 
   <form id="login-form" class="login" method="POST" action="{% url 'login' %}">
     {% csrf_token %}
     {{ form.as_p }}
     {% if redirect_field_value %}
-    <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" />
     {% endif %}
     <a class="button secondaryAction" href="{% url 'account_reset_password' %}">{% trans "Forgot Password?" %}</a>
     <button class="btn" style="color: white; background-color: #006466;" type="submit" id="login-btn">{% trans "Sign In" %}</button>
@@ -61,19 +70,19 @@
 
 {% endblock %}
 
+{% block extra_scripts %}
 <!-- Include necessary JS for modal and redirect -->
 <script>
-  document.getElementById("login-form").onsubmit = function(event) {
-    event.preventDefault();  // Prevent form submission until we show the modal
+  document.getElementById("login-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent immediate submission
 
-    var form = event.target;
-
-    // Assuming the form submission is successful, show the modal
+    // Submit form with AJAX or show modal (for demo purposes only)
     $('#loginSuccessModal').modal('show');  // Show modal
 
     // Redirect to homepage after 3 seconds
     setTimeout(function() {
-      window.location.href = '/';  // Redirect to homepage
+      window.location.href = '/';
     }, 3000);
-  };
+  });
 </script>
+{% endblock %}

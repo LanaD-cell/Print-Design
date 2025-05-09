@@ -2,6 +2,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from homepage.models import Profile
+from django.db import IntegrityError
+
 
 
 @receiver(post_save, sender=User)
@@ -19,6 +21,6 @@ def save_user_profile(sender, instance, **kwargs):
 
 @receiver(post_save, sender=User)
 def ensure_profile_exists(sender, instance, created, **kwargs):
-    if created:
+    if created and not hasattr(instance, 'profile'):
         Profile.objects.create(user=instance)
 

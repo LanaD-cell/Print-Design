@@ -19,6 +19,7 @@ from .models import Order, OrderLineItem
 from homepage.models import Profile
 from .forms import CustomSignupForm
 from .forms import OrderForm
+from .utils import get_or_create_cart
 import re
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -105,6 +106,7 @@ def checkout(request):
 
 
 def create_order(request, cart):
+    # If the user is not authenticated, redirect them to the signup page.
     if not request.user.is_authenticated:
         if request.method == 'POST':
             signup_form = CustomSignupForm(request.POST)
@@ -114,32 +116,20 @@ def create_order(request, cart):
                 return redirect('create_cart_order')
         else:
             signup_form = CustomSignupForm()
-        return render(request, 'account/signup.html',
-                      {'signup_form': signup_form})
+        return render(request, 'account/signup.html', {'signup_form': signup_form})
 
+    # Ensure the cart exists and has items.
     cart = get_or_create_cart(request)
     if not cart or not cart.items.exists():
         raise Http404("Cart is empty or missing.")
 
+    # Initialize totals for the order.
     order_total = Decimal(0)
     service_total = Decimal(0)
     delivery_total = Decimal(0)
     cart_total = Decimal(0)
 
-    for item in cart.items.all():
-        quantity_info = next(
-            (q for q in item.product.quantities
-            if q['quantity'] == item.quantity),
-            None
-        )
-
-        item_price = Decimal(quantity_info['price']) if quantity_info \
-            else Decimal(0)
-        order_total += item_price
-        cart_total += item_price
-        service_total += Decimal(item.service_price)
-        delivery_total += Decimal(item.delivery_price)
-
+    # Create the order object first
     order = Order.objects.create(
         user=request.user,
         name=request.POST.get('name', ''),
@@ -149,22 +139,22 @@ def create_order(request, cart):
         postcode=request.POST.get('postcode', ''),
         town_or_city=request.POST.get('town_or_city', ''),
         street_address1=request.POST.get('street_address1', ''),
-        order_total=order_total,
-        cart_total=cart_total,
-        service_cost=service_total,
-        delivery_cost=delivery_total,
-        grand_total=cart_total + service_total + delivery_total
     )
 
-    grand_total = order.get_grand_total()
-
+    # Now loop through cart items and create OrderLineItems.
     for item in cart.items.all():
         quantity_info = next(
-            (q for q in item.product.quantities
-            if q['quantity'] == item.quantity),
+            (q for q in item.product.quantities if q['quantity'] == item.quantity),
             None
         )
-        item_price = quantity_info['price'] if quantity_info else 0
+
+        item_price = Decimal(quantity_info['price']) if quantity_info else Decimal(0)
+        order_total += item_price
+        cart_total += item_price
+        service_total += Decimal(item.service_price)
+        delivery_total += Decimal(item.delivery_price)
+
+        # Create the order line item for each cart item.
         OrderLineItem.objects.create(
             order=order,
             product=item.product,
@@ -174,7 +164,17 @@ def create_order(request, cart):
             delivery_price=item.delivery_price
         )
 
-    cart.items.all().delete()
+    # Update the order with the calculated totals.
+    order.order_total = order_total
+    order.cart_total = cart_total
+    order.service_cost = service_total
+    order.delivery_cost = delivery_total
+    order.grand_total = cart_total + service_total + delivery_total
+    order.save()
+
+    if 'cart' in request.session:
+        del request.session['cart']
+
     return order
 
 

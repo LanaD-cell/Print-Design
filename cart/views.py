@@ -155,6 +155,7 @@ def add_to_cart(request):
 
         # Save cart data to session
         request.session['cart_id'] = cart.id
+        print(f"Cart ID stored in session: {request.session['cart_id']}")
 
         # Debugging output
         print(

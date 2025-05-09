@@ -5,6 +5,7 @@ from decimal import Decimal
 
 class Cart(models.Model):
     user = models.ForeignKey(User, null=True, blank=True, on_delete=models.CASCADE)
+    cart_id = models.CharField(max_length=255, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     delivery_option = models.CharField(max_length=255, null=True, blank=True)
@@ -42,7 +43,7 @@ class Cart(models.Model):
         return subtotal + vat + delivery
 
     def __str__(self):
-        return f"Cart for {self.user.username if self.user else 'Anonymous'}"
+        return f"Cart {self.id} for {self.user.username if self.user else 'Anonymous'}"
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
