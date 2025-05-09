@@ -11,7 +11,7 @@ html {
 body {
     display: flex;
     flex-direction: column;
-    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/freepik__the-style-is-candid-image-photography-with-natural__21526_izzgyt.png') no-repeat,
+    background: url('https://res.cloudinary.com/dvs5uituk/image/upload/v1746791068/bg-img_1_cpykti.webp') no-repeat,
                 url('/static/images/bgimg.png') no-repeat center center;
     background-size: cover;
     background-position: center center;
